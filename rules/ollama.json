@@ -1,0 +1,24 @@
+[
+  {
+    "id": 1,
+    "condition": {
+      "requestDomains": ["localhost"]
+    },
+    "priority": 1,
+    "action": {
+      "type": "modifyHeaders",
+      "requestHeaders": [
+        {
+          "header": "Referer",
+          "operation": "set",
+          "value": "http://localhost:11434"
+        },
+        {
+          "header": "origin",
+          "operation": "set",
+          "value": "http://localhost:11434"
+        }
+      ]
+    }
+  }
+]

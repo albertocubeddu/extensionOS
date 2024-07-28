@@ -1,0 +1,17 @@
+.hw-top {
+  width: 1000px;
+  background: red;
+  color: white;
+}
+
+#plasmo-shadow-container {
+  z-index: 18111987 !important;
+  position: fixed !important;
+}
+
+#plasmo-overlay-0 {
+  border: 0px;
+  margin-left: 10px;
+  margin-top: 10px;
+  color: black;
+}
