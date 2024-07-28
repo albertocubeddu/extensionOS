@@ -2,7 +2,11 @@
 
 ![Presentation Image](./assets/presentation.jpg)
 
-Welcome to Extension | OS!
+Welcome to Extension | OS
+
+# Why
+
+It all started a morning on the 27th July 2024, when I've decided to partecipate to the SF Hackaton x Build Club.
 
 # Vision & Mission
 
@@ -20,42 +24,53 @@ All your data is stored locally on your hard drive.
 
 ### Urgent & Important
 
-- **Prompt Factory**: Add the ability to edit a single prompt.
-- **Logging**: Determine a location to store log files.
-- **MoA**: Implement this feature.
+-  **Prompt Factory**: Add the ability to edit a single prompt.
+-  **Logging**: Determine a location to store log files.
+-  **MoA**: Implement this feature.
 
 ### Urgent, Not Important
 
-- **Prompt Factory**: Add the ability to create custom prompts.
-- Add the ability to chat within the browser.
-- Encryption of keys : They are stored locally, nonetheless being my first chrome extension i need to research more about how this can be accessed.
+-  **Prompt Factory**: Add the ability to create custom prompts.
+-  Add the ability to chat within the browser.
+-  Encryption of keys : They are stored locally, nonetheless being my first chrome extension i need to research more about how this can be accessed.
 
 ### Important, Not Urgent
 
-- Move files to a `/src` folder to improve organization.
-- Strategically organize the codebase structure.
-- Perfect the README documentation.
-- Evaluate the necessity of `executeScript`.
-- Decide on a package manager: npm, pnpm, or yarn.
-- Investigate if Playwright supports Chrome extension testing.
+-  Move files to a `/src` folder to improve organization.
+-  Strategically organize the codebase structure.
+-  Perfect the README documentation.
+-  Evaluate the necessity of `executeScript`.
+-  Decide on a package manager: npm, pnpm, or yarn.
+-  Investigate if Playwright supports Chrome extension testing.
 
 ### Not Urgent, Not Important
 
-- **Prompt Factory**: Add the ability to build workflows.
-- **Prompt Factory**: Add the option to select which LLM to use for each prompt.
+-  **Prompt Factory**: Add the ability to build workflows.
+-  **Prompt Factory**: Add the option to select which LLM to use for each prompt.
 
-# Thanks
+# Presentation Video
 
-Build Club -> Hackaton Organiser
-Leonardo.ai -> Icon generated with the phoenix model
-Canva -> The other images not generated with AI
-ShadCn -> All the UI?
-Plasmo -> The Framework
+[![Video Title](https://img.youtube.com/vi/dM1BOxVoebg/0.jpg)](https://www.youtube.com/watch?v=dM1BOxVoebg)
 
-Footage => [Olena from Pixabay](https://pixabay.com/users/olenchic-16658974/?utm_source=link-attribution&utm_medium=referral&utm_campaign=video&utm_content=218486)
-https://pixabay.com/users/nickype-10327513/?utm_source=link-attribution&utm_medium=referral&utm_campaign=video&utm_content=161402
+## Footage
 
-Music => https://suno.com/song/f14541af-c853-4c22-b0b7-9000194fc9c6
-https://suno.com/song/1b28f52a-0311-48e1-a645-f06f6a6f3d66
+-  [Olena from Pixabay](https://pixabay.com/users/olenchic-16658974/?utm_source=link-attribution&utm_medium=referral&utm_campaign=video&utm_content=218486)
 
-Voices => ElevenLabs
+-  [NickyPe from Pixabay](https://pixabay.com/users/nickype-10327513/?utm_source=link-attribution&utm_medium=referral&utm_campaign=video&utm_content=161402)
+
+## Music
+
+-  https://suno.com/song/f14541af-c853-4c22-b0b7-9000194fc9c6
+
+## Voices
+
+-  ElevenLabs
+
+# Special Thanks
+
+-  Build Club -> Hackaton Organiser
+-  Leonardo.ai -> Icon generated with the phoenix model
+-  Canva -> The other images not generated with AI
+-  ShadCn -> All the UI?
+-  Plasmo -> The Framework
+-  Groq -> Extra credits
