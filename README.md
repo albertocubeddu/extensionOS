@@ -6,7 +6,7 @@ Welcome to Extension | OS
 
 # Why
 
-It all started a morning on the 27th July 2024, when I've decided to partecipate to the SF Hackaton x Build Club.
+It all started on the morning of July 27th, 2024, when I decided to participate in the SF Hackathon x Build Club.
 
 # Vision & Mission
 
