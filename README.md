@@ -62,6 +62,7 @@ All your data is stored locally on your hard drive.
 
 ### Important, Not Urgent
 
+-  The sidebar API doesn't work after the storage API is called (User Interaction must be done)
 -  Move files to a `/src` folder to improve organization.
 -  Strategically organize the codebase structure.
 -  Perfect the README documentation.
@@ -100,3 +101,20 @@ All your data is stored locally on your hard drive.
 -  ShadCn -> All the UI?
 -  Plasmo -> The Framework
 -  Groq -> Extra credits
+
+# Changelog
+
+0.0.3 (not-release)
+
+-  Changed the datastructure to achieve a clearer and more abstract way to call functions
+-  Function to clean the datastructure to adapt to chrome.contextMenus.CreateProperties
+-  use "side_" as hack to open the sidebar. WHY: The sidebar.open doesn't work after we call the storage.get
+- 
+
+   0.0.2
+
+-  How to install and start polishing the repository
+
+   0.0.1
+
+-  Check the demo video

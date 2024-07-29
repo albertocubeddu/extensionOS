@@ -2,113 +2,88 @@
 import { Storage } from "@plasmohq/storage";
 
 import { initializeStorage } from "~background/init";
+import { cleanProperties } from "~lib/cleanContextMenu";
 import { callOpenAIReturn, type ApiResponse } from "~lib/openAITypeCall";
 import { createCall } from "~lib/vapiOutbound";
 
 const storage = new Storage();
 
-const linkedinPostComment =
-
-   "You're a helpful assistant expert in replying to LinkedIn posts in the form of a comment. It needs to be short, sweet, and coherent to the message.   Do not reply with any text, only the fixed sentence, and without any quotation marks. This is the message: ";
-
-const summariseText =
-   "You're expert in summarising snippet of text; Give me only the summarisation of this text: ";
-
-const grammarFixer = `
-  You're an expert teacher and you specialising in fixing grammar mistakes. Starting from an input phrase, you then think and fix it writing in English (Australian), and make the sentence fluent without changing the style or the tone of voice. Your goal is to provide only the fixed sentence.
-  
-  
-  # Examples
-  'I did go everyday to the gym' -> I go to the gym everyday
-  
-  Do not reply with any text, only the fixed sentence, and without any quotation marks.
-
-  This is the sentence i want you to fix:
-
-`;
-
-const linkedinPostEmoji =
-   "Respond to a LinkedIn post only using emojis but avoid hashtags.";
-
-// This must be called in this way, as need to be from a USER INTERACTION WTF CHROME.
-// TODO: Refactor this monster! (11:00PM)
-chrome.contextMenus.onClicked.addListener((info, tab) => {
-   switch (info.menuItemId) {
-      case "summariseText":
-      case "myOwnPromptSelection":
-         chrome.sidePanel.open({
-            tabId: tab.id ?? undefined, // Use nullish coalescing to handle undefined or null
-         });
-         break;
-   }
-});
-
-// As soon as we intall? Double check how it work, or put the openOptionPage only if the API KEY is not found.
+/*
+Fired when the extension is first installed, when the extension is updated to a new version, and when Chrome is updated to a new version.
+*/
 chrome.runtime.onInstalled.addListener(async () => {
-   //Show the OptionPage as soon as it's installed
    chrome.runtime.openOptionsPage();
-
 
    // It need to change in the future, unless i use two lists and i use the ID as a intersection?
    const contextMenuItems =
       (await initializeStorage()) as unknown as chrome.contextMenus.CreateProperties[];
 
-   contextMenuItems.forEach((item) => {
+   //Typescript can cast to an interface (or at least i can't find a way to do it)
+   //Therefore we clean our configObject to be adapted to the chrome.contextMenu.CreateProperties()
+   const test = cleanProperties(
+      contextMenuItems
+   ) as chrome.contextMenus.CreateProperties[];
+
+   test.forEach((item) => {
       chrome.contextMenus.create(item);
    });
 });
 
+/*
+Listener: ONLY FOR THE SIDEBAR.
+Why do we need the extra listener? The chrome.sidePanel.open doesn't work afer the storage.get (called in the other listener) is invoked.
+*/
+chrome.contextMenus.onClicked.addListener((info, tab) => {
+   const itemId = info.menuItemId as String;
+   if (itemId.startsWith("side_")) {
+      chrome.sidePanel.open({
+         tabId: tab.id ?? undefined, // Use nullish coalescing to handle undefined or null
+      });
+   }
+});
+
+/*
+General Listener for the onClicked.
+*/
 chrome.contextMenus.onClicked.addListener(async (info, tab) => {
    const message = info.selectionText;
    let response;
 
+   const items = await storage.get("contextMenuItems");
+   const element = items[info.menuItemId];
+
    switch (info.menuItemId) {
-      case "linkedinPostComment":
-         response = await callOpenAIReturn(linkedinPostComment, message);
-         copyTextToClipboard(response);
-         break;
-      case "callPhoneToTalkAboutSelection":
-         await createCall(message);
-         break;
-      case "summariseText":
-         response = await callOpenAIReturn(summariseText, message);
-         try {
-            chrome.runtime.sendMessage({
-               action: "send_to_sidepanel",
-               payload: response.data,
-            });
-         } catch (error) {
-            console.error("no sidebar");
+      case element.id:
+         if (element.functionType === "callAI-copyClipboard") {
+            response = await callOpenAIReturn(element.prompt, message);
+            copyTextToClipboard(response);
+            break;
+         }
+
+         if (element.functionType === "callVoice-ExternalNumber") {
+            //TODO: refactor as we want to pass a prompt!
+            await createCall(message);
+            break;
+         }
+
+         if (element.functionType === "callAI-openSideBar") {
+            response = await callOpenAIReturn(element.prompt, message);
+
+            // Leaving this comment to open an issue with Plamos or to dig down in the codebase and see why it doens't work as expeected. The issuse disappear as soon as i remove the storage.get()
+            // await chrome.sidePanel.open({
+            //    tabId: tab.id ?? undefined, // Use nullish coalescing to handle undefined or null
+            // });
+
+            try {
+               chrome.runtime.sendMessage({
+                  action: "send_to_sidepanel",
+                  payload: response.data,
+               });
+            } catch (error) {
+               console.error("no sidebar");
+            }
          }
          break;
-
-      case "grammarFixer":
-         response = await callOpenAIReturn(grammarFixer, message);
-         copyTextToClipboard(response);
-         break;
-
-      case "linkedinPostEmoji":
-         response = await callOpenAIReturn(linkedinPostEmoji, message);
-         copyTextToClipboard(response);
-         break;
-
-      case "myOwnPromptSelection":
-         response = await callOpenAIReturn(
-            (await storage.get("myOwnPrompt")) ||
-               "say 'You need to configure your own prompt; Go to Options'! Ignore the following:",
-            message
-         );
-         try {
-            chrome.sidePanel.open({ tabId: tab.id });
-            chrome.runtime.sendMessage({
-               action: "send_to_sidepanel",
-               payload: response.data,
-            });
-         } catch (error) {
-            console.error("no sidebar");
-         }
-         break;
-
       default:
          console.warn("Unhandled menu item:", info.menuItemId);
    }
