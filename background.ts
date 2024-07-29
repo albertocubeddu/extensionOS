@@ -1,5 +1,3 @@
-import TalentManagerText from "data-text:~messages/linkedin-connect-300-talent-manager.txt";
-
 // nneolbdbfjmdjmnpginhclljaphcdnad
 import { Storage } from "@plasmohq/storage";
 
@@ -10,18 +8,20 @@ import { createCall } from "~lib/vapiOutbound";
 const storage = new Storage();
 
 const linkedinPostComment =
-   "You're a helpful assistant expert in replying to LinkedIn posts in the form of a comment. It needs to be short, sweet, and coherent to the message. This is the message: ";
+
+   "You're a helpful assistant expert in replying to LinkedIn posts in the form of a comment. It needs to be short, sweet, and coherent to the message.   Do not reply with any text, only the fixed sentence, and without any quotation marks. This is the message: ";
 
 const summariseText =
    "You're expert in summarising snippet of text; Give me only the summarisation of this text: ";
+
 const grammarFixer = `
   You're an expert teacher and you specialising in fixing grammar mistakes. Starting from an input phrase, you then think and fix it writing in English (Australian), and make the sentence fluent without changing the style or the tone of voice. Your goal is to provide only the fixed sentence.
   
   
   # Examples
-  'I did go everyday to the gym' -> 'I go to the gym everyday' 
+  'I did go everyday to the gym' -> I go to the gym everyday
   
-  Do not reply with any text, only the fixed sentence.
+  Do not reply with any text, only the fixed sentence, and without any quotation marks.
 
   This is the sentence i want you to fix:
 
@@ -47,6 +47,7 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
 chrome.runtime.onInstalled.addListener(async () => {
    //Show the OptionPage as soon as it's installed
    chrome.runtime.openOptionsPage();
+
 
    // It need to change in the future, unless i use two lists and i use the ID as a intersection?
    const contextMenuItems =
