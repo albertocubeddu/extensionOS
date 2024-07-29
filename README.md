@@ -1,22 +1,48 @@
 # Extension | OS
 
-![Presentation Image](./assets/presentation.jpg)
+Imagine a world where every user has access to powerful large language models (LLMs) directly within their web browser. By integrating LLMs into everyday internet browsing, we can revolutionise the way people interact with information online, providing them with instant, intelligent assistance tailored to their needs.
 
 Welcome to Extension | OS
 
-# Why
+## 📸 Screenshots
 
-It all started a morning on the 27th July 2024, when I've decided to partecipate to the SF Hackaton x Build Club.
+Select and right-click—it's that easy!
+![action](./assets/showcase/action.png)
 
-# Vision & Mission
+Pick your favorite provider and select the model that excites you the most.
+![LLM Selector](./assets/showcase/llmSelector.png)
 
-Imagine a world where every user has access to powerful large language models (LLMs) directly within their web browser. By integrating LLMs into everyday internet browsing, we can revolutionise the way people interact with information online, providing them with instant, intelligent assistance tailored to their needs.
+Customize your look and feel, and unleash your creativity with your own prompts!
+![Prompt Factory](./assets/showcase/promptFactory.png)
 
-## Awareness
+Mixture of Agents (pre-release)
+![Mixture Of Agents](./assets/showcase/moa.png)
+
+## 🚀 Getting started
+
+1. Clone the extension or [download the latest release](https://github.com/albertocubeddu/extensionOS/releases/).
+2. Open the Chrome browser and navigate to [chrome://extensions](chrome://extensions).
+3. Enable the developer mode by clicking the toggle switch in the top right corner of the page.
+4. Unpack/Unzip the `chrome-mv3-prod.zip`
+5. Click on the "Load unpacked" button and select the folder you just unzipped.
+6. The options page automatically opens, insert your API keys.
+
+## ✨ Features
+
+-  **Seamless Integration**: Effortlessly access any LLM model directly from your favorite website.
+-  **Secure Storage**: Your API key is securely stored in the browser's local storage, ensuring it never leaves your device.
+-  **Customizable Prompts**: Tailor your prompts to suit your needs.
+-  **[Beta] Mixture of Agents**: Experience the innovative Mixture Of Agents feature.
+
+## Why
+
+On the morning of July 27th, 2024, I began an exciting journey by joining the SF Hackathon x Build Club. After months of refining the concept in my mind, I decided it was time to bring it to life. I worked on enhancing my idea, updating what I had already created, and empowering everyone to unleash their creativity with custom prompts.
+
+### Data - Awareness
 
 All your data is stored locally on your hard drive.
 
-### MAC OSX
+#### MAC OSX
 
 `/Users/<your-username>/Library/Application Support/Google/Chrome/Default/Sync Extension Settings/`
 
