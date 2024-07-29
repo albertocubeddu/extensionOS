@@ -62,6 +62,7 @@ All your data is stored locally on your hard drive.
 
 ### Important, Not Urgent
 
+-  The sidebar API doesn't work after the storage API is called (User Interaction must be done)
 -  Move files to a `/src` folder to improve organization.
 -  Strategically organize the codebase structure.
 -  Perfect the README documentation.
@@ -100,3 +101,14 @@ All your data is stored locally on your hard drive.
 -  ShadCn -> All the UI?
 -  Plasmo -> The Framework
 -  Groq -> Extra credits
+
+
+# Changelog
+0.0.3 (not-release)
+- Changed the datastructure to allow a more abstract way to 
+
+0.0.2
+- How to install and start polishing the repository
+
+0.0.1 
+- Check the demo video
