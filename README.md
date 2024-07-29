@@ -102,13 +102,19 @@ All your data is stored locally on your hard drive.
 -  Plasmo -> The Framework
 -  Groq -> Extra credits
 
-
 # Changelog
+
 0.0.3 (not-release)
-- Changed the datastructure to allow a more abstract way to 
 
-0.0.2
-- How to install and start polishing the repository
+-  Changed the datastructure to achieve a clearer and more abstract way to call functions
+-  Function to clean the datastructure to adapt to chrome.contextMenus.CreateProperties
+-  use "side_" as hack to open the sidebar. WHY: The sidebar.open doesn't work after we call the storage.get
+- 
 
-0.0.1 
-- Check the demo video
+   0.0.2
+
+-  How to install and start polishing the repository
+
+   0.0.1
+
+-  Check the demo video

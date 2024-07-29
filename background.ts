@@ -8,16 +8,17 @@ import { createCall } from "~lib/vapiOutbound";
 
 const storage = new Storage();
 
-// As soon as we intall? Double check how it work, or put the openOptionPage only if the API KEY is not found.
+/*
+Fired when the extension is first installed, when the extension is updated to a new version, and when Chrome is updated to a new version.
+*/
 chrome.runtime.onInstalled.addListener(async () => {
-   //Show the OptionPage as soon as it's installed
    chrome.runtime.openOptionsPage();
 
    // It need to change in the future, unless i use two lists and i use the ID as a intersection?
    const contextMenuItems =
       (await initializeStorage()) as unknown as chrome.contextMenus.CreateProperties[];
 
-   //Type script can cast to an interface (or at least i can't find a way to do it)
+   //Typescript can cast to an interface (or at least i can't find a way to do it)
    //Therefore we clean our configObject to be adapted to the chrome.contextMenu.CreateProperties()
    const test = cleanProperties(
       contextMenuItems
@@ -29,7 +30,8 @@ chrome.runtime.onInstalled.addListener(async () => {
 });
 
 /*
-We need the extra listener to open the sidebar
+Listener: ONLY FOR THE SIDEBAR.
+Why do we need the extra listener? The chrome.sidePanel.open doesn't work afer the storage.get (called in the other listener) is invoked.
 */
 chrome.contextMenus.onClicked.addListener((info, tab) => {
    const itemId = info.menuItemId as String;
@@ -40,6 +42,9 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
    }
 });
 
+/*
+General Listener for the onClicked.
+*/
 chrome.contextMenus.onClicked.addListener(async (info, tab) => {
    const message = info.selectionText;
    let response;
