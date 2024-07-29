@@ -8,6 +8,7 @@ import { createCall } from "~lib/vapiOutbound";
 const storage = new Storage();
 
 const linkedinPostComment =
+
    "You're a helpful assistant expert in replying to LinkedIn posts in the form of a comment. It needs to be short, sweet, and coherent to the message.   Do not reply with any text, only the fixed sentence, and without any quotation marks. This is the message: ";
 
 const summariseText =
@@ -45,7 +46,8 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
 // As soon as we intall? Double check how it work, or put the openOptionPage only if the API KEY is not found.
 chrome.runtime.onInstalled.addListener(async () => {
    //Show the OptionPage as soon as it's installed
-   //   chrome.runtime.openOptionsPage()
+   chrome.runtime.openOptionsPage();
+
 
    // It need to change in the future, unless i use two lists and i use the ID as a intersection?
    const contextMenuItems =
