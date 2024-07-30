@@ -113,6 +113,7 @@ All your data is stored locally on your hard drive.
 -  Allowing to change the default prompts
 -  chrome.runtime.openOptionsPage() opens only in production environment (onInstalled)
 -  Improved UI
+-  Allowing to change the functionality; The "side\_" bug is annoying as it is over complicating the codebase.
 
    0.0.2
 

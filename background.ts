@@ -49,8 +49,12 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
    const message = info.selectionText;
    let response;
 
-   const items = await storage.get("contextMenuItems");
-   const element = items[info.menuItemId];
+   const items = (await storage.get("contextMenuItems")) as any[];
+
+   console.log(items);
+
+   //In the past we've used the hashmap, however it would overcomplicated the rest of the codebase always because we are not able to use the chrome.storage and the sidebar.open in the same function. This can be reviewed and use an hashmap if we find the solution for that bug. At the moment i don't expect having more than 20 prompt per user, so readability and clean code beats efficiency.
+   const element = items.find((item) => item.id === info.menuItemId);
 
    switch (info.menuItemId) {
       case element.id:

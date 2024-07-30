@@ -41,13 +41,15 @@ import { cleanProperties } from "~lib/cleanContextMenu";
 
 const storage = new Storage();
 
+import type { IContextConfigItems } from "~background/init";
+
 export default function OptionsPromptFactory() {
-    const [contextMenuItems, setContextMenuItems] = useState({});
+    const [contextMenuItems, setContextMenuItems] = useState<IContextConfigItems[]>([]);
     const [myOwnPromptState, setMyOwnPromptState] = useState("");
 
     useEffect(() => {
         async function getStorage() {
-            const items = await storage.get("contextMenuItems");
+            const items = await storage.get<Array<IContextConfigItems>>("contextMenuItems");
             setContextMenuItems(items);
         }
 
@@ -60,14 +62,27 @@ export default function OptionsPromptFactory() {
         getMyOwnPrompt();
     }, []);
 
-    const handleChange = (key, prop, value) => {
-        setContextMenuItems((prevItems) => ({
-            ...prevItems,
-            [key]: {
-                ...prevItems[key],
-                [prop]: value,
-            },
-        }));
+    /*
+    This is needed, because we don't have any context when we are calling the listener on the background
+    that is the one aware of opening the sidebar. Need to find a solution for the chrome.storage ASAP.
+    */
+    const handleChange = (id, prop, value) => {
+        console.log(id, prop, value);
+
+        setContextMenuItems((prevItems) =>
+            prevItems.map(item => {
+                if (item.id === id) {
+                    let newId = item.id;
+                    if ("callAI-openSideBar" === value && "functionType" === prop && !item.id.startsWith("side_")) {
+                        newId = `side_${item.id}`;
+                    } else if ("callAI-openSideBar" !== value && "functionType" === prop && item.id.startsWith("side_")) {
+                        newId = item.id.replace(/^side_/, '');
+                    }
+                    return { ...item, [prop]: value, id: newId };
+                }
+                return item;
+            })
+        );
     };
 
     //What a shit show, saving two things together. Best practice thrown in the bin. TODO: Refactor the smelly code. (10:00PM - night)
@@ -122,7 +137,7 @@ export default function OptionsPromptFactory() {
                                                     value={contextMenuItems[key].title}
                                                     onChange={(e) => {
                                                         handleChange(
-                                                            key,
+                                                            contextMenuItems[key].id,
                                                             "title",
                                                             e.target.value
                                                         );
@@ -140,7 +155,7 @@ export default function OptionsPromptFactory() {
                                                     value={contextMenuItems[key].contexts.join(", ")}
                                                     onValueChange={(value) =>
                                                         handleChange(
-                                                            key,
+                                                            contextMenuItems[key].id,
                                                             "contexts",
                                                             value.split(", ")
                                                         )
@@ -188,7 +203,7 @@ export default function OptionsPromptFactory() {
                                                     value={contextMenuItems[key].prompt}
                                                     onChange={(e) =>
                                                         handleChange(
-                                                            key,
+                                                            contextMenuItems[key].id,
                                                             "prompt",
                                                             e.target.value
                                                         )
@@ -201,9 +216,24 @@ export default function OptionsPromptFactory() {
                                                     <Label className="font-medium">
                                                         Function Type:
                                                     </Label>
-                                                    <p className="mt-1 p-2 border rounded-md bg-white">
-                                                        {contextMenuItems[key].functionType}
-                                                    </p>
+                                                    <Select
+                                                        value={contextMenuItems[key].functionType}
+                                                        onValueChange={(value) =>
+                                                            handleChange(contextMenuItems[key].id, "functionType", value)
+                                                        }
+                                                    >
+                                                        <SelectTrigger className="w-full">
+                                                            <SelectValue placeholder="Select function type" />
+                                                        </SelectTrigger>
+                                                        <SelectContent>
+                                                            {["callAI-copyClipboard",
+                                                                "callAI-openSideBar", "callVoice-ExternalNumber",].map((type) => (
+                                                                    <SelectItem key={type} value={type}>
+                                                                        {type}
+                                                                    </SelectItem>
+                                                                ))}
+                                                        </SelectContent>
+                                                    </Select>
                                                 </div>
                                                 <div className="text-sm text-gray-600 w-1/2">
                                                     <Label className="font-medium">
