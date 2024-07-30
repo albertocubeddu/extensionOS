@@ -41,13 +41,13 @@ import { cleanProperties } from "~lib/cleanContextMenu";
 const storage = new Storage();
 
 export default function OptionsPromptFactory() {
-   const [contextMenuItems, setContextMenuItems] = useState([]);
+   const [contextMenuItems, setContextMenuItems] = useState({});
    const [myOwnPromptState, setMyOwnPromptState] = useState("");
 
    useEffect(() => {
       async function getStorage() {
-         const items = cleanProperties(await storage.get("contextMenuItems"));
-         setContextMenuItems(Array.isArray(items) ? items : []);
+         const items = await storage.get("contextMenuItems");
+         setContextMenuItems(items);
       }
 
       async function getMyOwnPrompt() {
@@ -59,10 +59,14 @@ export default function OptionsPromptFactory() {
       getMyOwnPrompt();
    }, []);
 
-   const handleChange = (index, field, value) => {
-      const updatedItems = [...contextMenuItems];
-      updatedItems[index][field] = value;
-      setContextMenuItems(updatedItems);
+   const handleChange = (key, prop, value) => {
+      setContextMenuItems((prevItems) => ({
+         ...prevItems,
+         [key]: {
+            ...prevItems[key],
+            [prop]: value,
+         },
+      }));
    };
 
    //What a shit show, saving two things together. Best practice thrown in the bin. TODO: Refactor the smelly code. (10:00PM - night)
@@ -70,10 +74,12 @@ export default function OptionsPromptFactory() {
       await storage.set("contextMenuItems", contextMenuItems);
       await storage.set("myOwnPrompt", myOwnPromptState);
 
+      const menuStorage = cleanProperties(contextMenuItems);
+
       // Remove all existing context menu items
       chrome.contextMenus.removeAll(() => {
          // Create new context menu items
-         contextMenuItems.forEach((item) => {
+         menuStorage.forEach((item) => {
             chrome.contextMenus.create(item);
          });
       });
@@ -93,161 +99,112 @@ export default function OptionsPromptFactory() {
                </CardDescription>
             </CardHeader>
             <CardContent>
-               {contextMenuItems.length > 0 ? (
-                  <Table>
-                     <TableHeader>
-                        <TableRow>
-                           <TableHead>
-                              <TooltipProvider delayDuration={200}>
-                                 <Tooltip>
-                                    <TooltipTrigger className="flex flex-row gap-1">
-                                       <span>Display Name</span>{" "}
-                                       <span>
-                                          <CircleHelp size={12} />
-                                       </span>
-                                    </TooltipTrigger>
-                                    <TooltipContent>
-                                       <p>
-                                          This is the display name for the
-                                          prompt you wish to utilize.
-                                       </p>
-                                    </TooltipContent>
-                                 </Tooltip>
-                              </TooltipProvider>
-                           </TableHead>
-                           <TableHead>
-                              <TooltipProvider delayDuration={200}>
-                                 <Tooltip>
-                                    <TooltipTrigger className="flex flex-row gap-1">
-                                       <span>Context</span>
-                                       <span>
-                                          <CircleHelp size={12} />
-                                       </span>
-                                    </TooltipTrigger>
-                                    <TooltipContent>
-                                       <p>
-                                          The different contexts a menu can
-                                          appear in.
-                                       </p>
-                                       <p>
-                                          <a
-                                             className="text-blue-400"
-                                             href="https://developer.chrome.com/docs/extensions/reference/api/contextMenus#enum"
-                                             target="_blank"
-                                             rel="noopener noreferrer"
-                                          >
-                                             Learn more
-                                          </a>
-                                       </p>
-                                    </TooltipContent>
-                                 </Tooltip>
-                              </TooltipProvider>
-                           </TableHead>
-                           <TableHead>
-                              <TooltipProvider delayDuration={200}>
-                                 <Tooltip>
-                                    <TooltipTrigger className="flex flex-row gap-1">
-                                       <span>ID</span>{" "}
-                                       <span>
-                                          <CircleHelp size={12} />
-                                       </span>
-                                    </TooltipTrigger>
-                                    <TooltipContent>
-                                       <p>
-                                          The unique identifier utilized by the
-                                          event listener to trigger your
-                                          function.
-                                       </p>
-                                    </TooltipContent>
-                                 </Tooltip>
-                              </TooltipProvider>
-                           </TableHead>
-                           {/* <TableHead>Target URL Patterns</TableHead> */}
-                        </TableRow>
-                     </TableHeader>
-                     <TableBody>
-                        {contextMenuItems.map((item, index) => (
-                           <TableRow key={item.id}>
-                              <TableCell>
-                                 <Input
-                                    type="text"
-                                    value={item.title || "Separator"}
-                                    onChange={(e) =>
-                                       handleChange(
-                                          index,
-                                          "title",
-                                          e.target.value
-                                       )
-                                    }
-                                 />
-                              </TableCell>
-                              <TableCell>
-                                 <Select
-                                    value={item.contexts.join(", ")}
-                                    onValueChange={(value) =>
-                                       handleChange(
-                                          index,
-                                          "contexts",
-                                          value.split(", ")
-                                       )
-                                    }
-                                 >
-                                    <SelectTrigger className="w-full">
-                                       <SelectValue placeholder="Select contexts" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                       {[
-                                          "all",
-                                          "page",
-                                          "frame",
-                                          "selection",
-                                          "link",
-                                          "editable",
-                                          "image",
-                                          "video",
-                                          "audio",
-                                          "launcher",
-                                          "browser_action",
-                                          "page_action",
-                                          "action",
-                                       ].map((context) => (
-                                          <SelectItem
-                                             key={context}
-                                             value={context}
-                                          >
-                                             {context}
-                                          </SelectItem>
-                                       ))}
-                                    </SelectContent>
-                                 </Select>
-                              </TableCell>
-                              <TableCell>{item.id}</TableCell>
-                           </TableRow>
-                        ))}
-                     </TableBody>
-                  </Table>
+               {contextMenuItems ? (
+                  <div>
+                     {Object.keys(contextMenuItems).map((key) => {
+                        console.log(contextMenuItems[key]);
+                        return (
+                           <>
+                              <div
+                                 key={key}
+                                 className="p-4 mb-4 border rounded-lg shadow-sm"
+                              >
+                                 <span className="flex flex-row justify-between">
+                                    <Input
+                                       className="text-lg font-semibold mb-2 w-[50%]"
+                                       value={contextMenuItems[key].title}
+                                       onChange={(e) => {
+                                          handleChange(
+                                             key,
+                                             "title",
+                                             e.target.value
+                                          );
+                                       }}
+                                    />
+                                    <div className="text-sm text-gray-600 mb-2">
+                                       <Select
+                                          value={contextMenuItems[
+                                             key
+                                          ].contexts.join(", ")}
+                                          onValueChange={(value) =>
+                                             handleChange(
+                                                key,
+                                                "contexts",
+                                                value.split(", ")
+                                             )
+                                          }
+                                       >
+                                          <SelectTrigger className="w-full">
+                                             <SelectValue placeholder="Select contexts" />
+                                          </SelectTrigger>
+                                          <SelectContent>
+                                             {[
+                                                "all",
+                                                "page",
+                                                "frame",
+                                                "selection",
+                                                "link",
+                                                "editable",
+                                                "image",
+                                                "video",
+                                                "audio",
+                                                "launcher",
+                                                "browser_action",
+                                                "page_action",
+                                                "action",
+                                             ].map((context) => (
+                                                <SelectItem
+                                                   key={context}
+                                                   value={context}
+                                                >
+                                                   {context}
+                                                </SelectItem>
+                                             ))}
+                                          </SelectContent>
+                                       </Select>
+                                    </div>
+                                 </span>
+
+                                 <span className="flex flex-col gap-5">
+                                    <div className="text-sm text-gray-600 mb-2">
+                                       ID: {contextMenuItems[key].id}
+                                    </div>
+                                    <div className="text-sm text-gray-800">
+                                       <label htmlFor={`prompt-${key}`}>
+                                          Prompt:
+                                       </label>
+                                       <Textarea
+                                          id={`prompt-${key}`}
+                                          value={contextMenuItems[key].prompt}
+                                          onChange={(e) =>
+                                             handleChange(
+                                                key,
+                                                "prompt",
+                                                e.target.value
+                                             )
+                                          }
+                                          placeholder="Enter your prompt here"
+                                       />
+                                    </div>
+                                    <div className="text-sm text-gray-800">
+                                       Function Type:{" "}
+                                       {contextMenuItems[key].functionType}
+                                    </div>
+                                 </span>
+
+                                 <div className="flex flex-row justify-end">
+                                    <Button onClick={() => handleSave()}>
+                                       Save All
+                                    </Button>
+                                 </div>
+                              </div>
+                           </>
+                        );
+                     })}
+                  </div>
                ) : (
                   <p>Loading...</p>
                )}
-            </CardContent>
-            <CardFooter className="border-t px-6 py-4">
-               <Button onClick={() => handleSave()}>Save</Button>
-            </CardFooter>
-         </Card>
-
-         <Card x-chunk="dashboard-04-chunk-2">
-            <CardHeader>
-               <CardTitle>Your Prompt</CardTitle>
-               <CardDescription>
-                  In the near future you'll be able to create multiple prompts
-               </CardDescription>
-            </CardHeader>
-            <CardContent>
-               <Textarea
-                  value={myOwnPromptState}
-                  onChange={(e) => setMyOwnPromptState(e.target.value)}
-                  placeholder="Enter your prompt here"
-               />
             </CardContent>
             <CardFooter className="border-t px-6 py-4">
                <Button onClick={() => handleSave()}>Save</Button>

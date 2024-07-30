@@ -73,7 +73,7 @@ export async function initializeStorage() {
          id: "side_myOwnPromptSelection",
          title: "Your Prompt",
          contexts: ["selection"],
-         prompt: `You're expert in summarising snippet of text; Give me only the summarisation of this text:`,
+         prompt: `Please provide your own prompt;`,
          functionType: "callAI-openSideBar",
       },
    };
