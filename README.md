@@ -113,6 +113,7 @@ Move it somewhere else ASAP.
 
 ## 0.0.3
 
+-  Added github branch protection.
 -  Changed the datastructure to achieve a clearer and more abstract way to call functions
 -  Function to clean the datastructure to adapt to chrome.contextMenus.CreateProperties
 -  use "side\_" as hack to open the sidebar. WHY: The sidebar.open doesn't work after we call the storage.get
