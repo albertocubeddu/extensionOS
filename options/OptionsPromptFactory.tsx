@@ -3,30 +3,13 @@ import {
     Card,
     CardContent,
     CardDescription,
-    CardFooter,
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from "@/components/ui/table";
-import {
-    Tooltip,
-    TooltipContent,
-    TooltipProvider,
-    TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { CircleHelp } from "lucide-react";
+
 import { useEffect, useState } from "react";
 import { Label } from "~components/ui/label";
-
 import { Storage } from "@plasmohq/storage";
-import { useStorage } from "@plasmohq/storage/hook";
 
 import { Input } from "~components/ui/input";
 import {
@@ -42,6 +25,7 @@ import { cleanProperties } from "~lib/cleanContextMenu";
 const storage = new Storage();
 
 import type { IContextConfigItems } from "~background/init";
+import LabelWithTooltip from "../components/blocks/LabelWithTooltip";
 
 export default function OptionsPromptFactory() {
     const [contextMenuItems, setContextMenuItems] = useState<IContextConfigItems[]>([]);
@@ -119,139 +103,141 @@ export default function OptionsPromptFactory() {
                         <div>
                             {Object.keys(contextMenuItems).map((key) => {
                                 return (
-                                    <div
-                                        key={key}
-                                        className="p-4 mb-10 border rounded-lg shadow-sm "
-                                    >
-                                        <div className="flex flex-row justify-between gap-4">
-                                            <div className="flex flex-col gap-2 w-3/4">
-                                                <Label
-                                                    className="text-sm text-gray-600"
-                                                    htmlFor={`title-${key}`}
-                                                >
-                                                    Display Name
-                                                </Label>
-                                                <Input
-                                                    id={`title-${key}`}
-                                                    className="text-lg font-semibold mb-2"
-                                                    value={contextMenuItems[key].title}
-                                                    onChange={(e) => {
-                                                        handleChange(
-                                                            contextMenuItems[key].id,
-                                                            "title",
-                                                            e.target.value
-                                                        );
-                                                    }}
-                                                />
-                                            </div>
-                                            <div className="flex flex-col gap-2 w-1/4">
-                                                <Label
-                                                    className="text-sm text-gray-600"
-                                                    htmlFor={`context-${key}`}
-                                                >
-                                                    Context
-                                                </Label>
-                                                <Select
-                                                    value={contextMenuItems[key].contexts.join(", ")}
-                                                    onValueChange={(value) =>
-                                                        handleChange(
-                                                            contextMenuItems[key].id,
-                                                            "contexts",
-                                                            value.split(", ")
-                                                        )
-                                                    }
-                                                >
-                                                    <SelectTrigger className="w-full">
-                                                        <SelectValue placeholder="Select contexts" />
-                                                    </SelectTrigger>
-                                                    <SelectContent>
-                                                        {[
-                                                            "all",
-                                                            "page",
-                                                            "frame",
-                                                            "selection",
-                                                            "link",
-                                                            "editable",
-                                                            "image",
-                                                            "video",
-                                                            "audio",
-                                                            "launcher",
-                                                            "browser_action",
-                                                            "page_action",
-                                                            "action",
-                                                        ].map((context) => (
-                                                            <SelectItem
-                                                                key={context}
-                                                                value={context}
-                                                            >
-                                                                {context}
-                                                            </SelectItem>
-                                                        ))}
-                                                    </SelectContent>
-                                                </Select>
-                                            </div>
-                                        </div>
-
-                                        <div className="flex flex-col gap-5 p-4 bg-gray-50 rounded-lg shadow-inner my-5">
-                                            <div className="text-sm text-gray-800">
-                                                <Label htmlFor={`prompt-${key}`} className="font-medium">
-                                                    Prompt:
-                                                </Label>
-                                                <Textarea
-                                                    id={`prompt-${key}`}
-                                                    className="mt-1 p-2 border rounded-md"
-                                                    value={contextMenuItems[key].prompt}
-                                                    onChange={(e) =>
-                                                        handleChange(
-                                                            contextMenuItems[key].id,
-                                                            "prompt",
-                                                            e.target.value
-                                                        )
-                                                    }
-                                                    placeholder="Enter your prompt here"
-                                                />
-                                            </div>
-                                            <div className="flex flex-row gap-4">
-                                                <div className="text-sm text-gray-800 w-1/2">
-                                                    <Label className="font-medium">
-                                                        Function Type:
+                                    <>
+                                        <div
+                                            key={key}
+                                            className="p-4 mb-20 border-t-4 border-t-[#ff66cc] border rounded-lg shadow-md"
+                                        >
+                                            <div className="flex flex-row justify-between gap-4">
+                                                <div className="flex flex-col gap-1 w-3/4">
+                                                    <LabelWithTooltip key={key} labelText="Display Name" tooltipText="The name displayed in the menu visualised when the user clicks the right-click" />
+                                                    <Input
+                                                        id={`title-${key}`}
+                                                        className="text-lg font-semibold mb-2"
+                                                        value={contextMenuItems[key].title}
+                                                        onChange={(e) => {
+                                                            handleChange(
+                                                                contextMenuItems[key].id,
+                                                                "title",
+                                                                e.target.value
+                                                            );
+                                                        }}
+                                                    />
+                                                </div>
+                                                <div className="flex flex-col gap-1 w-1/4">
+                                                    <Label
+                                                        className="text-sm text-gray-600"
+                                                        htmlFor={`context-${key}`}
+                                                    >
+                                                        <LabelWithTooltip key={key} labelText="Context" tooltipText="The context in which the item should display" />
                                                     </Label>
                                                     <Select
-                                                        value={contextMenuItems[key].functionType}
+                                                        value={contextMenuItems[key].contexts.join(", ")}
                                                         onValueChange={(value) =>
-                                                            handleChange(contextMenuItems[key].id, "functionType", value)
+                                                            handleChange(
+                                                                contextMenuItems[key].id,
+                                                                "contexts",
+                                                                value.split(", ")
+                                                            )
                                                         }
                                                     >
                                                         <SelectTrigger className="w-full">
-                                                            <SelectValue placeholder="Select function type" />
+                                                            <SelectValue placeholder="Select contexts" />
                                                         </SelectTrigger>
                                                         <SelectContent>
-                                                            {["callAI-copyClipboard",
-                                                                "callAI-openSideBar", "callVoice-ExternalNumber",].map((type) => (
-                                                                    <SelectItem key={type} value={type}>
-                                                                        {type}
-                                                                    </SelectItem>
-                                                                ))}
+                                                            {[
+                                                                "all",
+                                                                "page",
+                                                                "frame",
+                                                                "selection",
+                                                                "link",
+                                                                "editable",
+                                                                "image",
+                                                                "video",
+                                                                "audio",
+                                                                "launcher",
+                                                                "browser_action",
+                                                                "page_action",
+                                                                "action",
+                                                            ].map((context) => (
+                                                                <SelectItem
+                                                                    key={context}
+                                                                    value={context}
+                                                                >
+                                                                    {context}
+                                                                </SelectItem>
+                                                            ))}
                                                         </SelectContent>
                                                     </Select>
                                                 </div>
-                                                <div className="text-sm text-gray-600 w-1/2">
-                                                    <Label className="font-medium">
-                                                        ID:
-                                                    </Label>
-                                                    <p className="mt-1 p-2 border rounded-md bg-white">
-                                                        {contextMenuItems[key].id}
-                                                    </p>
+                                            </div>
+
+                                            <div className="flex flex-col gap-5 p-4 bg-gray-50 rounded-lg shadow-inner my-5">
+                                                <div className="text-sm text-gray-800">
+                                                    <LabelWithTooltip key={key} labelText="Prompt" tooltipText="The prompt for the GPT" />
+
+                                                    <Textarea
+                                                        id={`prompt-${key}`}
+                                                        className="mt-1 p-2 border rounded-md"
+                                                        value={contextMenuItems[key].prompt}
+                                                        onChange={(e) =>
+                                                            handleChange(
+                                                                contextMenuItems[key].id,
+                                                                "prompt",
+                                                                e.target.value
+                                                            )
+                                                        }
+                                                        placeholder="Enter your prompt here"
+                                                    />
+                                                </div>
+                                                <div className="flex flex-row gap-4">
+                                                    <div className="text-sm text-gray-800 w-1/2">
+                                                        <div className="flex flex-col gap-1">
+                                                            <LabelWithTooltip key={key} labelText="Functionality" tooltipText="The functionality after the prompt is executed" />
+                                                            <Select
+                                                                value={contextMenuItems[key].functionType}
+                                                                onValueChange={(value) =>
+                                                                    handleChange(contextMenuItems[key].id, "functionType", value)
+                                                                }
+                                                            >
+                                                                <SelectTrigger className="w-full">
+                                                                    <SelectValue placeholder="Select function type" />
+                                                                </SelectTrigger>
+                                                                <SelectContent>
+                                                                    {[
+                                                                        { key: "callAI-copyClipboard", value: "Copy to Clipboard" },
+                                                                        { key: "callAI-openSideBar", value: "Write to Sidebar" },
+                                                                        { key: "callVoice-ExternalNumber", value: "Call External Number" }
+                                                                    ].map((type) => (
+                                                                        <SelectItem key={type.key} value={type.key}>
+                                                                            {type.value}
+                                                                        </SelectItem>
+                                                                    ))}
+                                                                </SelectContent>
+                                                            </Select>
+                                                        </div>
+                                                    </div>
+                                                    <div className="text-sm text-gray-600 w-1/2">
+                                                        <div className="flex flex-col gap-1">
+                                                            <LabelWithTooltip key={key} labelText="ID" tooltipText="Unique Identification used internally" />
+                                                            <p className="p-2 h-10 border rounded-md bg-white">
+                                                                {contextMenuItems[key].id}
+                                                            </p>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
 
-                                        <div className="flex flex-row justify-start">
-                                            <Button onClick={() => handleSave()}>
-                                                Save All
-                                            </Button>
+                                            <div className="flex flex-row justify-center">
+                                                <Button onClick={() => handleSave()}>
+                                                    Save All
+                                                </Button>
+                                            </div>
+
+
                                         </div>
-                                    </div>
+                                    </>
+
                                 );
                             })}
                         </div>
