@@ -29,9 +29,10 @@ Mixture of Agents (pre-release)
 
 ## ✨ Features
 
+-  **Prompt Factory**: Effortlessly Tailor Every Prompt to Your Needs with Our Standard Installation.
+-  **Prompt Factory**: Choose the Functionality for Every Prompt: From Copy-Pasting to Opening a New Sidebar.
 -  **Seamless Integration**: Effortlessly access any LLM model directly from your favorite website.
 -  **Secure Storage**: Your API key is securely stored in the browser's local storage, ensuring it never leaves your device.
--  **Customizable Prompts**: Tailor your prompts to suit your needs.
 -  **[Beta] Mixture of Agents**: Experience the innovative Mixture Of Agents feature.
 
 ## Why
@@ -48,34 +49,36 @@ All your data is stored locally on your hard drive.
 
 ## To-Do List
 
+Move it somewhere else ASAP.
+
 ### Urgent & Important
 
--  **Prompt Factory**: Add the ability to edit a single prompt.
--  **Logging**: Determine a location to store log files.
--  **MoA**: Implement this feature.
+-  [x] **Prompt Factory**: Add the ability to edit a single prompt.
+-  [ ] **Logging**: Determine a location to store log files.
+-  [ ] **MoA**: Implement this feature.
 
 ### Urgent, Not Important
 
--  **Prompt Factory**: Add the ability to create custom prompts.
--  Add the ability to chat within the browser.
--  Encryption of keys : They are stored locally, nonetheless being my first chrome extension i need to research more about how this can be accessed.
+-  [ ] **Prompt Factory**: Add the ability to create custom prompts.
+-  [ ] Add the ability to chat within the browser.
+-  [ ] Encryption of keys : They are stored locally, nonetheless being my first chrome extension i need to research more about how this can be accessed.
 
 ### Important, Not Urgent
 
--  UI for the Prompt Factory is not intuitive and the "save all" button UX is cr@p.
--  The sidebar API doesn't work after the storage API is called (User Interaction must be done)
--  Move files to a `/src` folder to improve organization.
--  Strategically organize the codebase structure.
--  Perfect the README documentation.
--  Evaluate the necessity of `executeScript`.
--  Decide on a package manager: npm, pnpm, or yarn.
--  Investigate if Playwright supports Chrome extension testing.
+-  [ ] UI for the Prompt Factory is not intuitive and the "save all" button UX is cr@p.
+-  [ ] The sidebar API doesn't work after the storage API is called (User Interaction must be done)
+-  [ ] Move files to a `/src` folder to improve organization.
+-  [ ] Strategically organize the codebase structure.
+-  [ ] Perfect the README documentation.
+-  [ ] Evaluate the necessity of `executeScript`.
+-  [ ] Decide on a package manager: npm, pnpm, or yarn.
+-  [ ] Investigate if Playwright supports Chrome extension testing.
 
 ### Not Urgent, Not Important
 
--  **Prompt Factory**: Add the ability to build workflows.
--  **Prompt Factory**: Add the option to select which LLM to use for each prompt.
--  Remove all the silly comments, maybe one day....
+-  [ ] **Prompt Factory**: Add the ability to build workflows.
+-  [ ] **Prompt Factory**: Add the option to select which LLM to use for each prompt.
+-  [ ] Remove all the silly comments, maybe one day....
 
 # Presentation Video
 
@@ -106,7 +109,9 @@ All your data is stored locally on your hard drive.
 
 # Changelog
 
-0.0.3 (not-release / under-development)
+##0.0.4 (not-release / under-development)
+
+## 0.0.3
 
 -  Changed the datastructure to achieve a clearer and more abstract way to call functions
 -  Function to clean the datastructure to adapt to chrome.contextMenus.CreateProperties
@@ -116,10 +121,10 @@ All your data is stored locally on your hard drive.
 -  Improved UI (switched to dark theme)
 -  Allowing to change the functionality; The "side\_" bug is annoying as it is over complicating the codebase.
 
-   0.0.2
+## 0.0.2
 
 -  How to install and start polishing the repository
 
-   0.0.1
+## 0.0.1
 
 -  Check the demo video
