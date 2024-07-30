@@ -15,6 +15,7 @@ import { Checkbox } from "~components/ui/checkbox"
 import LlmSettings from "./LlmSettings"
 import VoiceSettingsOutbound from "./VoiceSettingsOutbound"
 import CardHeaderIntro from "~components/blocks/CardHeaderIntro"
+import FakeSaveButton from "~components/blocks/FakeSaveButton"
 
 export default function OptionsGeneral() {
     const [debugInfo, setDebugInfo] = useStorage("debugInfo", "unchecked")
@@ -47,7 +48,7 @@ export default function OptionsGeneral() {
                     </form>
                 </CardContent>
                 <CardFooter className="border-t px-6 py-4">
-                    <Button className="bg-gradient-to-l from-violet-500 to-orange-500" onClick={() => alert("Settings saved!")}>Save</Button>
+                    <FakeSaveButton />
                 </CardFooter>
             </Card>
         </div >

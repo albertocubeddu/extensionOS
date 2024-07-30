@@ -225,7 +225,7 @@ export default function OptionsPromptFactory() {
                                             </div>
 
                                             <div className="flex flex-row justify-center">
-                                                <Button className="bg-gradient-to-l from-violet-500 to-orange-500" onClick={() => handleSave()}>
+                                                <Button className="bg-gradient from-violet-500 to-orange-500" onClick={() => handleSave()}>
                                                     Save All
                                                 </Button>
                                             </div>

@@ -23,6 +23,7 @@ import React, { useEffect } from "react"
 import { useStorage } from "@plasmohq/storage/hook"
 import LabelWithTooltip from "~components/blocks/LabelWithTooltip"
 import CardHeaderIntro from "~components/blocks/CardHeaderIntro"
+import FakeSaveButton from "~components/blocks/FakeSaveButton"
 
 export default function VoiceSettingsOutbound({
     debugInfo
@@ -103,7 +104,7 @@ export default function VoiceSettingsOutbound({
                 </div>
             </CardContent>
             <CardFooter className="border-t px-6 py-4">
-                <Button className="bg-gradient-to-l from-violet-500 to-orange-500" onClick={() => alert("Settings saved!")}>Save</Button>
+                <FakeSaveButton />
                 {"checked" === debugInfo && (
                     <div className="flex flex-col flex-1 px-4">
                         <span> DEBUG</span>

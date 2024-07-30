@@ -16,7 +16,7 @@ import { Sheet, SheetContent, SheetTrigger } from "~components/ui/sheet"
 export default function OptionsHeader() {
     return (
         <>
-            <header className="top-0 flex h-24 items-center gap-4 border-b-2 bg-[#000] border-b-[#ff66cc] px-4 md:px-6">
+            <header className="top-0 flex h-24 items-center gap-4  bg-[#000] bg-gradient-to-b from-gray-700 to-transparent px-4 md:px-6">
                 <nav className="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6 w-[300px] ">
                     <a
                         href="#"
@@ -80,13 +80,13 @@ export default function OptionsHeader() {
                                 <span className="sr-only">Toggle user menu</span>
                             </Button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
+                        <DropdownMenuContent align="end"  >
                             <DropdownMenuLabel>My Account</DropdownMenuLabel>
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem>Settings</DropdownMenuItem>
-                            <DropdownMenuItem>Support</DropdownMenuItem>
+                            <DropdownMenuItem className="cursor-pointer">Settings</DropdownMenuItem>
+                            {/* <DropdownMenuItem>Support</DropdownMenuItem>
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem>Logout</DropdownMenuItem>
+                            <DropdownMenuItem>Logout</DropdownMenuItem> */}
                         </DropdownMenuContent>
                     </DropdownMenu>
                 </div>

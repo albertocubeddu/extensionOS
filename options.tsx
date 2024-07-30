@@ -35,7 +35,7 @@ export default function Options() {
                             (tab) => (
                                 <div
                                     key={tab}
-                                    className={` font-light text-xl cursor-pointer rounded-lg  ${activeTab === tab ? "bg-black text-[#ff66cc]" : "text-white"} shadow-md  `}
+                                    className={` font-light text-xl cursor-pointer rounded-lg  ${activeTab === tab ? "bg-black text-[#ff66cc] os-text-gradient" : "text-white"} shadow-md  `}
                                     onClick={() => setActiveTab(tab)}
                                 >
                                     {tab.charAt(0).toUpperCase() +

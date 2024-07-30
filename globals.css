@@ -67,3 +67,17 @@
       @apply bg-background text-foreground;
    }
 }
+
+.os-text-gradient {
+   background-image: radial-gradient(
+      circle,
+      #fa5560 -23.47%,
+      #ff66cc 45.52%,
+      #4d91ff 114.8%
+   );
+   background-clip: text; /* Standard property */
+   -webkit-background-clip: text;
+   -webkit-text-fill-color: transparent;
+   -moz-background-clip: text;
+   -moz-text-fill-color: transparent;
+}
