@@ -22,6 +22,7 @@ import React, { useEffect } from "react"
 
 import { useStorage } from "@plasmohq/storage/hook"
 import LabelWithTooltip from "~components/blocks/LabelWithTooltip"
+import CardHeaderIntro from "~components/blocks/CardHeaderIntro"
 
 // Add more combination here for the future
 // TODO: I may refactor it to be easier to access but whatever.
@@ -82,18 +83,15 @@ export default function LlmSettings({ debugInfo }: { debugInfo: string }) {
     return (
         <Card x-chunk="dashboard-04-chunk-1">
             <CardHeader>
-                <CardTitle>LLM Settings</CardTitle>
-                <CardDescription>
-                    Provide which provider and model you want to use for Extension | OS
-                </CardDescription>
+                <CardHeaderIntro title={"LLM Settings"} description={" Provide which provider and model you want to use for Extension | OS"} />
             </CardHeader>
-            <CardContent>
+            <CardContent >
                 <div>
                     {"groq" === llmProvider && (
                         <img
                             src={groqLogo}
                             alt="GROQ Logo"
-                            className="block max-w-[300px] mx-auto my-5"
+                            className="block max-w-[300px] mb-10 mt-4"
                         />
                     )}
                     <div className="flex flex-col gap-1">
@@ -163,7 +161,7 @@ export default function LlmSettings({ debugInfo }: { debugInfo: string }) {
                 </div>
             </CardContent>
             <CardFooter className="border-t px-6 py-4">
-                <Button onClick={() => alert("Settings saved!")}>Save</Button>
+                <Button className="bg-gradient-to-l from-violet-500 to-orange-500" onClick={() => alert("Settings saved!")}>Save</Button>
                 {"checked" === debugInfo && (
                     <div className="flex flex-col flex-1 px-4">
                         <span> DEBUG</span>

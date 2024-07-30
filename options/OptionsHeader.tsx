@@ -16,8 +16,8 @@ import { Sheet, SheetContent, SheetTrigger } from "~components/ui/sheet"
 export default function OptionsHeader() {
     return (
         <>
-            <header className="sticky top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6">
-                <nav className="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6 w-[300px]">
+            <header className="top-0 flex h-24 items-center gap-4 border-b-2 bg-[#000] border-b-[#ff66cc] px-4 md:px-6">
+                <nav className="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6 w-[300px] ">
                     <a
                         href="#"
                         className="flex items-center gap-2 text-lg font-semibold md:text-base">
@@ -26,11 +26,11 @@ export default function OptionsHeader() {
                             src={extensionAvatar}
                             alt="Some pretty cool image"
                         />
-                        <span className="sr-only">Extension | OS</span>
+                        <span className="sr-only text-white">Extension | OS</span>
                     </a>
                     <a
                         href="#"
-                        className="text-foreground transition-colors hover:text-foreground">
+                        className="text-white transition-colors hover:text-grey">
                         Extension | OS
                     </a>
                 </nav>
