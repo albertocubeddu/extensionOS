@@ -112,6 +112,7 @@ All your data is stored locally on your hard drive.
 -  use "side\_" as hack to open the sidebar. WHY: The sidebar.open doesn't work after we call the storage.get
 -  Allowing to change the default prompts
 -  chrome.runtime.openOptionsPage() opens only in production environment (onInstalled)
+-  Improved UI
 
    0.0.2
 
