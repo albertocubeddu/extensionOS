@@ -75,6 +75,7 @@ All your data is stored locally on your hard drive.
 
 -  **Prompt Factory**: Add the ability to build workflows.
 -  **Prompt Factory**: Add the option to select which LLM to use for each prompt.
+-  Remove all the silly comments, maybe one day....
 
 # Presentation Video
 
@@ -112,7 +113,7 @@ All your data is stored locally on your hard drive.
 -  use "side\_" as hack to open the sidebar. WHY: The sidebar.open doesn't work after we call the storage.get
 -  Allowing to change the default prompts
 -  chrome.runtime.openOptionsPage() opens only in production environment (onInstalled)
--  Improved UI
+-  Improved UI (switched to dark theme)
 -  Allowing to change the functionality; The "side\_" bug is annoying as it is over complicating the codebase.
 
    0.0.2

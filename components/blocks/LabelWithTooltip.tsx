@@ -14,13 +14,13 @@ export default function LabelWithTooltip({ key, labelText, tooltipText }: LabelW
             <Tooltip>
                 <TooltipTrigger className="flex flex-row gap-1">
                     <Label
-                        className="text-sm text-gray-600"
+                        className="text-sm text-gray-200"
                         htmlFor={`${labelText}-${key}`}
                     >
                         {labelText}
                     </Label>
                     <span className="inline-flex items-center gap-1">
-                        <CircleHelp size={12} />
+                        <CircleHelp color="white" size={12} />
                     </span>
                 </TooltipTrigger>
                 <TooltipContent>

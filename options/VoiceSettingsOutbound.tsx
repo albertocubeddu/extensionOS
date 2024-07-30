@@ -1,13 +1,10 @@
 import "@/globals.css"
 
-import { Button } from "@/components/ui/button"
 import {
     Card,
     CardContent,
-    CardDescription,
     CardFooter,
     CardHeader,
-    CardTitle
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import {
@@ -22,6 +19,8 @@ import React, { useEffect } from "react"
 
 import { useStorage } from "@plasmohq/storage/hook"
 import LabelWithTooltip from "~components/blocks/LabelWithTooltip"
+import CardHeaderIntro from "~components/blocks/CardHeaderIntro"
+import FakeSaveButton from "~components/blocks/FakeSaveButton"
 
 export default function VoiceSettingsOutbound({
     debugInfo
@@ -41,18 +40,14 @@ export default function VoiceSettingsOutbound({
     return (
         <Card x-chunk="dashboard-04-chunk-1">
             <CardHeader>
-                <CardTitle>Voice Outbound Settings</CardTitle>
-                <CardDescription>
-                    The provide you will use to establish an external phone call. At the
-                    moment we only support Vapi.ai
-                </CardDescription>
+                <CardHeaderIntro title={"Voice Outbound Settings"} description={"The provide you will use to establish an external phone call. At the moment we only support Vapi.ai"} />
             </CardHeader>
             <CardContent>
                 <div>
                     <img
                         src={vapiLogo}
                         alt="VAPI Logo"
-                        className="block max-w-sm mx-auto my-5"
+                        className="block max-w-sm mb-10 mt-4"
                     />
                     <div className="flex flex-col gap-1">
 
@@ -106,7 +101,7 @@ export default function VoiceSettingsOutbound({
                 </div>
             </CardContent>
             <CardFooter className="border-t px-6 py-4">
-                <Button>Save</Button>
+                <FakeSaveButton />
                 {"checked" === debugInfo && (
                     <div className="flex flex-col flex-1 px-4">
                         <span> DEBUG</span>

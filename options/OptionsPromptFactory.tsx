@@ -2,9 +2,7 @@ import { Button } from "@/components/ui/button";
 import {
     Card,
     CardContent,
-    CardDescription,
     CardHeader,
-    CardTitle,
 } from "@/components/ui/card";
 
 import { useEffect, useState } from "react";
@@ -26,6 +24,7 @@ const storage = new Storage();
 
 import type { IContextConfigItems } from "~background/init";
 import LabelWithTooltip from "../components/blocks/LabelWithTooltip";
+import CardHeaderIntro from "~components/blocks/CardHeaderIntro";
 
 export default function OptionsPromptFactory() {
     const [contextMenuItems, setContextMenuItems] = useState<IContextConfigItems[]>([]);
@@ -91,12 +90,7 @@ export default function OptionsPromptFactory() {
         <div className="grid gap-6">
             <Card x-chunk="dashboard-04-chunk-2">
                 <CardHeader>
-                    <CardTitle>Prompt Factory</CardTitle>
-                    <CardDescription>
-                        Welcome to the Prompt Factory, where you can set new prompts
-                        in the Extension | OS. The section it's in is early version,
-                        and it will allow to add/remove and modify every prompt.
-                    </CardDescription>
+                    <CardHeaderIntro title={"Prompt Factory"} description={"  Welcome to the Prompt Factory, where you can set new prompts in the Extension | OS. The section it's in is early version, and it will allow to add/remove and modify every prompt."} />
                 </CardHeader>
                 <CardContent>
                     {contextMenuItems ? (
@@ -106,7 +100,7 @@ export default function OptionsPromptFactory() {
                                     <>
                                         <div
                                             key={key}
-                                            className="p-4 mb-20 border-t-4 border-t-[#ff66cc] border rounded-lg shadow-md"
+                                            className="p-4 mb-20 border-t-8 border-l-8 border-2 rounded-lg shadow-lg"
                                         >
                                             <div className="flex flex-row justify-between gap-4">
                                                 <div className="flex flex-col gap-1 w-3/4">
@@ -172,8 +166,8 @@ export default function OptionsPromptFactory() {
                                                 </div>
                                             </div>
 
-                                            <div className="flex flex-col gap-5 p-4 bg-gray-50 rounded-lg shadow-inner my-5">
-                                                <div className="text-sm text-gray-800">
+                                            <div className="flex flex-col gap-5 p-4 rounded-lg shadow-inner my-5">
+                                                <div className="text-sm text-white">
                                                     <LabelWithTooltip key={key} labelText="Prompt" tooltipText="The prompt for the GPT" />
 
                                                     <Textarea
@@ -191,7 +185,7 @@ export default function OptionsPromptFactory() {
                                                     />
                                                 </div>
                                                 <div className="flex flex-row gap-4">
-                                                    <div className="text-sm text-gray-800 w-1/2">
+                                                    <div className="text-sm text-white w-1/2">
                                                         <div className="flex flex-col gap-1">
                                                             <LabelWithTooltip key={key} labelText="Functionality" tooltipText="The functionality after the prompt is executed" />
                                                             <Select
@@ -229,7 +223,7 @@ export default function OptionsPromptFactory() {
                                             </div>
 
                                             <div className="flex flex-row justify-center">
-                                                <Button onClick={() => handleSave()}>
+                                                <Button className="bg-gradient from-violet-500 to-orange-500" onClick={() => handleSave()}>
                                                     Save All
                                                 </Button>
                                             </div>
