@@ -62,6 +62,7 @@ All your data is stored locally on your hard drive.
 
 ### Important, Not Urgent
 
+-  UI for the Prompt Factory is not intuitive and the "save all" button UX is cr@p.
 -  The sidebar API doesn't work after the storage API is called (User Interaction must be done)
 -  Move files to a `/src` folder to improve organization.
 -  Strategically organize the codebase structure.
@@ -104,12 +105,13 @@ All your data is stored locally on your hard drive.
 
 # Changelog
 
-0.0.3 (not-release)
+0.0.3 (not-release / under-development)
 
 -  Changed the datastructure to achieve a clearer and more abstract way to call functions
 -  Function to clean the datastructure to adapt to chrome.contextMenus.CreateProperties
--  use "side_" as hack to open the sidebar. WHY: The sidebar.open doesn't work after we call the storage.get
-- 
+-  use "side\_" as hack to open the sidebar. WHY: The sidebar.open doesn't work after we call the storage.get
+-  Allowing to change the default prompts
+-  chrome.runtime.openOptionsPage() opens only in production environment (onInstalled)
 
    0.0.2
 

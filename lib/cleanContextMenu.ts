@@ -18,11 +18,13 @@ function removeKeysAndKeepValues<T extends object>(
    return Object.values(obj);
 }
 
+//This return an item ready to be injested by the chorme.menu
+//TODO: This must accept our configuration interface, that must be created.
 export function cleanProperties(
-   items: any[]
+   items: Record<string, any>
 ): chrome.contextMenus.CreateProperties[] {
    items = removeKeysAndKeepValues(items);
-   return items.map((item) => {
+   return (items as any[]).map((item) => {
       let cleanedItem: chrome.contextMenus.CreateProperties = {};
       Object.keys(item).forEach((key) => {
          if (
