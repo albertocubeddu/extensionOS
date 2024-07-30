@@ -19,6 +19,7 @@ function removeKeysAndKeepValues<T extends object>(
 }
 
 //This return an item ready to be injested by the chorme.menu
+//TODO: This must accept our configuration interface, that must be created.
 export function cleanProperties(
    items: Record<string, any>
 ): chrome.contextMenus.CreateProperties[] {

@@ -74,12 +74,12 @@ export default function OptionsPromptFactory() {
       await storage.set("contextMenuItems", contextMenuItems);
       await storage.set("myOwnPrompt", myOwnPromptState);
 
-      const menuStorage = cleanProperties(contextMenuItems);
+      const cleanedContextMenuItems = cleanProperties(contextMenuItems);
 
       // Remove all existing context menu items
       chrome.contextMenus.removeAll(() => {
          // Create new context menu items
-         menuStorage.forEach((item) => {
+         cleanedContextMenuItems.forEach((item) => {
             chrome.contextMenus.create(item);
          });
       });

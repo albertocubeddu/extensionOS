@@ -17,14 +17,14 @@ chrome.runtime.onInstalled.addListener(async () => {
    }
 
    // It need to change in the future, unless i use two lists and i use the ID as a intersection?
-   const contextMenuItems =
+   const contextConfigItems =
       (await initializeStorage()) as unknown as chrome.contextMenus.CreateProperties[];
 
    //Typescript can cast to an interface (or at least i can't find a way to do it)
    //Therefore we clean our configObject to be adapted to the chrome.contextMenu.CreateProperties()
-   const test = cleanProperties(contextMenuItems);
+   const cleanedContextMenuItems = cleanProperties(contextConfigItems);
 
-   test.forEach((item) => {
+   cleanedContextMenuItems.forEach((item) => {
       chrome.contextMenus.create(item);
    });
 });
