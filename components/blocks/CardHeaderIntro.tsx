@@ -5,9 +5,6 @@ interface CardHeaderIntroProps {
     description: string
 }
 
-
-
-
 export default function CardHeaderIntro({ title, description }: CardHeaderIntroProps) {
     return (
         <>

@@ -1,10 +1,8 @@
 import { Button } from "@/components/ui/button"
 import {
     CardContent,
-    CardDescription,
     CardFooter,
     CardHeader,
-    CardTitle
 } from "@/components/ui/card"
 
 import { useStorage } from "@plasmohq/storage/hook"
