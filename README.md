@@ -18,6 +18,10 @@ Customize your look and feel, and unleash your creativity with your own prompts!
 Mixture of Agents (pre-release)
 ![Mixture Of Agents](./assets/showcase/moa.png)
 
+## Help me grow this extension
+
+Use my affiliation code when you sign-up on VAPI: https://vapi.ai/?aff=extension-os
+
 ## 🚀 Getting started
 
 1. Clone the extension or [download the latest release](https://github.com/albertocubeddu/extensionOS/releases/).
@@ -109,7 +113,16 @@ Move it somewhere else ASAP.
 
 # Changelog
 
-##0.0.4 (not-release / under-development)
+### 0.0.6 (under development)
+
+## 0.0.5
+
+-  Vapi affilation link (help me maintain this extension, sign up with the link)
+-  Vapi custom prompt when functionality "Call External Number"
+
+##0.0.4
+
+-  Hotfix: declarativeNetRequest was intercepting every localhost request.
 
 ## 0.0.3
 

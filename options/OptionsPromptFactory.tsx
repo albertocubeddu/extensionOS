@@ -25,10 +25,10 @@ const storage = new Storage();
 import type { IContextConfigItems } from "~background/init";
 import LabelWithTooltip from "../components/blocks/LabelWithTooltip";
 import CardHeaderIntro from "~components/blocks/CardHeaderIntro";
+import VapiSpecificConfiguration from "./promptFactory/VapiSpecificConfiguration";
 
 export default function OptionsPromptFactory() {
     const [contextMenuItems, setContextMenuItems] = useState<IContextConfigItems[]>([]);
-    const [myOwnPromptState, setMyOwnPromptState] = useState("");
 
     useEffect(() => {
         async function getStorage() {
@@ -36,13 +36,7 @@ export default function OptionsPromptFactory() {
             setContextMenuItems(items);
         }
 
-        async function getMyOwnPrompt() {
-            const myOwnPrompt = await storage.get("myOwnPrompt");
-            setMyOwnPromptState(myOwnPrompt ?? "");
-        }
-
         getStorage();
-        getMyOwnPrompt();
     }, []);
 
     /*
@@ -71,7 +65,6 @@ export default function OptionsPromptFactory() {
     //What a shit show, saving two things together. Best practice thrown in the bin. TODO: Refactor the smelly code. (10:00PM - night)
     const handleSave = async () => {
         await storage.set("contextMenuItems", contextMenuItems);
-        await storage.set("myOwnPrompt", myOwnPromptState);
 
         const cleanedContextMenuItems = cleanProperties(contextMenuItems);
 
@@ -100,7 +93,7 @@ export default function OptionsPromptFactory() {
                                     <>
                                         <div
                                             key={key}
-                                            className="p-4 mb-20 border-t-8 border-l-8 border-2 rounded-lg shadow-lg"
+                                            className="p-4 pt-6 mb-20 border-t-8 border-l-8 border-2 rounded-lg shadow-lg"
                                         >
                                             <div className="flex flex-row justify-between gap-4">
                                                 <div className="flex flex-col gap-1 w-3/4">
@@ -166,7 +159,7 @@ export default function OptionsPromptFactory() {
                                                 </div>
                                             </div>
 
-                                            <div className="flex flex-col gap-5 p-4 rounded-lg shadow-inner my-5">
+                                            <div className="flex flex-col gap-5 pt-4 px-4 rounded-lg shadow-inner mt-5 mb-4">
                                                 <div className="text-sm text-white">
                                                     <LabelWithTooltip key={key} labelText="Prompt" tooltipText="The prompt for the GPT" />
 
@@ -220,21 +213,23 @@ export default function OptionsPromptFactory() {
                                                         </div>
                                                     </div>
                                                 </div>
+                                                {contextMenuItems[key].functionType === "callVoice-ExternalNumber" && (
+                                                    <VapiSpecificConfiguration contextMenuItems={contextMenuItems[key]} handleChange={handleChange} />
+                                                )}
+
+                                                <div className="flex flex-row justify-center pt-8">
+                                                    <Button className="bg-gradient-to-r from-violet-500 to-orange-500 text-white" onClick={() => handleSave()}>
+                                                        Save All
+                                                    </Button>
+                                                </div>
+
                                             </div>
-
-                                            <div className="flex flex-row justify-center">
-                                                <Button className="bg-gradient from-violet-500 to-orange-500" onClick={() => handleSave()}>
-                                                    Save All
-                                                </Button>
-                                            </div>
-
-
                                         </div>
                                     </>
 
                                 );
                             })}
-                        </div>
+                        </div >
                     ) : (
                         <p>Loading...</p>
                     )}

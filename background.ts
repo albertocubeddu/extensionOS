@@ -65,8 +65,14 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
          }
 
          if (element.functionType === "callVoice-ExternalNumber") {
-            //TODO: refactor as we want to pass a prompt!
-            await createCall(message);
+            //In this case we do know that the callVoice will have those argument setup.
+            await createCall(
+               element.prompt,
+               message,
+               element.extraArgs?.vapiRecipientPhoneNumber ??
+                  "Hi, this is your assistent calling. How can I help you?",
+               element.extraArgs?.vapiFirstMessage ?? ""
+            );
             break;
          }
 
