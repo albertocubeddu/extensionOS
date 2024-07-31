@@ -129,6 +129,7 @@ Move it somewhere else ASAP.
 
 -  Hotfix: declarativeNetRequest was intercepting every localhost request.
 
+
 ## 0.0.3
 
 -  Added github branch protection.
