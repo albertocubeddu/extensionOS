@@ -32,10 +32,7 @@ export default function VoiceSettingsOutbound({
         "voice_outbound_phoneNumberId",
         ""
     )
-    const [recipientPhoneNumber, setCustomerNumber] = useStorage(
-        "voice_outbound_recipientPhoneNumber",
-        ""
-    )
+
 
     return (
         <Card x-chunk="dashboard-04-chunk-1">
@@ -63,7 +60,7 @@ export default function VoiceSettingsOutbound({
                     </div>
                     <br />
                     <div className="flex flex-col gap-1">
-                        <LabelWithTooltip key={"voiceOutboundApiToken"} labelText={"API Key"} tooltipText={"This is the API Key for the outbound voice provider."} />
+                        <LabelWithTooltip key={"voiceOutboundApiToken"} labelText={"VAPI Private API Key"} tooltipText={"Visit https://dashboard.vapi.ai/org/api-keys and copy your Private Key."} />
                         <Input
                             id="voiceOutboundApiToken"
                             type="text"
@@ -87,17 +84,6 @@ export default function VoiceSettingsOutbound({
                         />
                     </div>
                     <br />
-                    <div className="flex flex-col gap-1">
-                        <LabelWithTooltip key={"voiceOutboundPhoneNumber"} labelText={"Recipient Phone Number"} tooltipText={"The default number receiving the phone call"} />
-                        <Input
-                            id="voiceOutboundPhoneNumber"
-                            type="text"
-                            placeholder="Enter your Customer Number"
-                            value={recipientPhoneNumber}
-                            onChange={(e) => setCustomerNumber(e.target.value)}
-                            className="border border-input rounded-md p-2 w-full"
-                        />
-                    </div>
                 </div>
             </CardContent>
             <CardFooter className="border-t px-6 py-4">
@@ -110,7 +96,6 @@ export default function VoiceSettingsOutbound({
                             VAPI Auth Token: {authToken.slice(0, authToken.length / 4)}
                         </span>
                         <span> VAPI Phone ID: {phoneNumberId}</span>
-                        <span> Recipient Phone Number: {recipientPhoneNumber}</span>
                     </div>
                 )}
             </CardFooter>
