@@ -109,7 +109,11 @@ Move it somewhere else ASAP.
 
 # Changelog
 
-##0.0.4 (not-release / under-development)
+## 0.0.5(not-release / under-development)
+
+## 0.0.4
+
+-  FIX Localhost issue when plasmo try to access the messaging service
 
 ## 0.0.3
 
