@@ -115,10 +115,15 @@ Move it somewhere else ASAP.
 
 ### 0.0.6 (under development)
 
+
 ## 0.0.5
 
--  Vapi affilation link (help me maintain this extension, sign up with the link)
--  Vapi custom prompt when functionality "Call External Number"
+- Vapi affilation link (help me maintain this extension, sign up with the link)
+- Vapi Enhancements: Prompts now support selecting a specific phone number to call.
+- Vapi Enhancements: Prompts can now include a custom initial message for the conversation.
+- Vapi Enhancements: Now every prompt can be customised using the 
+- UI: Section for specific configurations
+
 
 ##0.0.4
 
