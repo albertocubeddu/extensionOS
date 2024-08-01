@@ -118,6 +118,10 @@ Move it somewhere else ASAP.
 # Changelog
 
 ### 0.0.6 (under development)
+- Popup UI revamped
+- New Presentation image and slogan
+- Unified fonts
+- Minor UI updates
 
 ## 0.0.5
 
