@@ -89,7 +89,7 @@ export default function LlmSettings({ debugInfo }: { debugInfo: string }) {
                         <img
                             src={groqLogo}
                             alt="GROQ Logo"
-                            className="block max-w-[300px] mb-10 mt-4"
+                            className="block max-w-[150px] mb-10 mt-4"
                         />
                     )}
                     <div className="flex flex-col gap-1">

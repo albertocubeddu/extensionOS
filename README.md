@@ -1,8 +1,10 @@
 # Extension | OS
 
-Imagine a world where every user has access to powerful large language models (LLMs) directly within their web browser. By integrating LLMs into everyday internet browsing, we can revolutionise the way people interact with information online, providing them with instant, intelligent assistance tailored to their needs.
+![logo](./assets/presentation.png)
 
-Welcome to Extension | OS
+Welcome to Extension | OS: AI at Your Fingertips, Anytime, Anywhere.
+
+Imagine a world where every user has access to powerful large language models (LLMs) directly within their web browser. By integrating LLMs into everyday internet browsing, we can revolutionise the way people interact with information online, providing them with instant, intelligent assistance tailored to their needs.
 
 ## 📸 Screenshots
 
@@ -66,6 +68,9 @@ Move it somewhere else ASAP.
 -  [ ] **Prompt Factory**: Add the ability to create custom prompts.
 -  [ ] Add the ability to chat within the browser.
 -  [ ] Encryption of keys : They are stored locally, nonetheless being my first chrome extension i need to research more about how this can be accessed.
+-  [ ] Automated Testing
+-  [ ] Investigate if Playwright supports Chrome extension testing.
+-  [ ] Automated Tagging / Release
 
 ### Important, Not Urgent
 
@@ -74,9 +79,8 @@ Move it somewhere else ASAP.
 -  [ ] Move files to a `/src` folder to improve organization.
 -  [ ] Strategically organize the codebase structure.
 -  [ ] Perfect the README documentation.
--  [ ] Evaluate the necessity of `executeScript`.
+-  [x] Evaluate the necessity of `executeScript`.
 -  [ ] Decide on a package manager: npm, pnpm, or yarn.
--  [ ] Investigate if Playwright supports Chrome extension testing.
 
 ### Not Urgent, Not Important
 
@@ -115,20 +119,17 @@ Move it somewhere else ASAP.
 
 ### 0.0.6 (under development)
 
-
 ## 0.0.5
 
-- Vapi affilation link (help me maintain this extension, sign up with the link)
-- Vapi Enhancements: Prompts now support selecting a specific phone number to call.
-- Vapi Enhancements: Prompts can now include a custom initial message for the conversation.
-- Vapi Enhancements: Now every prompt can be customised using the 
-- UI: Section for specific configurations
-
+-  Vapi affilation link (help me maintain this extension, sign up with the link)
+-  Vapi Enhancements: Prompts now support selecting a specific phone number to call.
+-  Vapi Enhancements: Prompts can now include a custom initial message for the conversation.
+-  Vapi Enhancements: Now every prompt can be customised using the
+-  UI: Section for specific configurations
 
 ##0.0.4
 
 -  Hotfix: declarativeNetRequest was intercepting every localhost request.
-
 
 ## 0.0.3
 

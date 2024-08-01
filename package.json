@@ -1,7 +1,7 @@
 {
    "name": "extension-os",
    "displayName": "Extension-OS: Your AI Partner",
-   "version": "0.0.5",
+   "version": "0.0.6",
    "description": "The way to turbo-charge your productivity.",
    "author": "acubeddu87@gmail.com",
    "scripts": {
