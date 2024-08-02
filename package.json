@@ -1,8 +1,8 @@
 {
    "name": "extension-os",
    "displayName": "Extension-OS: Your AI Partner",
-   "version": "0.0.6",
-   "description": "The way to turbo-charge your productivity.",
+   "version": "0.0.7",
+   "description": "AI at Your Fingertips, Anytime, Anywhere.",
    "author": "acubeddu87@gmail.com",
    "scripts": {
       "dev": "plasmo dev",

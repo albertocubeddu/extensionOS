@@ -10,23 +10,41 @@ export default function OptionsAbout() {
         <div className="grid gap-6 text-lg">
             <Card x-chunk="dashboard-04-chunk-2">
                 <CardHeader>
-                    <CardHeaderIntro title={"Extension | OS"} description={"Extension | OS has been created during the SF Hackaton x Build Club."} />
+                    <CardHeaderIntro title={"Why Extension | OS?"} description={"Extension | OS has been created during the SF Hackaton x Build Club."} />
                 </CardHeader>
                 <CardContent>
-                    It all started a morning on the 27th July 2024
+                    It all started a morning on the 27th July 2024 when I decided to partecipate to the San Francisco Hackaton organised by the build club.
                 </CardContent>
             </Card>
 
             <Card x-chunk="dashboard-04-chunk-2">
                 <CardHeader>
-                    <CardHeaderIntro title={"Mission & Vision"} description={""} />
+                    <CardHeaderIntro title={"Vision"} description={""} />
                 </CardHeader>
                 <CardContent>
-                    Imagine a world where every user has access to powerful large language
-                    models (LLMs) directly within their web browser. By integrating LLMs
+                    AI at Your Fingertips, Anytime, Anywhere.
+                </CardContent>
+            </Card>
+
+            <Card x-chunk="dashboard-04-chunk-2">
+                <CardHeader>
+                    <CardHeaderIntro title={"Mission"} description={""} />
+                </CardHeader>
+                <CardContent>
+                    Imagine a world where every user has access to powerful (LLMs and more) directly within their web browser. By integrating AI
                     into everyday internet browsing, we can revolutionize the way people
                     interact with information online, providing them with instant,
                     intelligent assistance tailored to their needs.
+                </CardContent>
+            </Card>
+
+
+            <Card x-chunk="dashboard-04-chunk-2">
+                <CardHeader>
+                    <CardHeaderIntro title={"Problem Statement"} description={""} />
+                </CardHeader>
+                <CardContent>
+                    AI is advancing at a pace that is unbearable, and knowing all the models available is not an easy task. Why should we limit our productivity when Artificial Intelligence could help us on our day-to-day?
                 </CardContent>
             </Card>
 

@@ -4,7 +4,7 @@
 
 Welcome to Extension | OS: AI at Your Fingertips, Anytime, Anywhere.
 
-Imagine a world where every user has access to powerful large language models (LLMs) directly within their web browser. By integrating LLMs into everyday internet browsing, we can revolutionise the way people interact with information online, providing them with instant, intelligent assistance tailored to their needs.
+Imagine a world where every user has access to powerful models (LLMs and more) directly within their web browser. By integrating AI into everyday internet browsing, we can revolutionise the way people interact with information online, providing them with instant, intelligent assistance tailored to their needs.
 
 ## 📸 Screenshots
 
