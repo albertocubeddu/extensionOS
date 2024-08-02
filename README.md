@@ -84,6 +84,7 @@ Move it somewhere else ASAP.
 
 ### Not Urgent, Not Important
 
+-  [ ] Workflow to update the models automatically.
 -  [ ] **Prompt Factory**: Add the ability to build workflows.
 -  [ ] **Prompt Factory**: Add the option to select which LLM to use for each prompt.
 -  [ ] Remove all the silly comments, maybe one day....
@@ -117,7 +118,13 @@ Move it somewhere else ASAP.
 
 # Changelog
 
-### 0.0.6 (under development)
+### 0.0.8 (under dev)
+
+### 0.0.7 
+- Adding missing models from together.ai
+- Adding missing models from groq
+
+### 0.0.6 
 
 -  Popup: UI revamped
 -  Popup: New Presentation image and slogan
