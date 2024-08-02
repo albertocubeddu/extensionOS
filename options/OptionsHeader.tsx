@@ -16,21 +16,11 @@ import { Sheet, SheetContent, SheetTrigger } from "~components/ui/sheet"
 export default function OptionsHeader() {
     return (
         <>
-            <header className="top-0 flex h-24 items-center gap-4  bg-[#000] bg-gradient-to-b from-gray-700 to-transparent px-4 md:px-6">
-                <nav className="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6 w-[300px] ">
+            <header className="top-0 flex h-24 items-center gap-4  bg-[#000] bg-gradient-to-b from-gray-700 to-transparent px-4 md:px-12">
+                <nav className="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6 w-[400px]">
                     <a
                         href="#"
-                        className="flex items-center gap-2 text-lg font-semibold md:text-base">
-                        <img
-                            style={{ width: "32px" }}
-                            src={extensionAvatar}
-                            alt="Some pretty cool image"
-                        />
-                        <span className="sr-only text-white">Extension | OS</span>
-                    </a>
-                    <a
-                        href="#"
-                        className="text-white transition-colors hover:text-grey">
+                        className="text-white transition-colors hover:text-grey text-3xl ">
                         Extension | OS
                     </a>
                 </nav>
@@ -62,7 +52,7 @@ export default function OptionsHeader() {
                         </nav>
                     </SheetContent>
                 </Sheet>
-                <div className="flex w-full items-center gap-4 md:ml-auto md:gap-2 lg:gap-4">
+                <div className="flex w-full items-center gap-4 md:ml-auto md:gap-2 lg:gap-4 -mr-1">
                     <form className="ml-auto flex-1 sm:flex-initial">
                         <div className="relative">
                             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />

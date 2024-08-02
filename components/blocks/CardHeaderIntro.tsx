@@ -13,7 +13,7 @@ export default function CardHeaderIntro({ title, description }: CardHeaderIntroP
             >
                 {title}
             </CardTitle>
-            <CardDescription className="font-mono text-sm text-white">
+            <CardDescription className="text-base text-white">
                 {description}
             </CardDescription>
         </>

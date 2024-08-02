@@ -44,13 +44,13 @@ export default function VoiceSettingsOutbound({
                     <img
                         src={vapiLogo}
                         alt="VAPI Logo"
-                        className="block max-w-sm mb-10 mt-4"
+                        className="block max-w-[150px] mb-10 mt-4"
                     />
                     <div className="flex flex-col gap-1">
 
                         <LabelWithTooltip key={"voiceOutboundProvider"} labelText={"Default Voice Outbound Provider"} tooltipText={"This is the Voice provider that will be used by default."} />
                         <Select value="vapi">
-                            <SelectTrigger className="w-[180px]">
+                            <SelectTrigger className="w-[150px]">
                                 <SelectValue placeholder="Select a provider" />
                             </SelectTrigger>
                             <SelectContent>
