@@ -15,12 +15,14 @@ import {
     SelectValue
 } from "@/components/ui/select"
 import groqLogo from "data-base64:~assets/AppIcons/groq.png"
+import openAILogo from "data-base64:~assets/AppIcons/openai.svg"
 import React, { useEffect } from "react"
 
 import { useStorage } from "@plasmohq/storage/hook"
 import LabelWithTooltip from "~components/blocks/LabelWithTooltip"
 import CardHeaderIntro from "~components/blocks/CardHeaderIntro"
 import FakeSaveButton from "~components/blocks/FakeSaveButton"
+import ProviderInstruction from "./promptFactory/ProviderInstruction"
 
 // Add more combination here for the future
 // TODO: I may refactor it to be easier to access but whatever.
@@ -84,14 +86,10 @@ export default function LlmSettings({ debugInfo }: { debugInfo: string }) {
                 <CardHeaderIntro title={"LLM Settings"} description={" Provide which provider and model you want to use for Extension | OS"} />
             </CardHeader>
             <CardContent >
+                <div className="pb-10 pt-5">
+                    <ProviderInstruction provider={llmProvider} />
+                </div>
                 <div>
-                    {"groq" === llmProvider && (
-                        <img
-                            src={groqLogo}
-                            alt="GROQ Logo"
-                            className="block max-w-[150px] mb-10 mt-4"
-                        />
-                    )}
                     <div className="flex flex-col gap-1">
                         <LabelWithTooltip key={"llmProvider"} labelText={"Default LLM Provider"} tooltipText={"This is the LLM provider that will be used by default."} />
                         <Select value={llmProvider} onValueChange={setLlmProvider}>
