@@ -9,6 +9,7 @@ function vendorToEndpoint(vendor: string): string {
    const endpoints: { [key: string]: string } = {
       openai: "https://api.openai.com/v1/chat/completions",
       groq: "https://api.groq.com/openai/v1/chat/completions",
+      together: "https://api.together.xyz/v1/chat/completions",
       localhost: "http://localhost:11434/v1/chat/completions",
    };
    return endpoints[vendor] || endpoints["groq"];

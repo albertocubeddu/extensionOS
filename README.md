@@ -124,6 +124,7 @@ Move it somewhere else ASAP.
 -  Options: Unified fonts
 -  Options: Minor UI updates
 -  Content: Better error handling and UX (user get redireted to the option page when the API key is missing)
+-  Fix for together.ai (it was using a non-chat model)
 
 ## 0.0.5
 

@@ -45,7 +45,7 @@ export const providersData = {
         },
         {
             name: "together",
-            models: ["google/gemma-2b"]
+            models: ["meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo"]
         },
         {
             name: "localhost",
