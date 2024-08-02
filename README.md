@@ -118,10 +118,12 @@ Move it somewhere else ASAP.
 # Changelog
 
 ### 0.0.6 (under development)
-- Popup UI revamped
-- New Presentation image and slogan
-- Unified fonts
-- Minor UI updates
+
+-  Popup: UI revamped
+-  Popup: New Presentation image and slogan
+-  Options: Unified fonts
+-  Options: Minor UI updates
+-  Content: Better error handling and UX (user get redireted to the option page when the API key is missing)
 
 ## 0.0.5
 
