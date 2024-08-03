@@ -51,7 +51,6 @@
       "permissions": [
          "tabs",
          "contextMenus",
-         "activeTab",
          "clipboard",
          "sidePanel",
          "declarativeNetRequest"
