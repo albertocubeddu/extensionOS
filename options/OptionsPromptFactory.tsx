@@ -217,8 +217,8 @@ export default function OptionsPromptFactory() {
                                                     <VapiSpecificConfiguration contextMenuItems={contextMenuItems[key]} handleChange={handleChange} />
                                                 )}
 
-                                                <div className="flex flex-row justify-center pt-8">
-                                                    <Button className="bg-gradient-to-r from-violet-500 to-orange-500 text-white" onClick={() => handleSave()}>
+                                                <div className="flex flex-row justify-center pt-0">
+                                                    <Button className="w-full bg-gradient-to-r from-violet-500 to-orange-500 text-white" onClick={() => handleSave()}>
                                                         Save All
                                                     </Button>
                                                 </div>

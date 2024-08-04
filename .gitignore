@@ -6,6 +6,9 @@
 /.pnp
 .pnp.js
 
+#utilty scripts
+/_generators
+
 # testing
 /coverage
 

@@ -10,25 +10,61 @@ export default function OptionsAbout() {
         <div className="grid gap-6 text-lg">
             <Card x-chunk="dashboard-04-chunk-2">
                 <CardHeader>
-                    <CardHeaderIntro title={"Extension | OS"} description={"Extension | OS has been created during the SF Hackaton x Build Club."} />
+                    <CardHeaderIntro title={"Why Extension | OS?"} description={"Extension | OS has been created during the SF Hackaton x Build Club."} />
                 </CardHeader>
                 <CardContent>
-                    It all started a morning on the 27th July 2024
+                    It all started a morning on the 27th July 2024 when I decided to partecipate to the San Francisco Hackaton organised by the build club.
                 </CardContent>
             </Card>
 
             <Card x-chunk="dashboard-04-chunk-2">
                 <CardHeader>
-                    <CardHeaderIntro title={"Mission & Vision"} description={""} />
+                    <CardHeaderIntro title={"Vision"} description={""} />
                 </CardHeader>
                 <CardContent>
-                    Imagine a world where every user has access to powerful large language
-                    models (LLMs) directly within their web browser. By integrating LLMs
-                    into everyday internet browsing, we can revolutionize the way people
-                    interact with information online, providing them with instant,
-                    intelligent assistance tailored to their needs.
+                    AI at Your Fingertips, Anytime, Anywhere.
                 </CardContent>
             </Card>
+
+            <Card x-chunk="dashboard-04-chunk-2">
+                <CardHeader>
+                    <CardHeaderIntro title={"Mission"} description={""} />
+                </CardHeader>
+                <CardContent>
+                    Imagine a world where everyone can access powerful AI models—LLMs, generative image models, and speech recognition—directly in their web browser. Integrating AI into daily browsing will revolutionise online interactions, offering instant, intelligent assistance tailored to individual needs.
+                </CardContent>
+            </Card>
+
+
+            <Card x-chunk="dashboard-04-chunk-2">
+                <CardHeader>
+                    <CardHeaderIntro title={"Problem Statement"} description={""} />
+                </CardHeader>
+                <CardContent>
+                    The rapid pace of AI advancement can be overwhelming, and keeping up with the latest models is a challenge. Why limit our productivity when Artificial Intelligence can enhance our daily tasks effortlessly? Our solution bridges the gap, putting the most powerful AI tools directly within your reach, ensuring you never miss out on the benefits of cutting-edge technology.
+                </CardContent>
+            </Card>
+
+            <Card x-chunk="dashboard-04-chunk-2">
+                <CardHeader>
+                    <CardHeaderIntro title={"Why"} description={""} />
+                </CardHeader>
+                <CardContent>
+                    I see Artificial Intelligence as the modern equivalent of electricity—essential, transformative, and, yeah, a bit daunting. It's a powerful force that can truly revolutionise our lives, and I reckon everyone should have the chance to experience and benefit from its advancements. By making AI accessible to all, we can unlock its full potential and drive innovation forward.
+                </CardContent>
+            </Card>
+
+
+            <Card x-chunk="dashboard-04-chunk-2">
+                <CardHeader>
+                    <CardHeaderIntro title={"What Success looks like?"} description={""} />
+                </CardHeader>
+                <CardContent>
+                    By August 4th, 2025, we have empowered 10,000 incredible individuals!
+                </CardContent>
+            </Card>
+
+
 
             <Card x-chunk="dashboard-04-chunk-2">
                 <CardHeader>

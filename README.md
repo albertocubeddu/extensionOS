@@ -4,7 +4,7 @@
 
 Welcome to Extension | OS: AI at Your Fingertips, Anytime, Anywhere.
 
-Imagine a world where every user has access to powerful large language models (LLMs) directly within their web browser. By integrating LLMs into everyday internet browsing, we can revolutionise the way people interact with information online, providing them with instant, intelligent assistance tailored to their needs.
+Imagine a world where every user has access to powerful models (LLMs and more) directly within their web browser. By integrating AI into everyday internet browsing, we can revolutionise the way people interact with information online, providing them with instant, intelligent assistance tailored to their needs.
 
 ## 📸 Screenshots
 
@@ -55,7 +55,11 @@ All your data is stored locally on your hard drive.
 
 ## To-Do List
 
-Move it somewhere else ASAP.
+Move it somewhere else ASAP:
+
+-  https://github.com/rowyio/roadmap?tab=readme-ov-file#step-1-setup-backend-template
+-  https://canny.io
+-  https://sleekplan.com/
 
 ### Urgent & Important
 
@@ -84,6 +88,7 @@ Move it somewhere else ASAP.
 
 ### Not Urgent, Not Important
 
+-  [ ] Workflow to update the models automatically.
 -  [ ] **Prompt Factory**: Add the ability to build workflows.
 -  [ ] **Prompt Factory**: Add the option to select which LLM to use for each prompt.
 -  [ ] Remove all the silly comments, maybe one day....
@@ -117,7 +122,16 @@ Move it somewhere else ASAP.
 
 # Changelog
 
-### 0.0.6 (under development)
+### 0.0.8 (under dev)
+
+### 0.0.7
+
+-  Adding missing models from together.ai
+-  Adding missing models from groq
+-  Updated About page
+-  **MoA**: Add the ability to use a custom prompt.
+
+### 0.0.6
 
 -  Popup: UI revamped
 -  Popup: New Presentation image and slogan
