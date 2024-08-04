@@ -128,6 +128,8 @@ Move it somewhere else ASAP:
 
 -  Adding missing models from together.ai
 -  Adding missing models from groq
+-  Updated About page
+-  **MoA**: Add the ability to use a custom prompt.
 
 ### 0.0.6
 
