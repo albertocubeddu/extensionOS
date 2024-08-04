@@ -55,7 +55,11 @@ All your data is stored locally on your hard drive.
 
 ## To-Do List
 
-Move it somewhere else ASAP.
+Move it somewhere else ASAP:
+
+-  https://github.com/rowyio/roadmap?tab=readme-ov-file#step-1-setup-backend-template
+-  https://canny.io
+-  https://sleekplan.com/
 
 ### Urgent & Important
 
@@ -120,11 +124,12 @@ Move it somewhere else ASAP.
 
 ### 0.0.8 (under dev)
 
-### 0.0.7 
-- Adding missing models from together.ai
-- Adding missing models from groq
+### 0.0.7
 
-### 0.0.6 
+-  Adding missing models from together.ai
+-  Adding missing models from groq
+
+### 0.0.6
 
 -  Popup: UI revamped
 -  Popup: New Presentation image and slogan
