@@ -8,7 +8,7 @@ Imagine a world where every user has access to powerful models (LLMs and more) d
 
 ## 📸 Screenshots
 
-Select and right-click—it's that easy!
+Select, right-click and selecte the functionality—it's that easy!
 ![action](./assets/showcase/action.png)
 
 Pick your favorite provider and select the model that excites you the most.
@@ -63,9 +63,7 @@ Move it somewhere else ASAP:
 
 ### Urgent & Important
 
--  [x] **Prompt Factory**: Add the ability to edit a single prompt.
 -  [ ] **Logging**: Determine a location to store log files.
--  [ ] **MoA**: Implement this feature.
 
 ### Urgent, Not Important
 
@@ -75,6 +73,7 @@ Move it somewhere else ASAP:
 -  [ ] Automated Testing
 -  [ ] Investigate if Playwright supports Chrome extension testing.
 -  [ ] Automated Tagging / Release
+-  [ ] Locale
 
 ### Important, Not Urgent
 
@@ -82,8 +81,6 @@ Move it somewhere else ASAP:
 -  [ ] The sidebar API doesn't work after the storage API is called (User Interaction must be done)
 -  [ ] Move files to a `/src` folder to improve organization.
 -  [ ] Strategically organize the codebase structure.
--  [ ] Perfect the README documentation.
--  [x] Evaluate the necessity of `executeScript`.
 -  [ ] Decide on a package manager: npm, pnpm, or yarn.
 
 ### Not Urgent, Not Important
@@ -119,10 +116,16 @@ Move it somewhere else ASAP:
 -  ShadCn -> All the UI?
 -  Plasmo -> The Framework
 -  Groq -> Extra credits
+-  Icons -> icons8
 
 # Changelog
 
 ### 0.0.8 (under dev)
+
+-  Removed an unnecessary dependency to comply with Chrome Store publication guidelines.
+-  Introduced a new icon.
+-  Implemented a loading state.
+-  Fixed an issue where Reddit visibility was broken.
 
 ### 0.0.7
 
