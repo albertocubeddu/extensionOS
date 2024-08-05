@@ -1,7 +1,7 @@
 {
    "name": "extension-os",
    "displayName": "Extension-OS: Your AI Partner",
-   "version": "0.0.7",
+   "version": "0.0.8",
    "description": "AI at Your Fingertips, Anytime, Anywhere.",
    "author": "acubeddu87@gmail.com",
    "scripts": {
@@ -44,12 +44,7 @@
       "typescript": "5.3.3"
    },
    "manifest": {
-      "host_permissions": [
-         "https://*/*",
-         "http://*/*"
-      ],
       "permissions": [
-         "tabs",
          "contextMenus",
          "clipboard",
          "sidePanel",
