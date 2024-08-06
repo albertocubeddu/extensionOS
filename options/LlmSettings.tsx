@@ -193,7 +193,7 @@ export default function LlmSettings({ debugInfo }: { debugInfo: string }) {
                 </div>
                 <div>
                     <div className="flex flex-col gap-1">
-                        <LabelWithTooltip key={"llmProvider"} labelText={"Default LLM Provider"} tooltipText={"This is the LLM provider that will be used by default."} />
+                        <LabelWithTooltip keyTooltip={"llmProvider"} labelText={"Default LLM Provider"} tooltipText={"This is the LLM provider that will be used by default."} />
                         <div className="flex flex-row">
                             <Select value={llmProvider} onValueChange={setLlmProvider}>
                                 <SelectTrigger className="w-[180px]">
@@ -227,7 +227,7 @@ export default function LlmSettings({ debugInfo }: { debugInfo: string }) {
                             <div key={provider.name}>
                                 <div className="flex flex-col gap-1">
 
-                                    <LabelWithTooltip key={"llmModel"} labelText={"Default LLM Model"} tooltipText={"This is the LLM model that will be used by default."} />
+                                    <LabelWithTooltip keyTooltip={"llmModel"} labelText={"Default LLM Model"} tooltipText={"This is the LLM model that will be used by default."} />
                                     {provider.models.length > 0 ? (
                                         <Select value={llmModel} onValueChange={setLlmModel}>
                                             <SelectTrigger className="w-full">
@@ -263,7 +263,7 @@ export default function LlmSettings({ debugInfo }: { debugInfo: string }) {
                                 <div key={provider.name}>
                                     {provider.models.length > 0 ? (
                                         <div className="flex flex-col gap-1">
-                                            <LabelWithTooltip key={"llmProviderKey"} labelText={"API Key"} tooltipText={"This API Key for the selected provider."} />
+                                            <LabelWithTooltip keyTooltip={"llmProviderKey"} labelText={"API Key"} tooltipText={"This API Key for the selected provider."} />
                                             <Input
                                                 type="password"
                                                 id="llmKey"

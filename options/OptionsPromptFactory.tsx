@@ -5,7 +5,7 @@ import {
     CardHeader,
 } from "@/components/ui/card";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Label } from "~components/ui/label";
 import { Storage } from "@plasmohq/storage";
 
@@ -43,7 +43,7 @@ export default function OptionsPromptFactory() {
     This is needed, because we don't have any context when we are calling the listener on the background
     that is the one aware of opening the sidebar. Need to find a solution for the chrome.storage ASAP.
     */
-    const handleChange = (id, prop, value) => {
+    const handleChange = useCallback((id, prop, value) => {
         console.log(id, prop, value);
 
         setContextMenuItems((prevItems) =>
@@ -60,7 +60,7 @@ export default function OptionsPromptFactory() {
                 return item;
             })
         );
-    };
+    }, []);
 
     //What a shit show, saving two things together. Best practice thrown in the bin. TODO: Refactor the smelly code. (10:00PM - night)
     const handleSave = async () => {
@@ -97,7 +97,7 @@ export default function OptionsPromptFactory() {
                                         >
                                             <div className="flex flex-row justify-between gap-4">
                                                 <div className="flex flex-col gap-1 w-3/4">
-                                                    <LabelWithTooltip key={key} labelText="Display Name" tooltipText="The name displayed in the menu visualised when the user clicks the right-click" />
+                                                    <LabelWithTooltip keyTooltip={key} labelText="Display Name" tooltipText="The name displayed in the menu visualised when the user clicks the right-click" />
                                                     <Input
                                                         id={`title-${key}`}
                                                         className="text-lg font-semibold mb-2"
@@ -116,7 +116,7 @@ export default function OptionsPromptFactory() {
                                                         className="text-sm text-gray-600"
                                                         htmlFor={`context-${key}`}
                                                     >
-                                                        <LabelWithTooltip key={key} labelText="Context" tooltipText="The context in which the item should display" />
+                                                        <LabelWithTooltip keyTooltip={key} labelText="Context" tooltipText="The context in which the item should display" />
                                                     </Label>
                                                     <Select
                                                         value={contextMenuItems[key].contexts.join(", ")}
@@ -161,7 +161,7 @@ export default function OptionsPromptFactory() {
 
                                             <div className="flex flex-col gap-5 pt-4 px-4 rounded-lg shadow-inner mt-5 mb-4">
                                                 <div className="text-sm text-white">
-                                                    <LabelWithTooltip key={key} labelText="Prompt" tooltipText="The prompt for the GPT" />
+                                                    <LabelWithTooltip keyTooltip={key} labelText="Prompt" tooltipText="The prompt for the GPT" />
 
                                                     <Textarea
                                                         id={`prompt-${key}`}
@@ -180,7 +180,7 @@ export default function OptionsPromptFactory() {
                                                 <div className="flex flex-row gap-4">
                                                     <div className="text-sm text-white w-1/2">
                                                         <div className="flex flex-col gap-1">
-                                                            <LabelWithTooltip key={key} labelText="Functionality" tooltipText="The functionality after the prompt is executed" />
+                                                            <LabelWithTooltip keyTooltip={key} labelText="Functionality" tooltipText="The functionality after the prompt is executed" />
                                                             <Select
                                                                 value={contextMenuItems[key].functionType}
                                                                 onValueChange={(value) =>
@@ -206,7 +206,7 @@ export default function OptionsPromptFactory() {
                                                     </div>
                                                     <div className="text-sm text-gray-600 w-1/2">
                                                         <div className="flex flex-col gap-1">
-                                                            <LabelWithTooltip key={key} labelText="ID" tooltipText="Unique Identification used internally" />
+                                                            <LabelWithTooltip keyTooltip={key} labelText="ID" tooltipText="Unique Identification used internally" />
                                                             <p className="p-2 h-10 border rounded-md bg-white">
                                                                 {contextMenuItems[key].id}
                                                             </p>
