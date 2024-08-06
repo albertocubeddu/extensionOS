@@ -57,7 +57,6 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
    switch (info.menuItemId) {
       case element.id:
          if (element.functionType === "callAI-copyClipboard") {
-            console.log("jere");
             sendLoadingAction();
             response = await callOpenAIReturn(element.prompt, message);
             copyTextToClipboard(response);
