@@ -200,7 +200,7 @@ export default function LlmSettings({ debugInfo }: { debugInfo: string }) {
                                     <SelectValue placeholder="Select a provider" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    {providersData.pqroviders.map((provider) => (
+                                    {providersData.providers.map((provider) => (
                                         <SelectItem key={provider.name} value={provider.name}>
                                             {provider.name.charAt(0).toUpperCase() +
                                                 provider.name.slice(1)}
