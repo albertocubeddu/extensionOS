@@ -172,7 +172,6 @@ export default function LlmSettings({ debugInfo }: { debugInfo: string }) {
             if (!isModelValid) {
                 setLlmModel(selectedProvider.models[0])
             }
-            console.log("Is model valid:", isModelValid)
         }
     }, [llmProvider])
 

@@ -41,7 +41,6 @@ export const createCall = async (
    };
 
    try {
-      console.log(data);
       const response = await fetch("https://api.vapi.ai/call/phone", {
          method: "POST",
          headers: headers,
@@ -50,12 +49,8 @@ export const createCall = async (
 
       if (response.status === 201) {
          const responseData = await response.json();
-         console.log("Call created successfully");
-         console.log(responseData);
       } else {
          const errorData = await response.text();
-         console.log("Failed to create call");
-         console.log(errorData);
       }
    } catch (error) {
       console.error("Error creating call:", error);

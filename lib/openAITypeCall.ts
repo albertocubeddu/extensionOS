@@ -43,8 +43,6 @@ export async function callOpenAIReturn(
 
       const openAIEndpoint = vendorToEndpoint(vendor);
 
-      console.log("Model used: ", openAIModel);
-      console.log("Endpoint called: ", openAIEndpoint);
 
       const bodyReq = JSON.stringify({
          model: openAIModel,

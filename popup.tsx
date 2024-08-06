@@ -13,7 +13,6 @@ function IndexPopup() {
         const messageListener = (message, sender, sendResponse) => {
             // Assuming the message contains the data you want to display
             // You can add conditions to filter messages if necessary
-            console.log(message)
             setData(message.data)
 
             // Optional: send a response back
