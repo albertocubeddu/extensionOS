@@ -9,7 +9,6 @@ function IndexSidePanel() {
 
     useEffect(() => {
         const messageListener = function (request, sender, sendResponse) {
-            console.log("side", request)
             if (request.action === "send_to_sidepanel") {
                 setData(request.payload)
             }

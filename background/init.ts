@@ -23,11 +23,11 @@ export async function initializeStorage() {
 
    const contextMenuItems: IContextConfigItems[] = [
       {
-         id: "linkedinPostComment",
+         id: "postComment",
          title: "💬 Comment Post",
          contexts: ["selection"],
          prompt:
-            "You're a helpful assistant expert in replying to LinkedIn posts in the form of a comment. It needs to be short, sweet, and coherent to the message. Do not reply with any text, only the fixed sentence, and without any quotation marks. This is the message:",
+            "You're a helpful assistant expert in replying to Social Media posts in the form of a comment. It needs to be short, sweet, and coherent to the message. Do not reply with any text, only the fixed sentence, and without any quotation marks. This is the message:",
          functionType: "callAI-copyClipboard",
       },
       {

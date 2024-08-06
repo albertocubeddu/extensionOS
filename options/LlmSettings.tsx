@@ -14,8 +14,6 @@ import {
     SelectTrigger,
     SelectValue
 } from "@/components/ui/select"
-import groqLogo from "data-base64:~assets/AppIcons/groq.png"
-import openAILogo from "data-base64:~assets/AppIcons/openai.svg"
 import React, { useEffect } from "react"
 
 import { useStorage } from "@plasmohq/storage/hook"
@@ -23,6 +21,7 @@ import LabelWithTooltip from "~components/blocks/LabelWithTooltip"
 import CardHeaderIntro from "~components/blocks/CardHeaderIntro"
 import FakeSaveButton from "~components/blocks/FakeSaveButton"
 import ProviderInstruction from "./promptFactory/ProviderInstruction"
+import { ArrowBigLeftDash, ArrowBigUpDash } from "lucide-react"
 
 // Add more combination here for the future
 // TODO: I may refactor it to be easier to access but whatever.
@@ -31,13 +30,13 @@ export const providersData = {
         {
             name: "groq",
             models: [
-                "gemma-7b-it",
-                "gemma2-9b-it",
                 "llama-3.1-70b-versatile",
                 "llama-3.1-8b-instant",
                 "llama3-70b-8192",
                 "llama3-8b-8192",
                 "mixtral-8x7b-32768",
+                "gemma-7b-it",
+                "gemma2-9b-it",
             ]
         },
         {
@@ -171,7 +170,6 @@ export default function LlmSettings({ debugInfo }: { debugInfo: string }) {
             if (!isModelValid) {
                 setLlmModel(selectedProvider.models[0])
             }
-            console.log("Is model valid:", isModelValid)
         }
     }, [llmProvider])
 
@@ -187,25 +185,45 @@ export default function LlmSettings({ debugInfo }: { debugInfo: string }) {
                 <CardHeaderIntro title={"LLM Settings"} description={" Provide which provider and model you want to use for Extension | OS"} />
             </CardHeader>
             <CardContent >
-                <div className="pb-10 pt-5">
+                <div className="flex flex-row pb-10 pt-5">
                     <ProviderInstruction provider={llmProvider} />
+                    {!getCurrentKey() && llmProvider && (
+                        <>
+                            {/* UX Note: This arrow indicates where users should click to obtain their API keys. */}
+                            <ArrowBigLeftDash size={40} strokeWidth={1} className=" mx-5 text-[#ff66cc] animate-[wiggle_1s_ease-in-out_infinite]" />
+                        </>
+                    )}
                 </div>
+
                 <div>
                     <div className="flex flex-col gap-1">
-                        <LabelWithTooltip key={"llmProvider"} labelText={"Default LLM Provider"} tooltipText={"This is the LLM provider that will be used by default."} />
-                        <Select value={llmProvider} onValueChange={setLlmProvider}>
-                            <SelectTrigger className="w-[180px]">
-                                <SelectValue placeholder="Select a provider" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                {providersData.providers.map((provider) => (
-                                    <SelectItem key={provider.name} value={provider.name}>
-                                        {provider.name.charAt(0).toUpperCase() +
-                                            provider.name.slice(1)}
-                                    </SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
+                        <LabelWithTooltip keyTooltip={"llmProvider"} labelText={"Default LLM Provider"} tooltipText={"This is the LLM provider that will be used by default."} />
+                        <div className="flex flex-row">
+                            <Select value={llmProvider} onValueChange={setLlmProvider}>
+                                <SelectTrigger className="w-[180px]">
+                                    <SelectValue placeholder="Select a provider" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {providersData.providers.map((provider) => (
+                                        <SelectItem key={provider.name} value={provider.name}>
+                                            {provider.name.charAt(0).toUpperCase() +
+                                                provider.name.slice(1)}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+
+                            {!llmProvider && (
+                                <>
+                                    <ArrowBigLeftDash size={40} strokeWidth={1} className=" mx-5 text-[#ff66cc] animate-[wiggle_1s_ease-in-out_infinite]" />
+                                    <strong className="mr-2">Instructions:</strong> Choose a provider from the list on your left.<br /> The selected provider will be set as the default.
+                                </>
+                            )}
+
+
+
+
+                        </div>
                     </div>
                 </div>
                 <br />
@@ -215,7 +233,7 @@ export default function LlmSettings({ debugInfo }: { debugInfo: string }) {
                             <div key={provider.name}>
                                 <div className="flex flex-col gap-1">
 
-                                    <LabelWithTooltip key={"llmModel"} labelText={"Default LLM Model"} tooltipText={"This is the LLM model that will be used by default."} />
+                                    <LabelWithTooltip keyTooltip={"llmModel"} labelText={"Default LLM Model"} tooltipText={"This is the LLM model that will be used by default."} />
                                     {provider.models.length > 0 ? (
                                         <Select value={llmModel} onValueChange={setLlmModel}>
                                             <SelectTrigger className="w-full">
@@ -245,16 +263,25 @@ export default function LlmSettings({ debugInfo }: { debugInfo: string }) {
                 )}
                 <br />
                 <div>
-                    <div className="flex flex-col gap-1">
-                        <LabelWithTooltip key={"llmProviderKey"} labelText={"API Key"} tooltipText={"This API Key for the seleted provider."} />
-                        <Input
-                            type="password"
-                            id="llmKey"
-                            disabled={!llmProvider}
-                            value={getCurrentKey()}
-                            onChange={(e) => handleKeyChange(llmProvider, e.target.value)}
-                        />
-                    </div>
+                    {providersData.providers.map(
+                        (provider) =>
+                            llmProvider === provider.name && (
+                                <div key={provider.name}>
+                                    {provider.models.length > 0 ? (
+                                        <div className="flex flex-col gap-1">
+                                            <LabelWithTooltip keyTooltip={"llmProviderKey"} labelText={"API Key"} tooltipText={"This API Key for the selected provider."} />
+                                            <Input
+                                                type="password"
+                                                id="llmKey"
+                                                disabled={!llmProvider}
+                                                value={getCurrentKey()}
+                                                onChange={(e) => handleKeyChange(llmProvider, e.target.value)}
+                                            />
+                                        </div>
+                                    ) : null}
+                                </div>
+                            )
+                    )}
                 </div>
             </CardContent>
             <CardFooter className="border-t px-6 py-4">

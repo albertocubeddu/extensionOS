@@ -36,7 +36,7 @@ export default function VapiSpecificConfiguration({ contextMenuItems, handleChan
             <div className="text-sm text-white w-1/2">
                 <div className="flex flex-col gap-1">
                     <LabelWithTooltip
-                        key={`firstMessage-${id}`}
+                        keyTooltip={`firstMessage-${id}`}
                         labelText="First Message:"
                         tooltipText="What the VAPI bot will say at the beginning of the call"
                     />
@@ -51,7 +51,7 @@ export default function VapiSpecificConfiguration({ contextMenuItems, handleChan
             <div className="text-sm w-1/2">
                 <div className="flex flex-col gap-1">
                     <LabelWithTooltip
-                        key={`vapiCustomerNumber-${id}`}
+                        keyTooltip={`vapiCustomerNumber-${id}`}
                         labelText="Customer Number to Call"
                         tooltipText="Enter the phone number to call in the international format (e.g., +61 for Australia)"
                     />

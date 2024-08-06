@@ -3,19 +3,19 @@ import { CircleHelp } from "lucide-react";
 import { Label } from "~components/ui/label";
 
 interface LabelWithTooltipProps {
-    key: string
+    keyTooltip: string
     labelText: string
     tooltipText: string
 }
 
-export default function LabelWithTooltip({ key, labelText, tooltipText }: LabelWithTooltipProps) {
+export default function LabelWithTooltip({ keyTooltip, labelText, tooltipText }: LabelWithTooltipProps) {
     return (
         <TooltipProvider delayDuration={200}>
             <Tooltip>
                 <TooltipTrigger className="flex flex-row gap-1">
                     <Label
                         className="text-sm text-gray-200"
-                        htmlFor={`${labelText}-${key}`}
+                        htmlFor={`${labelText}-${keyTooltip}`}
                     >
                         {labelText}
                     </Label>

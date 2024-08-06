@@ -120,7 +120,13 @@ Move it somewhere else ASAP:
 
 # Changelog
 
-### 0.0.8 (under dev)
+### 0.0.9
+
+-  Bug fixes
+-  Clean up codebase
+-  UX for the functionality improved
+
+### 0.0.8
 
 -  Removed an unnecessary dependency to comply with Chrome Store publication guidelines.
 -  Introduced a new icon.

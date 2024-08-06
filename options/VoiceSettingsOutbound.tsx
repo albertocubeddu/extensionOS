@@ -1,5 +1,3 @@
-import "@/globals.css"
-
 import {
     Card,
     CardContent,
@@ -48,7 +46,7 @@ export default function VoiceSettingsOutbound({
                     />
                     <div className="flex flex-col gap-1">
 
-                        <LabelWithTooltip key={"voiceOutboundProvider"} labelText={"Default Voice Outbound Provider"} tooltipText={"This is the Voice provider that will be used by default."} />
+                        <LabelWithTooltip keyTooltip={"voiceOutboundProvider"} labelText={"Default Voice Outbound Provider"} tooltipText={"This is the Voice provider that will be used by default."} />
                         <Select value="vapi">
                             <SelectTrigger className="w-[150px]">
                                 <SelectValue placeholder="Select a provider" />
@@ -60,7 +58,7 @@ export default function VoiceSettingsOutbound({
                     </div>
                     <br />
                     <div className="flex flex-col gap-1">
-                        <LabelWithTooltip key={"voiceOutboundApiToken"} labelText={"VAPI Private API Key"} tooltipText={"Visit https://dashboard.vapi.ai/org/api-keys and copy your Private Key."} />
+                        <LabelWithTooltip keyTooltip={"voiceOutboundApiToken"} labelText={"VAPI Private API Key"} tooltipText={"Visit https://dashboard.vapi.ai/org/api-keys and copy your Private Key."} />
                         <Input
                             id="voiceOutboundApiToken"
                             type="text"
@@ -73,7 +71,7 @@ export default function VoiceSettingsOutbound({
                     <br />
                     <div className="flex flex-col gap-1">
 
-                        <LabelWithTooltip key={"voiceOutboundPhoneNumberID"} labelText={"Phone Number ID"} tooltipText={"This is the Phone Number ID from VAPI."} />
+                        <LabelWithTooltip keyTooltip={"voiceOutboundPhoneNumberID"} labelText={"Phone Number ID"} tooltipText={"This is the Phone Number ID from VAPI."} />
                         <Input
                             id="voiceOutboundPhoneNumberID"
                             type="text"
