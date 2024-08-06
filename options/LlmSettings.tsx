@@ -21,7 +21,7 @@ import LabelWithTooltip from "~components/blocks/LabelWithTooltip"
 import CardHeaderIntro from "~components/blocks/CardHeaderIntro"
 import FakeSaveButton from "~components/blocks/FakeSaveButton"
 import ProviderInstruction from "./promptFactory/ProviderInstruction"
-import { ArrowBigLeftDash } from "lucide-react"
+import { ArrowBigLeftDash, ArrowBigUpDash } from "lucide-react"
 
 // Add more combination here for the future
 // TODO: I may refactor it to be easier to access but whatever.
@@ -30,13 +30,13 @@ export const providersData = {
         {
             name: "groq",
             models: [
-                "gemma-7b-it",
-                "gemma2-9b-it",
                 "llama-3.1-70b-versatile",
                 "llama-3.1-8b-instant",
                 "llama3-70b-8192",
                 "llama3-8b-8192",
                 "mixtral-8x7b-32768",
+                "gemma-7b-it",
+                "gemma2-9b-it",
             ]
         },
         {
@@ -185,9 +185,16 @@ export default function LlmSettings({ debugInfo }: { debugInfo: string }) {
                 <CardHeaderIntro title={"LLM Settings"} description={" Provide which provider and model you want to use for Extension | OS"} />
             </CardHeader>
             <CardContent >
-                <div className="pb-10 pt-5">
+                <div className="flex flex-row pb-10 pt-5">
                     <ProviderInstruction provider={llmProvider} />
+                    {!getCurrentKey() && llmProvider && (
+                        <>
+                            {/* UX Note: This arrow indicates where users should click to obtain their API keys. */}
+                            <ArrowBigLeftDash size={40} strokeWidth={1} className=" mx-5 text-[#ff66cc] animate-[wiggle_1s_ease-in-out_infinite]" />
+                        </>
+                    )}
                 </div>
+
                 <div>
                     <div className="flex flex-col gap-1">
                         <LabelWithTooltip keyTooltip={"llmProvider"} labelText={"Default LLM Provider"} tooltipText={"This is the LLM provider that will be used by default."} />
@@ -212,6 +219,8 @@ export default function LlmSettings({ debugInfo }: { debugInfo: string }) {
                                     <strong className="mr-2">Instructions:</strong> Choose a provider from the list on your left.<br /> The selected provider will be set as the default.
                                 </>
                             )}
+
+
 
 
                         </div>
