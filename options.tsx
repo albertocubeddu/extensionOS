@@ -4,7 +4,6 @@ import React, { useState } from "react"
 
 import { useStorage } from "@plasmohq/storage/hook"
 
-import { Button } from "~components/ui/button"
 import OptionsAbout from "~options/OptionsAbout"
 import OptionsGeneral from "~options/OptionsGeneral"
 import OptionsHeader from "~options/OptionsHeader"
@@ -15,11 +14,6 @@ import OptionsPromptFactory from "~options/OptionsPromptFactory"
 // MAIN FUNCTION (OPTIONS)
 // --------------------------------
 export default function Options() {
-    // Use Plasmo's useStorage hook to interact with chrome.storage
-    const [yourCustomPrompt, setYourCustomPrompt] = useStorage(
-        "yourCustomPrompt",
-        ""
-    )
     const [activeTab, setActiveTab] = useState("general")
 
     return (

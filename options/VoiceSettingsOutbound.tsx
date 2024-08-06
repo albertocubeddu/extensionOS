@@ -1,5 +1,3 @@
-import "@/globals.css"
-
 import {
     Card,
     CardContent,
