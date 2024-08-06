@@ -14,8 +14,6 @@ import {
     SelectTrigger,
     SelectValue
 } from "@/components/ui/select"
-import groqLogo from "data-base64:~assets/AppIcons/groq.png"
-import openAILogo from "data-base64:~assets/AppIcons/openai.svg"
 import React, { useEffect } from "react"
 
 import { useStorage } from "@plasmohq/storage/hook"
@@ -23,7 +21,7 @@ import LabelWithTooltip from "~components/blocks/LabelWithTooltip"
 import CardHeaderIntro from "~components/blocks/CardHeaderIntro"
 import FakeSaveButton from "~components/blocks/FakeSaveButton"
 import ProviderInstruction from "./promptFactory/ProviderInstruction"
-import { ArrowBigLeftDash, CircleArrowLeft, PlayCircle, Star, Undo2 } from "lucide-react"
+import { ArrowBigLeftDash } from "lucide-react"
 
 // Add more combination here for the future
 // TODO: I may refactor it to be easier to access but whatever.
