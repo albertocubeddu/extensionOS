@@ -51,14 +51,13 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
 
    const items = (await storage.get("contextMenuItems")) as any[];
 
-   console.log(items);
-
    //In the past we've used the hashmap, however it would overcomplicated the rest of the codebase always because we are not able to use the chrome.storage and the sidebar.open in the same function. This can be reviewed and use an hashmap if we find the solution for that bug. At the moment i don't expect having more than 20 prompt per user, so readability and clean code beats efficiency.
    const element = items.find((item) => item.id === info.menuItemId);
 
    switch (info.menuItemId) {
       case element.id:
          if (element.functionType === "callAI-copyClipboard") {
+            sendLoadingAction();
             response = await callOpenAIReturn(element.prompt, message);
             copyTextToClipboard(response);
             break;
@@ -132,13 +131,14 @@ const copyTextToClipboard = (response: ApiResponse<any>) => {
    }
 };
 
-function clickAllCheckboxes() {
-   const checkboxes = document.querySelectorAll(
-      '[id^="i18n_checkbox-invitee-suggestion"]'
-   );
-   checkboxes.forEach(function (checkbox) {
-      if (checkbox instanceof HTMLElement) {
-         checkbox.click();
+function sendLoadingAction() {
+   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+      if (tabs[0]?.id) {
+         chrome.tabs.sendMessage(tabs[0].id, {
+            action: "loadingAction",
+         });
+      } else {
+         throw new Error("No active tab found.");
       }
    });
 }
