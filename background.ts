@@ -56,6 +56,9 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
 
    switch (info.menuItemId) {
       case element.id:
+         if (element.id === "configuration") {
+            chrome.runtime.openOptionsPage();
+         }
          if (element.functionType === "callAI-copyClipboard") {
             sendLoadingAction();
             response = await callOpenAIReturn(element.prompt, message);

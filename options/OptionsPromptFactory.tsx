@@ -44,15 +44,13 @@ export default function OptionsPromptFactory() {
     that is the one aware of opening the sidebar. Need to find a solution for the chrome.storage ASAP.
     */
     const handleChange = useCallback((id, prop, value) => {
-        setContextMenuItems((prevItems) =>
+        setContextMenuItems(prevItems =>
             prevItems.map(item => {
                 if (item.id === id) {
-                    let newId = item.id;
-                    if ("callAI-openSideBar" === value && "functionType" === prop && !item.id.startsWith("side_")) {
-                        newId = `side_${item.id}`;
-                    } else if ("callAI-openSideBar" !== value && "functionType" === prop && item.id.startsWith("side_")) {
-                        newId = item.id.replace(/^side_/, '');
-                    }
+                    const newId = item.id.startsWith("side_")
+                        ? value === "callAI-openSideBar" ? item.id : item.id.replace(/^side_/, '')
+                        : value === "callAI-openSideBar" ? `side_${item.id}` : item.id;
+
                     return { ...item, [prop]: value, id: newId };
                 }
                 return item;
@@ -62,20 +60,23 @@ export default function OptionsPromptFactory() {
 
     //What a shit show, saving two things together. Best practice thrown in the bin. TODO: Refactor the smelly code. (10:00PM - night)
     const handleSave = async () => {
-        await storage.set("contextMenuItems", contextMenuItems);
+        try {
+            await storage.set("contextMenuItems", contextMenuItems);
+            const cleanedContextMenuItems = cleanProperties(contextMenuItems);
 
-        const cleanedContextMenuItems = cleanProperties(contextMenuItems);
-
-        // Remove all existing context menu items
-        chrome.contextMenus.removeAll(() => {
-            // Create new context menu items
-            cleanedContextMenuItems.forEach((item) => {
-                chrome.contextMenus.create(item);
+            // Remove all existing context menu items
+            chrome.contextMenus.removeAll(() => {
+                cleanedContextMenuItems.forEach(item => chrome.contextMenus.create(item));
             });
-        });
 
-        alert("Changes saved!");
+            alert("Changes saved!");
+        } catch (error) {
+            console.error("Failed to save changes:", error);
+            alert("Failed to save changes. Please try again.");
+        }
     };
+
+
 
     return (
         <div className="grid gap-6">
@@ -86,7 +87,8 @@ export default function OptionsPromptFactory() {
                 <CardContent>
                     {contextMenuItems ? (
                         <div>
-                            {Object.keys(contextMenuItems).map((key) => {
+                            {/* We exclude the separrator and the configuration button as it's not essential for the user to see at this stage */}
+                            {Object.keys(contextMenuItems).filter(key => !contextMenuItems[key].id.startsWith("separator") && contextMenuItems[key].id !== "configuration").map((key) => {
                                 return (
                                     <div
                                         key={key}

@@ -120,6 +120,12 @@ Move it somewhere else ASAP:
 
 # Changelog
 
+### 0.0.10
+
+-  Added option to find the configuration from the right-click
+-  Reorganised the context menu
+
+
 ### 0.0.9
 
 -  Bug fixes
