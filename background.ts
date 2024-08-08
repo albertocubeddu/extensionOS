@@ -11,7 +11,17 @@ const storage = new Storage();
 /*
 Fired when the extension is first installed, when the extension is updated to a new version, and when Chrome is updated to a new version.
 */
-chrome.runtime.onInstalled.addListener(async () => {
+chrome.runtime.onInstalled.addListener(async (details) => {
+   if (details.reason === chrome.runtime.OnInstalledReason.UPDATE) {
+      console.log(
+         "Extension updated from version",
+         details.previousVersion,
+         "to",
+         chrome.runtime.getManifest().version
+      );
+      // Perform any update-specific tasks here
+   }
+
    if (process.env.NODE_ENV === "production") {
       chrome.runtime.openOptionsPage();
    }
@@ -47,6 +57,7 @@ General Listener for the onClicked.
 */
 chrome.contextMenus.onClicked.addListener(async (info, tab) => {
    const message = info.selectionText;
+
    let response;
 
    const items = (await storage.get("contextMenuItems")) as any[];
@@ -57,6 +68,7 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
    switch (info.menuItemId) {
       case element.id:
          if (element.id === "configuration") {
+            await storage.set("activeTab", "promptFactory");
             chrome.runtime.openOptionsPage();
          }
          if (element.functionType === "callAI-copyClipboard") {
