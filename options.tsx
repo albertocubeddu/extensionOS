@@ -14,7 +14,8 @@ import OptionsPromptFactory from "~options/OptionsPromptFactory"
 // MAIN FUNCTION (OPTIONS)
 // --------------------------------
 export default function Options() {
-    const [activeTab, setActiveTab] = useState("general")
+
+    const [activeTab, setActiveTab] = useStorage<string>("activeTab", "general")
 
     return (
         <div className="flex min-h-screen w-full flex-col">

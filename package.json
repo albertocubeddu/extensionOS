@@ -1,7 +1,7 @@
 {
    "name": "extension-os",
    "displayName": "Extension-OS: Your AI Partner",
-   "version": "0.0.9",
+   "version": "0.0.10",
    "description": "AI at Your Fingertips, Anytime, Anywhere.",
    "author": "acubeddu87@gmail.com",
    "scripts": {
@@ -16,6 +16,7 @@
       "@radix-ui/react-dialog": "^1.1.1",
       "@radix-ui/react-dropdown-menu": "^2.1.1",
       "@radix-ui/react-label": "^2.1.0",
+      "@radix-ui/react-scroll-area": "^1.1.0",
       "@radix-ui/react-select": "^2.1.1",
       "@radix-ui/react-separator": "^1.1.0",
       "@radix-ui/react-slot": "^1.1.0",

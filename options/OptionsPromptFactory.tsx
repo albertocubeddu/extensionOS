@@ -17,6 +17,16 @@ import {
     SelectTrigger,
     SelectValue,
 } from "~components/ui/select";
+
+import {
+    Sheet,
+    SheetContent,
+    SheetDescription,
+    SheetHeader,
+    SheetTitle,
+    SheetTrigger,
+} from "@/components/ui/sheet"
+
 import { Textarea } from "~components/ui/textarea";
 import { cleanProperties } from "~lib/cleanContextMenu";
 
@@ -26,6 +36,10 @@ import type { IContextConfigItems } from "~background/init";
 import LabelWithTooltip from "../components/blocks/LabelWithTooltip";
 import CardHeaderIntro from "~components/blocks/CardHeaderIntro";
 import VapiSpecificConfiguration from "./promptFactory/VapiSpecificConfiguration";
+import HelpSheetContext from "./promptFactory/HelpSheetContext";
+import HelpSheetFunctionality from "./promptFactory/HelpSheetFunctionality";
+import { chromeContextsParameters } from "./promptFactory/parameters/chromeContextParameters";
+import { functionalityParameters } from "./promptFactory/parameters/functionalityParameters";
 
 export default function OptionsPromptFactory() {
     const [contextMenuItems, setContextMenuItems] = useState<IContextConfigItems[]>([]);
@@ -44,15 +58,13 @@ export default function OptionsPromptFactory() {
     that is the one aware of opening the sidebar. Need to find a solution for the chrome.storage ASAP.
     */
     const handleChange = useCallback((id, prop, value) => {
-        setContextMenuItems((prevItems) =>
+        setContextMenuItems(prevItems =>
             prevItems.map(item => {
                 if (item.id === id) {
-                    let newId = item.id;
-                    if ("callAI-openSideBar" === value && "functionType" === prop && !item.id.startsWith("side_")) {
-                        newId = `side_${item.id}`;
-                    } else if ("callAI-openSideBar" !== value && "functionType" === prop && item.id.startsWith("side_")) {
-                        newId = item.id.replace(/^side_/, '');
-                    }
+                    const newId = item.id.startsWith("side_")
+                        ? value === "callAI-openSideBar" ? item.id : item.id.replace(/^side_/, '')
+                        : value === "callAI-openSideBar" ? `side_${item.id}` : item.id;
+
                     return { ...item, [prop]: value, id: newId };
                 }
                 return item;
@@ -62,20 +74,23 @@ export default function OptionsPromptFactory() {
 
     //What a shit show, saving two things together. Best practice thrown in the bin. TODO: Refactor the smelly code. (10:00PM - night)
     const handleSave = async () => {
-        await storage.set("contextMenuItems", contextMenuItems);
+        try {
+            await storage.set("contextMenuItems", contextMenuItems);
+            const cleanedContextMenuItems = cleanProperties(contextMenuItems);
 
-        const cleanedContextMenuItems = cleanProperties(contextMenuItems);
-
-        // Remove all existing context menu items
-        chrome.contextMenus.removeAll(() => {
-            // Create new context menu items
-            cleanedContextMenuItems.forEach((item) => {
-                chrome.contextMenus.create(item);
+            // Remove all existing context menu items
+            chrome.contextMenus.removeAll(() => {
+                cleanedContextMenuItems.forEach(item => chrome.contextMenus.create(item));
             });
-        });
 
-        alert("Changes saved!");
+            alert("Changes saved!");
+        } catch (error) {
+            console.error("Failed to save changes:", error);
+            alert("Failed to save changes. Please try again.");
+        }
     };
+
+
 
     return (
         <div className="grid gap-6">
@@ -86,7 +101,8 @@ export default function OptionsPromptFactory() {
                 <CardContent>
                     {contextMenuItems ? (
                         <div>
-                            {Object.keys(contextMenuItems).map((key) => {
+                            {/* We exclude the separrator and the configuration button as it's not essential for the user to see at this stage */}
+                            {Object.keys(contextMenuItems).filter(key => !contextMenuItems[key].id.startsWith("separator") && contextMenuItems[key].id !== "configuration").map((key) => {
                                 return (
                                     <div
                                         key={key}
@@ -113,8 +129,15 @@ export default function OptionsPromptFactory() {
                                                     className="text-sm text-gray-600"
                                                     htmlFor={`context-${key}`}
                                                 >
-                                                    <LabelWithTooltip keyTooltip={key} labelText="Context" tooltipText="The context in which the item should display" />
+                                                    <Sheet>
+
+                                                        <SheetTrigger><LabelWithTooltip keyTooltip={key} labelText="Context" tooltipText="The context in which the item should display. Click for more info" sheetIncluded={true} /></SheetTrigger>
+                                                        <HelpSheetContext />
+                                                    </Sheet>
+
                                                 </Label>
+
+
                                                 <Select
                                                     value={contextMenuItems[key].contexts.join(", ")}
                                                     onValueChange={(value) =>
@@ -129,26 +152,12 @@ export default function OptionsPromptFactory() {
                                                         <SelectValue placeholder="Select contexts" />
                                                     </SelectTrigger>
                                                     <SelectContent>
-                                                        {[
-                                                            "all",
-                                                            "page",
-                                                            "frame",
-                                                            "selection",
-                                                            "link",
-                                                            "editable",
-                                                            "image",
-                                                            "video",
-                                                            "audio",
-                                                            "launcher",
-                                                            "browser_action",
-                                                            "page_action",
-                                                            "action",
-                                                        ].map((context) => (
+                                                        {chromeContextsParameters.map(({ key, display }) => (
                                                             <SelectItem
-                                                                key={context}
-                                                                value={context}
+                                                                key={key}
+                                                                value={key}
                                                             >
-                                                                {context}
+                                                                {display}
                                                             </SelectItem>
                                                         ))}
                                                     </SelectContent>
@@ -177,7 +186,12 @@ export default function OptionsPromptFactory() {
                                             <div className="flex flex-row gap-4">
                                                 <div className="text-sm text-white w-1/2">
                                                     <div className="flex flex-col gap-1">
-                                                        <LabelWithTooltip keyTooltip={key} labelText="Functionality" tooltipText="The functionality after the prompt is executed" />
+
+                                                        <Sheet>
+                                                            <SheetTrigger> <LabelWithTooltip keyTooltip={key} labelText="Functionality" tooltipText="The functionality after the prompt is executed. Click for more info" sheetIncluded={true} /></SheetTrigger>
+                                                            <HelpSheetFunctionality />
+                                                        </Sheet>
+
                                                         <Select
                                                             value={contextMenuItems[key].functionType}
                                                             onValueChange={(value) =>
@@ -188,13 +202,9 @@ export default function OptionsPromptFactory() {
                                                                 <SelectValue placeholder="Select function type" />
                                                             </SelectTrigger>
                                                             <SelectContent>
-                                                                {[
-                                                                    { key: "callAI-copyClipboard", value: "Copy to Clipboard" },
-                                                                    { key: "callAI-openSideBar", value: "Write to Sidebar" },
-                                                                    { key: "callVoice-ExternalNumber", value: "Call External Number" }
-                                                                ].map((type) => (
-                                                                    <SelectItem key={type.key} value={type.key}>
-                                                                        {type.value}
+                                                                {functionalityParameters.map(({ key, display }) => (
+                                                                    <SelectItem key={key} value={key}>
+                                                                        {display}
                                                                     </SelectItem>
                                                                 ))}
                                                             </SelectContent>
@@ -231,6 +241,6 @@ export default function OptionsPromptFactory() {
                     )}
                 </CardContent>
             </Card>
-        </div>
+        </div >
     );
 }

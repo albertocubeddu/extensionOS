@@ -83,28 +83,21 @@ Adopt these roles to create a productive and enriching conversation that leverag
          functionType: "callVoice-ExternalNumber",
       },
       {
-         id: "separator1",
-         type: "separator",
-         contexts: ["all"],
-      },
-      {
          id: "linkedinPostEmoji",
-         title: "Comment using only Emoji",
+         title: "👀 Comment using only Emoji",
          contexts: ["selection"],
          functionType: "callAI-copyClipboard",
          prompt: `Respond to a LinkedIn post only using emojis but avoid hashtags`,
       },
       {
-         id: "separator2",
+         id: "separator1",
          type: "separator",
          contexts: ["all"],
       },
       {
-         id: "side_myOwnPromptSelection",
-         title: "Your Prompt",
-         contexts: ["selection"],
-         prompt: `Please provide your own prompt;`,
-         functionType: "callAI-openSideBar",
+         id: "configuration",
+         title: "Setup Your Own Prompt",
+         contexts: ["all"],
       },
    ];
    await storage.set("contextMenuItems", contextMenuItems);
