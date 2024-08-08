@@ -122,9 +122,9 @@ Move it somewhere else ASAP:
 
 ### 0.0.10
 
--  Added option to find the configuration from the right-click
--  Reorganised the context menu
-
+-  Context Menu: Introduced a new option for accessing configuration via right-click
+-  Context Menu: Enhanced the organization of the context menu for improved usability
+-  Prompt Factory: Added a detailed sheet outlining the context and functionality
 
 ### 0.0.9
 
