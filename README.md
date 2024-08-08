@@ -122,9 +122,10 @@ Move it somewhere else ASAP:
 
 ### 0.0.10
 
--  Context Menu: Introduced a new option for accessing configuration via right-click
--  Context Menu: Enhanced the organization of the context menu for improved usability
--  Prompt Factory: Added a detailed sheet outlining the context and functionality
+-  Context Menu: Added a new right-click option for seamless access to configuration settings.
+-  Context Menu: Improved the layout and organization of the context menu for enhanced user experience.
+-  Prompt Factory: Introduced a comprehensive sheet that details the context and functionality of each feature.
+-  Prompt Factory: Implemented a clickable icon to indicate that the tooltip contains additional information when clicked.
 
 ### 0.0.9
 
