@@ -14,7 +14,7 @@ import {
     SelectTrigger,
     SelectValue
 } from "@/components/ui/select"
-import React, { useEffect } from "react"
+import React, { useContext, useEffect } from "react"
 
 import { useStorage } from "@plasmohq/storage/hook"
 import LabelWithTooltip from "~components/blocks/LabelWithTooltip"
@@ -22,11 +22,27 @@ import CardHeaderIntro from "~components/blocks/CardHeaderIntro"
 import FakeSaveButton from "~components/blocks/FakeSaveButton"
 import ProviderInstruction from "./promptFactory/ProviderInstruction"
 import { ArrowBigLeftDash, ArrowBigUpDash } from "lucide-react"
+import { useUserInfo } from "~lib/providers/UserInfoContext"
+import { Button } from "~components/ui/button"
+import useSWR from "swr"
+import { callAPI } from "~lib/fetcher/callApi"
 
 // Add more combination here for the future
 // TODO: I may refactor it to be easier to access but whatever.
 export const providersData = {
     providers: [
+        {
+            name: "extensionos",
+            models: [
+                "llama-3.1-70b-versatile",
+                "llama-3.1-8b-instant",
+                "llama3-70b-8192",
+                "llama3-8b-8192",
+                "mixtral-8x7b-32768",
+                "gemma-7b-it",
+                "gemma2-9b-it",
+            ]
+        },
         {
             name: "groq",
             models: [
@@ -154,10 +170,59 @@ export const providersData = {
     ]
 }
 
+const ExtensionOsLogin = () => {
+    const userInfo = useUserInfo()
+
+    // Make the function async
+    const checkToken = async () => {
+        const hasToken = await chrome.identity.getAuthToken({ interactive: false }) // Added argument
+        console.log(hasToken)
+        if (!hasToken) {
+            return (
+                <Button
+                    disabled={!userInfo}
+                    onClick={async () => {
+                        chrome.identity.getAuthToken(
+                            {
+                                interactive: true
+                            },
+                            (token) => {
+                                if (!!token) {
+                                    console.log('we have the token!')
+                                }
+                            }
+                        )
+                    }}>
+                    Login To Use Our Models
+                </Button>
+            )
+        }
+    }
+
+    // Call the async function
+    useEffect(() => {
+        checkToken()
+    }, [])
+
+    return (
+        <button
+            onClick={async () => {
+                const data = await callAPI("/api/premium-feature", {
+                    method: "POST"
+                })
+
+                alert(data.code)
+            }}>
+            Your Key is Set, and you're enjoying the FREE tier.
+        </button>
+    )
+}
+
 export default function LlmSettings({ debugInfo }: { debugInfo: string }) {
     const [llmModel, setLlmModel] = useStorage("llmModel", "")
     const [llmProvider, setLlmProvider] = useStorage("llmProvider", "")
     const [llmKeys, setLlmKeys] = useStorage("llmKeys", {})
+    const userInfo = useUserInfo()
 
     //To auto-assign a model when the provider is changed.
     useEffect(() => {
@@ -267,7 +332,7 @@ export default function LlmSettings({ debugInfo }: { debugInfo: string }) {
                         (provider) =>
                             llmProvider === provider.name && (
                                 <div key={provider.name}>
-                                    {provider.models.length > 0 ? (
+                                    {provider.models.length > 0 && provider.name !== "extensionos" ? ( // Added exception for "extensionos"
                                         <div className="flex flex-col gap-1">
                                             <LabelWithTooltip keyTooltip={"llmProviderKey"} labelText={"API Key"} tooltipText={"This API Key for the selected provider."} />
                                             <Input
@@ -278,7 +343,8 @@ export default function LlmSettings({ debugInfo }: { debugInfo: string }) {
                                                 onChange={(e) => handleKeyChange(llmProvider, e.target.value)}
                                             />
                                         </div>
-                                    ) : null}
+                                    ) :
+                                        <ExtensionOsLogin />}
                                 </div>
                             )
                     )}

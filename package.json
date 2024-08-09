@@ -1,8 +1,8 @@
 {
    "name": "extension-os",
    "displayName": "Extension-OS: Your AI Partner",
-   "version": "0.0.10",
-   "description": "AI at Your Fingertips, Anytime, Anywhere.",
+   "version": "0.0.11",
+   "description": "AI at Your Finxgertips, Anytime, Anywhere.",
    "author": "acubeddu87@gmail.com",
    "scripts": {
       "dev": "plasmo dev",
@@ -29,6 +29,7 @@
       "pnpm": "^9.6.0",
       "react": "18.2.0",
       "react-dom": "18.2.0",
+      "swr": "^2.2.5",
       "tailwind-merge": "^2.4.0",
       "tailwindcss-animate": "^1.0.7"
    },
@@ -45,11 +46,21 @@
       "typescript": "5.3.3"
    },
    "manifest": {
+      "key": "$CRX_PUBLIC_KEY",
+      "oauth2": {
+         "client_id": "$OAUTH_CLIENT_ID",
+         "scopes": [
+            "https://www.googleapis.com/auth/userinfo.email",
+            "https://www.googleapis.com/auth/userinfo.profile"
+         ]
+      },
       "permissions": [
          "contextMenus",
          "clipboard",
          "sidePanel",
-         "declarativeNetRequest"
+         "declarativeNetRequest",
+         "identity",
+         "identity.email"
       ],
       "declarative_net_request": {
          "rule_resources": [
