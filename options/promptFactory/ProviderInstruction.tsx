@@ -11,7 +11,7 @@ import togetherAiLogo from "data-base64:~assets/AppIcons/togetherai.png";
 import extensionOsLogo from "data-base64:~assets/AppIcons/extension-os.svg";
 
 const providerData = {
-    extensionos: {
+    "extension | OS": {
         logo: extensionOsLogo,
         links: [
             { label: "Official Website", url: "https://extension-os.com" },

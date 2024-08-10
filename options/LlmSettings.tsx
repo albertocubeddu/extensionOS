@@ -14,7 +14,7 @@ import {
     SelectTrigger,
     SelectValue
 } from "@/components/ui/select"
-import React, { useContext, useEffect } from "react"
+import React, { useContext, useEffect, useState } from "react"
 
 import { useStorage } from "@plasmohq/storage/hook"
 import LabelWithTooltip from "~components/blocks/LabelWithTooltip"
@@ -26,13 +26,14 @@ import { useUserInfo } from "~lib/providers/UserInfoContext"
 import { Button } from "~components/ui/button"
 import useSWR from "swr"
 import { callAPI } from "~lib/fetcher/callApi"
+import { ExtensionOsLogin } from "./settings/ExtensionOsLogin"
 
 // Add more combination here for the future
 // TODO: I may refactor it to be easier to access but whatever.
 export const providersData = {
     providers: [
         {
-            name: "extensionos",
+            name: "extension | OS",
             models: [
                 "llama-3.1-70b-versatile",
                 "llama-3.1-8b-instant",
@@ -170,53 +171,6 @@ export const providersData = {
     ]
 }
 
-const ExtensionOsLogin = () => {
-    const userInfo = useUserInfo()
-
-    // Make the function async
-    const checkToken = async () => {
-        const hasToken = await chrome.identity.getAuthToken({ interactive: false }) // Added argument
-        console.log(hasToken)
-        if (!hasToken) {
-            return (
-                <Button
-                    disabled={!userInfo}
-                    onClick={async () => {
-                        chrome.identity.getAuthToken(
-                            {
-                                interactive: true
-                            },
-                            (token) => {
-                                if (!!token) {
-                                    console.log('we have the token!')
-                                }
-                            }
-                        )
-                    }}>
-                    Login To Use Our Models
-                </Button>
-            )
-        }
-    }
-
-    // Call the async function
-    useEffect(() => {
-        checkToken()
-    }, [])
-
-    return (
-        <button
-            onClick={async () => {
-                const data = await callAPI("/api/premium-feature", {
-                    method: "POST"
-                })
-
-                alert(data.code)
-            }}>
-            Your Key is Set, and you're enjoying the FREE tier.
-        </button>
-    )
-}
 
 export default function LlmSettings({ debugInfo }: { debugInfo: string }) {
     const [llmModel, setLlmModel] = useStorage("llmModel", "")
@@ -232,7 +186,9 @@ export default function LlmSettings({ debugInfo }: { debugInfo: string }) {
             )
             const isModelValid = selectedProvider?.models.includes(llmModel)
 
-            if (!isModelValid) {
+            //We need to ensure the selectedProvider is valid
+            //E.g. We do change a name in the config -> From OpenAI to ClosedAI (pun intended..)
+            if (!isModelValid && selectedProvider) {
                 setLlmModel(selectedProvider.models[0])
             }
         }
@@ -332,7 +288,7 @@ export default function LlmSettings({ debugInfo }: { debugInfo: string }) {
                         (provider) =>
                             llmProvider === provider.name && (
                                 <div key={provider.name}>
-                                    {provider.models.length > 0 && provider.name !== "extensionos" ? ( // Added exception for "extensionos"
+                                    {provider.models.length > 0 && provider.name !== "extension | OS" ? ( // Added exception for "extensionos"
                                         <div className="flex flex-col gap-1">
                                             <LabelWithTooltip keyTooltip={"llmProviderKey"} labelText={"API Key"} tooltipText={"This API Key for the selected provider."} />
                                             <Input
