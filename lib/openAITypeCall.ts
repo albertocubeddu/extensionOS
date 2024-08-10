@@ -7,6 +7,7 @@ import { Storage } from "@plasmohq/storage";
 // Function to map vendor names to their respective API endpoints
 function vendorToEndpoint(vendor: string): string {
    const endpoints: { [key: string]: string } = {
+      "extension | OS": process.env.PLASMO_PUBLIC_EXTENSION_OS_API_ENDPOINT,
       openai: "https://api.openai.com/v1/chat/completions",
       groq: "https://api.groq.com/openai/v1/chat/completions",
       together: "https://api.together.xyz/v1/chat/completions",
@@ -14,6 +15,21 @@ function vendorToEndpoint(vendor: string): string {
    };
    return endpoints[vendor] || endpoints["groq"];
 }
+
+// Constants
+const DEFAULT_MODEL = "llama-3.1-70b-versatile";
+const DEFAULT_VENDOR = "extension | OS";
+
+// TODO: move somewhere else
+const getAccessToken = async (): Promise<string> => {
+   try {
+      const result = await chrome.identity.getAuthToken({ interactive: true });
+      return result?.token || "invalid";
+   } catch (error) {
+      console.error("Failed to get auth token:", error);
+      return "invalid";
+   }
+};
 
 // The T is to enable us to pass different structure in the future. And the errorMessage, give us an idea of what's wrong; Even the error should have a structure.
 export type ApiResponse<T> = {
@@ -32,28 +48,28 @@ export async function callOpenAIReturn(
 
    try {
       const [storedModel, storedVendor, llmKeys] = await Promise.all([
-         storage.get("llmModel").then((model) => model ?? "llama3-8b-8192"),
-         storage.get("llmProvider"),
+         storage.get("llmModel").then((model) => model ?? DEFAULT_MODEL),
+         storage
+            .get("llmProvider")
+            .then((provider) => provider ?? DEFAULT_VENDOR),
          storage.get("llmKeys").then((key) => key ?? ""),
       ]);
 
       const openAIModel = overrideModel || storedModel;
       const vendor = overrideProvider || storedVendor;
-      const apiKey = llmKeys[vendor] || "";
-
+      const apiKey = llmKeys ? llmKeys[vendor] : "";
       const openAIEndpoint = vendorToEndpoint(vendor);
 
+      const headers = new Headers({
+         "Content-Type": "application/json",
+         Authorization: `Bearer ${apiKey || (await getAccessToken())}`,
+      });
 
       const bodyReq = JSON.stringify({
          model: openAIModel,
          messages: [{ role: "user", content: `${systemPrompt}${message}` }],
          stream: false,
       });
-
-      const headers = {
-         "Content-Type": "application/json",
-         Authorization: `Bearer ${apiKey}`,
-      };
 
       const response = await fetch(openAIEndpoint, {
          method: "POST",
@@ -70,22 +86,24 @@ export async function callOpenAIReturn(
          }, 2000);
       }
 
-      if (response.ok && data.choices?.length > 0) {
-         return { data: data.choices[0].message.content };
-      } else {
-         console.error("Unexpected response structure:", data);
-
-         const errorMessage =
-            data.error?.message ||
-            data.error?.code ||
-            "An unknown error occurred.";
-
-         return {
-            errorMessage: errorMessage ?? "Unexpected response structure.",
-         };
+      if (!response.ok) {
+         if (response.status === 401) {
+            setTimeout(() => chrome.runtime.openOptionsPage(), 2000);
+         }
+         throw new Error(
+            data.error?.message || `HTTP error! status: ${response.status}`
+         );
       }
+
+      if (!data.choices?.length) {
+         throw new Error("Unexpected response structure");
+      }
+
+      return { data: data.choices[0].message.content };
    } catch (error) {
       console.error("Failed to fetch from OpenAI API:", error);
-      return { errorMessage: String(error) };
+      return {
+         errorMessage: error instanceof Error ? error.message : String(error),
+      };
    }
 }

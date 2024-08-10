@@ -11,6 +11,13 @@ import togetherAiLogo from "data-base64:~assets/AppIcons/togetherai.png";
 import extensionOsLogo from "data-base64:~assets/AppIcons/extension-os.svg";
 
 const providerData = {
+    "extension | OS": {
+        logo: extensionOsLogo,
+        links: [
+            { label: "Official Website", url: "https://extension-os.com" },
+            { label: "More Tiers Available Soon:", url: "https://extension-os.com", }
+        ]
+    },
     groq: {
         logo: groqLogo,
         links: [
@@ -33,6 +40,7 @@ const providerData = {
         ]
     }
 };
+
 
 export default function ProviderInstruction({ provider }: ProviderInstructionProps) {
     const { logo, links } = providerData[provider] || { logo: extensionOsLogo, links: [] };

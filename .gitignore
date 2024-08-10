@@ -34,3 +34,8 @@ dist/
 
 # typescript
 .tsbuildinfo
+
+# Env
+.env
+.env.production
+.env.development

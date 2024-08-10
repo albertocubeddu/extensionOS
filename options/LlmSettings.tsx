@@ -22,11 +22,24 @@ import CardHeaderIntro from "~components/blocks/CardHeaderIntro"
 import FakeSaveButton from "~components/blocks/FakeSaveButton"
 import ProviderInstruction from "./promptFactory/ProviderInstruction"
 import { ArrowBigLeftDash, ArrowBigUpDash } from "lucide-react"
+import { ExtensionOsLogin } from "./settings/ExtensionOsLogin"
 
 // Add more combination here for the future
 // TODO: I may refactor it to be easier to access but whatever.
 export const providersData = {
     providers: [
+        {
+            name: "extension | OS",
+            models: [
+                "llama-3.1-70b-versatile",
+                "llama-3.1-8b-instant",
+                "llama3-70b-8192",
+                "llama3-8b-8192",
+                "mixtral-8x7b-32768",
+                "gemma-7b-it",
+                "gemma2-9b-it",
+            ]
+        },
         {
             name: "groq",
             models: [
@@ -154,9 +167,10 @@ export const providersData = {
     ]
 }
 
+
 export default function LlmSettings({ debugInfo }: { debugInfo: string }) {
     const [llmModel, setLlmModel] = useStorage("llmModel", "")
-    const [llmProvider, setLlmProvider] = useStorage("llmProvider", "")
+    const [llmProvider, setLlmProvider] = useStorage("llmProvider", "extension | OS")
     const [llmKeys, setLlmKeys] = useStorage("llmKeys", {})
 
     //To auto-assign a model when the provider is changed.
@@ -167,7 +181,9 @@ export default function LlmSettings({ debugInfo }: { debugInfo: string }) {
             )
             const isModelValid = selectedProvider?.models.includes(llmModel)
 
-            if (!isModelValid) {
+            //We need to ensure the selectedProvider is valid
+            //E.g. We do change a name in the config -> From OpenAI to ClosedAI (pun intended..)
+            if (!isModelValid && selectedProvider) {
                 setLlmModel(selectedProvider.models[0])
             }
         }
@@ -187,7 +203,7 @@ export default function LlmSettings({ debugInfo }: { debugInfo: string }) {
             <CardContent >
                 <div className="flex flex-row pb-10 pt-5">
                     <ProviderInstruction provider={llmProvider} />
-                    {!getCurrentKey() && llmProvider && (
+                    {!getCurrentKey() && llmProvider && llmProvider !== "extension | OS" && (
                         <>
                             {/* UX Note: This arrow indicates where users should click to obtain their API keys. */}
                             <ArrowBigLeftDash size={40} strokeWidth={1} className=" mx-5 text-[#ff66cc] animate-[wiggle_1s_ease-in-out_infinite]" />
@@ -267,7 +283,7 @@ export default function LlmSettings({ debugInfo }: { debugInfo: string }) {
                         (provider) =>
                             llmProvider === provider.name && (
                                 <div key={provider.name}>
-                                    {provider.models.length > 0 ? (
+                                    {provider.models.length > 0 && provider.name !== "extension | OS" ? ( // Added exception for "extensionos": To find a better solution this is smelly code.
                                         <div className="flex flex-col gap-1">
                                             <LabelWithTooltip keyTooltip={"llmProviderKey"} labelText={"API Key"} tooltipText={"This API Key for the selected provider."} />
                                             <Input
@@ -278,7 +294,8 @@ export default function LlmSettings({ debugInfo }: { debugInfo: string }) {
                                                 onChange={(e) => handleKeyChange(llmProvider, e.target.value)}
                                             />
                                         </div>
-                                    ) : null}
+                                    ) :
+                                        <ExtensionOsLogin />}
                                 </div>
                             )
                     )}
