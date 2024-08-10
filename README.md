@@ -120,9 +120,14 @@ Move it somewhere else ASAP:
 
 # Changelog
 
-### 0.0.11
-- General: Added the FREE Tier to explore Extension | OS if you're not familiar with API Keys
-- 
+### 0.0.11 (Not released to the public)
+- General: Introduced a FREE Tier for users to explore the Extension | OS without needing to understand API Keys.
+- Development: Implemented the CRX Public Key to maintain a consistent extension ID across re-installations during development.
+- Development: Integrated OAUTH for user authentication when accessing the FREE tier.
+- Permissions: Added identity permissions to facilitate user identity retrieval.
+- Showcase: Updated images for improved visual presentation.
+- Prompt Factory: Set Extension | OS as the default model, enabling users to utilize the extension without prior knowledge of API Key setup.
+
 
 ### 0.0.10
 
