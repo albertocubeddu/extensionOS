@@ -6,6 +6,7 @@ import { Storage } from "@plasmohq/storage";
 
 // Function to map vendor names to their respective API endpoints
 function vendorToEndpoint(vendor: string): string {
+   console.log(vendor);
    const endpoints: { [key: string]: string } = {
       "extension | OS": process.env.PLASMO_PUBLIC_EXTENSION_OS_API_ENDPOINT,
       openai: "https://api.openai.com/v1/chat/completions",
@@ -33,14 +34,19 @@ export async function callOpenAIReturn(
 
    try {
       const [storedModel, storedVendor, llmKeys] = await Promise.all([
-         storage.get("llmModel").then((model) => model ?? "llama3-8b-8192"),
-         storage.get("llmProvider"),
+         storage
+            .get("llmModel")
+            .then((model) => model ?? "llama-3.1-70b-versatile"),
+         storage
+            .get("llmProvider")
+            .then((provider) => provider ?? "extension | OS"),
+         ,
          storage.get("llmKeys").then((key) => key ?? ""),
       ]);
 
       const openAIModel = overrideModel || storedModel;
       const vendor = overrideProvider || storedVendor;
-      const apiKey = llmKeys[vendor] || "";
+      const apiKey = llmKeys ? llmKeys[vendor] : "";
 
       const openAIEndpoint = vendorToEndpoint(vendor);
 
@@ -53,14 +59,23 @@ export async function callOpenAIReturn(
       //   ///////////////
       //   TO REFACTOR
       //   ///////////////
-      const getAccessToken = () =>
-         new Promise((resolve) =>
-            chrome.identity.getAuthToken(null, (token) => {
-               if (!!token) {
-                  resolve(token);
-               }
-            })
-         );
+      const getAccessToken = async () => {
+         try {
+            const result = await chrome.identity.getAuthToken({
+               interactive: true,
+            });
+            if (result) {
+               return result.token;
+            } else {
+               return "invalid";
+            }
+         } catch (error) {
+            return "invalid";
+         }
+      };
+
+      console.log(apiKey);
+
       const authHeader = apiKey
          ? `Bearer ${apiKey}`
          : `Bearer ${await getAccessToken()}`;
