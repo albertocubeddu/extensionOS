@@ -50,10 +50,26 @@ export async function callOpenAIReturn(
          stream: false,
       });
 
+      //   ///////////////
+      //   TO REFACTOR
+      //   ///////////////
+      const getAccessToken = () =>
+         new Promise((resolve) =>
+            chrome.identity.getAuthToken(null, (token) => {
+               if (!!token) {
+                  resolve(token);
+               }
+            })
+         );
+      const authHeader = apiKey
+         ? `Bearer ${apiKey}`
+         : `Bearer ${await getAccessToken()}`;
+
       const headers = {
          "Content-Type": "application/json",
-         Authorization: `Bearer ${apiKey}`,
+         Authorization: authHeader,
       };
+      // ********************
 
       const response = await fetch(openAIEndpoint, {
          method: "POST",
