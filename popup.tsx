@@ -8,62 +8,6 @@ import { Button } from "~components/ui/button"
 import { UserInfoProvider, useUserInfo } from "~lib/providers/UserInfoContext"
 import { callAPI } from "~lib/fetcher/callApi"
 
-const EmailShowcase = () => {
-    const userInfo = useUserInfo()
-
-    return (
-        <div className="text-white">
-            Your email is: <b>{userInfo?.email}</b>
-        </div>
-    )
-}
-
-const PremiumFeatureButton = () => {
-    const { data, error } = useSWR<{ active: boolean }, Error>(
-        "/api/check-subscription",
-        { fetcher: callAPI } // Use an object with the fetcher property
-    )
-    const userInfo = useUserInfo()
-
-    if (!!error || !data?.active) {
-        return (
-            <button
-                disabled={!userInfo}
-                onClick={async () => {
-                    chrome.identity.getAuthToken(
-                        {
-                            interactive: true
-                        },
-                        (token) => {
-                            if (!!token) {
-                                window.open(
-                                    `https://buy.stripe.com/test_6oE4k08aba1XdigdQT
-?client_reference_id=${userInfo.id
-                                    }&prefilled_email=${encodeURIComponent(userInfo.email)}`,
-                                    "_blank"
-                                )
-                            }
-                        }
-                    )
-                }}>
-                Subscribe to Paid feature
-            </button>
-        )
-    }
-
-    return (
-        <button
-            onClick={async () => {
-                const data = await callAPI("/api/premium-feature", {
-                    method: "POST"
-                })
-
-                alert(data.code)
-            }}>
-            Calling Awesome Premium Feature
-        </button>
-    )
-}
 
 
 function IndexPopup() {
@@ -95,9 +39,7 @@ function IndexPopup() {
                     Configuration
                 </Button>
 
-                <EmailShowcase />
-
-                <span className="flex pt-5 basis-[4%]">
+                <span className="flex pt-5 basis-1/12">
                 </span>
 
             </div>

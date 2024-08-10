@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
-import { Button } from "~components/ui/button";
 import { callAPI } from "~lib/fetcher/callApi";
+import GoogleButton from "./GoogleButton"; // Changed to default import
+import { ArrowBigLeftDash } from "lucide-react";
+import GoogleButtonDark from "./GoogleButtonDark";
 
 export const ExtensionOsLogin = () => {
     const [showLoginButton, setShowLoginButton] = useState(false);
@@ -36,15 +38,16 @@ export const ExtensionOsLogin = () => {
     return (
         <>
             {showLoginButton ? (
-                <Button
-                    onClick={() => handleToken(true)}>
-                    Login To Use Our Models
-                </Button>
-            ) : (
+                <div className="flex flex-row gap-0 mt-2">
+                    <GoogleButton
+                        onClick={() => handleToken(true)} />
+                    <ArrowBigLeftDash size={40} strokeWidth={1} className=" mx-5 text-[#ff66cc] animate-[wiggle_1s_ease-in-out_infinite]" />
+                </div>
+            ) :
                 <button onClick={handleFreeTier}>
                     Your Key is Set, and you're enjoying the FREE tier.
                 </button>
-            )}
+            }
         </>
     );
 };

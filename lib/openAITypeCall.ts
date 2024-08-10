@@ -7,7 +7,7 @@ import { Storage } from "@plasmohq/storage";
 // Function to map vendor names to their respective API endpoints
 function vendorToEndpoint(vendor: string): string {
    const endpoints: { [key: string]: string } = {
-      "extension | OS": "http://localhost:3000/v1/chat/completions",
+      "extension | OS": process.env.PLASMO_PUBLIC_EXTENSION_OS_API_ENDPOINT,
       openai: "https://api.openai.com/v1/chat/completions",
       groq: "https://api.groq.com/openai/v1/chat/completions",
       together: "https://api.together.xyz/v1/chat/completions",

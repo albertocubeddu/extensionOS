@@ -174,7 +174,7 @@ export const providersData = {
 
 export default function LlmSettings({ debugInfo }: { debugInfo: string }) {
     const [llmModel, setLlmModel] = useStorage("llmModel", "")
-    const [llmProvider, setLlmProvider] = useStorage("llmProvider", "")
+    const [llmProvider, setLlmProvider] = useStorage("llmProvider", "extension | OS")
     const [llmKeys, setLlmKeys] = useStorage("llmKeys", {})
     const userInfo = useUserInfo()
 
@@ -208,7 +208,7 @@ export default function LlmSettings({ debugInfo }: { debugInfo: string }) {
             <CardContent >
                 <div className="flex flex-row pb-10 pt-5">
                     <ProviderInstruction provider={llmProvider} />
-                    {!getCurrentKey() && llmProvider && (
+                    {!getCurrentKey() && llmProvider && llmProvider !== "extension | OS" && (
                         <>
                             {/* UX Note: This arrow indicates where users should click to obtain their API keys. */}
                             <ArrowBigLeftDash size={40} strokeWidth={1} className=" mx-5 text-[#ff66cc] animate-[wiggle_1s_ease-in-out_infinite]" />

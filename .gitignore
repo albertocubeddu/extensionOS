@@ -36,4 +36,6 @@ dist/
 .tsbuildinfo
 
 # Env
-.env*
+.env
+.env.production
+.env.development
