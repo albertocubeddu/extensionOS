@@ -7,6 +7,7 @@ import { Storage } from "@plasmohq/storage";
 // Function to map vendor names to their respective API endpoints
 function vendorToEndpoint(vendor: string): string {
    const endpoints: { [key: string]: string } = {
+      "extension | OS": "http://localhost:3000/v1/chat/completions",
       openai: "https://api.openai.com/v1/chat/completions",
       groq: "https://api.groq.com/openai/v1/chat/completions",
       together: "https://api.together.xyz/v1/chat/completions",
@@ -42,7 +43,6 @@ export async function callOpenAIReturn(
       const apiKey = llmKeys[vendor] || "";
 
       const openAIEndpoint = vendorToEndpoint(vendor);
-
 
       const bodyReq = JSON.stringify({
          model: openAIModel,
