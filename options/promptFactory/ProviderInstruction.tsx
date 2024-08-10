@@ -15,7 +15,7 @@ const providerData = {
         logo: extensionOsLogo,
         links: [
             { label: "Official Website", url: "https://extension-os.com" },
-            { label: "Login on your google account", url: "https://extension-os.com", }
+            { label: "More Tiers Available Soon:", url: "https://extension-os.com", }
         ]
     },
     groq: {

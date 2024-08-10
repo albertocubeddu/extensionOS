@@ -3,6 +3,8 @@ import type { ReactNode } from "react"
 
 const UserInfoContext = createContext<chrome.identity.UserInfo | null>(null)
 
+// Not used at the moment; If needed in the future, remember to add: 
+// identity, identity.email in the permission on the package.json
 export const UserInfoProvider = ({ children }: { children: ReactNode }) => {
     const [userInfo, setUserInfo] = useState<chrome.identity.UserInfo | null>(null)
 

@@ -22,7 +22,6 @@ import CardHeaderIntro from "~components/blocks/CardHeaderIntro"
 import FakeSaveButton from "~components/blocks/FakeSaveButton"
 import ProviderInstruction from "./promptFactory/ProviderInstruction"
 import { ArrowBigLeftDash, ArrowBigUpDash } from "lucide-react"
-import { useUserInfo } from "~lib/providers/UserInfoContext"
 import { ExtensionOsLogin } from "./settings/ExtensionOsLogin"
 
 // Add more combination here for the future
@@ -173,7 +172,6 @@ export default function LlmSettings({ debugInfo }: { debugInfo: string }) {
     const [llmModel, setLlmModel] = useStorage("llmModel", "")
     const [llmProvider, setLlmProvider] = useStorage("llmProvider", "extension | OS")
     const [llmKeys, setLlmKeys] = useStorage("llmKeys", {})
-    const userInfo = useUserInfo()
 
     //To auto-assign a model when the provider is changed.
     useEffect(() => {

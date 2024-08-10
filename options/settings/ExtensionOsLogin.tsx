@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import GoogleButton from "./GoogleButton"; // Changed to default import
 import { ArrowBigLeftDash } from "lucide-react";
+import { Badge } from "~components/ui/badge";
 
 export const ExtensionOsLogin = () => {
     const [showLoginButton, setShowLoginButton] = useState(false);
@@ -33,9 +34,11 @@ export const ExtensionOsLogin = () => {
                     <ArrowBigLeftDash size={40} strokeWidth={1} className=" mx-5 text-[#ff66cc] animate-[wiggle_1s_ease-in-out_infinite]" />
                 </div>
             ) :
-                <button>
-                    Your Key is Set, and you're enjoying the FREE tier.
-                </button>
+                <div className="flex flex-row gap-2 text-bases items-center">
+                    <Badge className="os-text-gradient" variant="outline"> Free Tier </Badge>
+                    <p className="font-extrabold"> 20 Request / Day </p>
+
+                </div>
             }
         </>
     );

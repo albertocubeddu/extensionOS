@@ -2,7 +2,7 @@
    "name": "extension-os",
    "displayName": "Extension-OS: Your AI Partner",
    "version": "0.0.11",
-   "description": "AI at Your Finxgertips, Anytime, Anywhere.",
+   "description": "AI at Your Fingertips, Anytime, Anywhere.",
    "author": "acubeddu87@gmail.com",
    "scripts": {
       "dev": "plasmo dev",
@@ -58,8 +58,7 @@
          "clipboard",
          "sidePanel",
          "declarativeNetRequest",
-         "identity",
-         "identity.email"
+         "identity"
       ],
       "declarative_net_request": {
          "rule_resources": [

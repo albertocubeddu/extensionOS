@@ -13,16 +13,13 @@ import LlmSettings from "./LlmSettings"
 import VoiceSettingsOutbound from "./VoiceSettingsOutbound"
 import CardHeaderIntro from "~components/blocks/CardHeaderIntro"
 import FakeSaveButton from "~components/blocks/FakeSaveButton"
-import { UserInfoProvider } from "~lib/providers/UserInfoContext"
 
 export default function OptionsGeneral() {
     const [debugInfo, setDebugInfo] = useStorage("debugInfo", "unchecked")
 
     return (
         <div className="grid gap-6">
-            <UserInfoProvider>
-                <LlmSettings debugInfo={debugInfo as string} />
-            </UserInfoProvider>
+            <LlmSettings debugInfo={debugInfo as string} />
             <VoiceSettingsOutbound debugInfo={debugInfo as string} />
 
             <Card x-chunk="dashboard-04-chunk-2">
