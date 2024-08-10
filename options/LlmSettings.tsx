@@ -23,9 +23,6 @@ import FakeSaveButton from "~components/blocks/FakeSaveButton"
 import ProviderInstruction from "./promptFactory/ProviderInstruction"
 import { ArrowBigLeftDash, ArrowBigUpDash } from "lucide-react"
 import { useUserInfo } from "~lib/providers/UserInfoContext"
-import { Button } from "~components/ui/button"
-import useSWR from "swr"
-import { callAPI } from "~lib/fetcher/callApi"
 import { ExtensionOsLogin } from "./settings/ExtensionOsLogin"
 
 // Add more combination here for the future

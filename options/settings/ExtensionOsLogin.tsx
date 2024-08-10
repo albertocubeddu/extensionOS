@@ -1,8 +1,6 @@
 import { useState, useEffect } from "react";
-import { callAPI } from "~lib/fetcher/callApi";
 import GoogleButton from "./GoogleButton"; // Changed to default import
 import { ArrowBigLeftDash } from "lucide-react";
-import GoogleButtonDark from "./GoogleButtonDark";
 
 export const ExtensionOsLogin = () => {
     const [showLoginButton, setShowLoginButton] = useState(false);
@@ -26,15 +24,6 @@ export const ExtensionOsLogin = () => {
     }, []);
 
 
-    const handleFreeTier = async () => {
-        try {
-            const data = await callAPI('/api/premium-feature', { method: 'POST' });
-            alert(data.code);
-        } catch (error) {
-            console.error('Error calling API:', error);
-        }
-    };
-
     return (
         <>
             {showLoginButton ? (
@@ -44,7 +33,7 @@ export const ExtensionOsLogin = () => {
                     <ArrowBigLeftDash size={40} strokeWidth={1} className=" mx-5 text-[#ff66cc] animate-[wiggle_1s_ease-in-out_infinite]" />
                 </div>
             ) :
-                <button onClick={handleFreeTier}>
+                <button>
                     Your Key is Set, and you're enjoying the FREE tier.
                 </button>
             }

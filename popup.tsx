@@ -1,33 +1,14 @@
 import backgroundExt from "data-base64:~assets/popup.png"
-import React, { useEffect, useState } from "react"
-import useSWR from "swr"
+import React from "react"
 
 
 import "./globals.css"
 import { Button } from "~components/ui/button"
-import { UserInfoProvider, useUserInfo } from "~lib/providers/UserInfoContext"
-import { callAPI } from "~lib/fetcher/callApi"
+import { UserInfoProvider } from "~lib/providers/UserInfoContext"
 
 
 
 function IndexPopup() {
-    const [data, setData] = useState("")
-    const userInfo = useUserInfo()
-
-
-
-    useEffect(() => {
-        const messageListener = (message, sender, sendResponse) => {
-            setData(message.data)
-            return true; // Keep the messaging channel open for asynchronous response
-        }
-
-        chrome.runtime.onMessage.addListener(messageListener)
-
-        // Cleanup the listener when the component unmounts
-        return () => chrome.runtime.onMessage.removeListener(messageListener);
-    }, [])
-
     return (
         <UserInfoProvider>
             <div style={{ backgroundImage: `url(${backgroundExt})` }} className="bg-cover bg-center w-[300px] h-[300px] flex flex-col items-center justify-end gap-2">
