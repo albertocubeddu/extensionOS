@@ -120,6 +120,10 @@ Move it somewhere else ASAP:
 
 # Changelog
 
+### 0.0.11
+- General: Added the FREE Tier to explore Extension | OS if you're not familiar with API Keys
+- 
+
 ### 0.0.10
 
 -  Context Menu: Added a new right-click option for seamless access to configuration settings.

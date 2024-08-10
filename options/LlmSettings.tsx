@@ -14,7 +14,7 @@ import {
     SelectTrigger,
     SelectValue
 } from "@/components/ui/select"
-import React, { useContext, useEffect, useState } from "react"
+import React, { useEffect } from "react"
 
 import { useStorage } from "@plasmohq/storage/hook"
 import LabelWithTooltip from "~components/blocks/LabelWithTooltip"
@@ -283,7 +283,7 @@ export default function LlmSettings({ debugInfo }: { debugInfo: string }) {
                         (provider) =>
                             llmProvider === provider.name && (
                                 <div key={provider.name}>
-                                    {provider.models.length > 0 && provider.name !== "extension | OS" ? ( // Added exception for "extensionos"
+                                    {provider.models.length > 0 && provider.name !== "extension | OS" ? ( // Added exception for "extensionos": To find a better solution this is smelly code.
                                         <div className="flex flex-col gap-1">
                                             <LabelWithTooltip keyTooltip={"llmProviderKey"} labelText={"API Key"} tooltipText={"This API Key for the selected provider."} />
                                             <Input
