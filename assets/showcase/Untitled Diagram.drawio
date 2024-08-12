@@ -40,6 +40,12 @@
         <mxCell id="dUNwwTDt9htzdZQ2tlWp-2" value="401" style="ellipse;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
           <mxGeometry x="750" y="440" width="50" height="55" as="geometry" />
         </mxCell>
+        <mxCell id="dUNwwTDt9htzdZQ2tlWp-5" value="403" style="ellipse;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="50" y="550" width="50" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="dUNwwTDt9htzdZQ2tlWp-6" value="&lt;h1 style=&quot;margin-top: 0px;&quot;&gt;403 from Extension | OS&lt;/h1&gt;&lt;p&gt;- Triggers an alert&amp;nbsp;&lt;br&gt;- Open the website https://extension-os.com&lt;/p&gt;" style="text;html=1;whiteSpace=wrap;overflow=hidden;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="100" y="570" width="310" height="120" as="geometry" />
+        </mxCell>
       </root>
     </mxGraphModel>
   </diagram>
