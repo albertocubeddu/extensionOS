@@ -5,6 +5,9 @@ import type { PlasmoCSConfig } from "plasmo"
 import { useEffect, useState } from "react"
 
 import { useStorage } from "@plasmohq/storage/hook"
+import { UserInfoProvider, useUserInfo } from "~lib/providers/UserInfoContext"
+import EmailShowCase from "~lib/providers/EmailShowcase"
+
 
 // We enable the extension to be used in anywebsite with an http/https protocol.
 export const config: PlasmoCSConfig = {
@@ -24,6 +27,7 @@ const PlasmoOverlay = () => {
     const [errorDivVisibe, setErrorDivVisibe] = useState(false)
     const [llmModel] = useStorage("llmModel")
     const [debugInfo] = useStorage("debugInfo")
+
 
     useEffect(() => {
         const handleClipboardCopy = async (text) => {
@@ -56,6 +60,13 @@ const PlasmoOverlay = () => {
                         setErrorDivVisibe(false)
                     }, 15000)
                     break
+                case "subscriptionLimitReached":
+                    console.log
+                    setIsLoading(false)
+                    alert('Oops! It looks like you have used up all your FREE credits for Extension | OS. Consider upgrading for more access!')
+                    // window.open(`https://extension-os.com/pricing?email=${data.email}&profile_id=${data.id}`, "_blank")
+
+                    break
                 default:
                     console.warn("Unknown action:", request.action)
             }
@@ -67,10 +78,13 @@ const PlasmoOverlay = () => {
         return () => chrome.runtime.onMessage.removeListener(messageListener)
     }, [])
 
+
+
     return (
         <>
             {/* DEBUG BOX */}
             <div
+
                 style={{
                     padding: "12px",
                     backgroundColor: "white",
