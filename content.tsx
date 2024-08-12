@@ -6,7 +6,8 @@ import { useEffect, useState } from "react"
 
 import { useStorage } from "@plasmohq/storage/hook"
 import { UserInfoProvider, useUserInfo } from "~lib/providers/UserInfoContext"
-import EmailShowCase from "~lib/providers/EmailShowcase"
+import { sendToBackground } from "@plasmohq/messaging"
+import { relay } from "@plasmohq/messaging/relay"
 
 
 // We enable the extension to be used in anywebsite with an http/https protocol.
@@ -20,6 +21,10 @@ export const getStyle = () => {
     return style
 }
 
+
+
+
+
 const PlasmoOverlay = () => {
     const [responseText, setResponseText] = useState("")
     const [successDivVisibe, setSuccessDivVisibile] = useState(false)
@@ -30,6 +35,20 @@ const PlasmoOverlay = () => {
 
 
     useEffect(() => {
+
+
+        const fetchData = async () => {
+
+            const resp = await sendToBackground({
+                name: "identity",
+            })
+
+            return resp;
+        }
+
+
+
+
         const handleClipboardCopy = async (text) => {
             try {
                 await navigator.clipboard.writeText(text)
@@ -41,7 +60,7 @@ const PlasmoOverlay = () => {
             }
         }
 
-        const messageListener = (request) => {
+        const messageListener = async (request) => {
             switch (request.action) {
                 case "copyToClipboard":
                     setResponseText(request.text)
@@ -61,14 +80,10 @@ const PlasmoOverlay = () => {
                     }, 15000)
                     break
                 case "subscriptionLimitReached":
-                    console.log
+                    const data = await fetchData()
+                    console.log("Subscription limit reached")
                     setIsLoading(false)
-                    alert('Oops! It looks like you have used up all your FREE credits for Extension | OS. Consider upgrading for more access!')
-                    // window.open(`https://extension-os.com/pricing?email=${data.email}&profile_id=${data.id}`, "_blank")
-
-                    break
-                default:
-                    console.warn("Unknown action:", request.action)
+                    window.open(`${process.env.PLASMO_PUBLIC_WEBSITE_EXTENSION_OS}/pricing?email=${data?.data.email}&profile_id=${data?.data.id}`, "_blank")
             }
         }
 
@@ -82,6 +97,7 @@ const PlasmoOverlay = () => {
 
     return (
         <>
+
             {/* DEBUG BOX */}
             <div
 

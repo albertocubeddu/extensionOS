@@ -58,7 +58,8 @@
          "clipboard",
          "sidePanel",
          "declarativeNetRequest",
-         "identity"
+         "identity",
+         "identity.email"
       ],
       "declarative_net_request": {
          "rule_resources": [
