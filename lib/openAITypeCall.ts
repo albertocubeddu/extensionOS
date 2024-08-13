@@ -67,7 +67,10 @@ export async function callOpenAIReturn(
 
       const bodyReq = JSON.stringify({
          model: openAIModel,
-         messages: [{ role: "user", content: `${systemPrompt}${message}` }],
+         messages: [
+            { role: "system", content: systemPrompt }, // Added system role
+            { role: "user", content: message }, // Updated user content
+         ],
          stream: false,
       });
 

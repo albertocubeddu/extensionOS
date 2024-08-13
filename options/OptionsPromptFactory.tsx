@@ -40,6 +40,7 @@ import HelpSheetContext from "./promptFactory/HelpSheetContext";
 import HelpSheetFunctionality from "./promptFactory/HelpSheetFunctionality";
 import { chromeContextsParameters } from "./promptFactory/parameters/chromeContextParameters";
 import { functionalityParameters } from "./promptFactory/parameters/functionalityParameters";
+import { AutosizeTextarea } from "~components/shadcnui-expansions/AutosizeTextarea";
 
 export default function OptionsPromptFactory() {
     const [contextMenuItems, setContextMenuItems] = useState<IContextConfigItems[]>([]);
@@ -169,7 +170,7 @@ export default function OptionsPromptFactory() {
                                             <div className="text-sm text-white">
                                                 <LabelWithTooltip keyTooltip={key} labelText="Prompt" tooltipText="The prompt for the GPT" />
 
-                                                <Textarea
+                                                <AutosizeTextarea
                                                     id={`prompt-${key}`}
                                                     className="mt-1 p-2 border rounded-md"
                                                     value={contextMenuItems[key].prompt}
