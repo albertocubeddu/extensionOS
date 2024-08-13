@@ -3,12 +3,8 @@ import loadingImage from "data-base64:~assets/AppIcons/loading.png"
 import cssText from "data-text:~/plasmo-overlay.css"
 import type { PlasmoCSConfig } from "plasmo"
 import { useEffect, useState } from "react"
-
 import { useStorage } from "@plasmohq/storage/hook"
-import { UserInfoProvider, useUserInfo } from "~lib/providers/UserInfoContext"
 import { sendToBackground } from "@plasmohq/messaging"
-import { relay } from "@plasmohq/messaging/relay"
-
 
 // We enable the extension to be used in anywebsite with an http/https protocol.
 export const config: PlasmoCSConfig = {
@@ -21,10 +17,6 @@ export const getStyle = () => {
     return style
 }
 
-
-
-
-
 const PlasmoOverlay = () => {
     const [responseText, setResponseText] = useState("")
     const [successDivVisibe, setSuccessDivVisibile] = useState(false)
@@ -36,19 +28,15 @@ const PlasmoOverlay = () => {
 
     useEffect(() => {
 
-
+        //Trick to fetch the chrome.profile from the background;
         const fetchData = async () => {
-
             const resp = await sendToBackground({
                 name: "identity",
             })
-
             return resp;
         }
 
-
-
-
+        //Function to copy text to the clipboard;
         const handleClipboardCopy = async (text) => {
             try {
                 await navigator.clipboard.writeText(text)
@@ -81,7 +69,6 @@ const PlasmoOverlay = () => {
                     break
                 case "subscriptionLimitReached":
                     const data = await fetchData()
-                    console.log("Subscription limit reached")
                     setIsLoading(false)
                     window.open(`${process.env.PLASMO_PUBLIC_WEBSITE_EXTENSION_OS}/pricing?email=${data?.data.email}&profile_id=${data?.data.id}`, "_blank")
             }

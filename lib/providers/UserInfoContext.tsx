@@ -12,7 +12,6 @@ export const UserInfoProvider = ({ children }: { children: ReactNode }) => {
         let isMounted = true; // Track if the component is mounted
         chrome.identity.getProfileUserInfo((data) => {
             if (isMounted && data.email && data.id) {
-                console.log(data)
                 setUserInfo(data)
             }
         })
