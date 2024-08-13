@@ -26,9 +26,9 @@ export default function LabelWithTooltip({ keyTooltip, labelText, tooltipText, s
                     </Label>
                     <span className="inline-flex items-center gap-1 mb-2">
                         {sheetIncluded ? (
-                            <MousePointerClick color="#ff66cc" className="animate-[wiggle_1s_ease-in-out_3]" size={15} />
+                            <MousePointerClick color="#ff66cc" className="animate-[pulse_1s_ease-in-out_10]" size={18} />
                         ) : (
-                            <CircleHelp color="white" size={15} />
+                            <CircleHelp color="white" size={18} />
                         )}
                     </span>
 

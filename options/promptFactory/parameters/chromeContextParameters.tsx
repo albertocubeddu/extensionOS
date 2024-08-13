@@ -1,4 +1,14 @@
+
 export const chromeContextsParameters = [
+    {
+        key: "selection",
+        display: "Selection",
+        description: "This context is used when there is selected text on the web page. The menu item will appear when right-clicking on the selected text."
+    },
+]
+
+//To explore in the future, at the moment we don't have a use-case
+export const chromeContextsParametersAdvancedUser = [
     {
         key: "all",
         display: "All",

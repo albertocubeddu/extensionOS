@@ -221,7 +221,7 @@ export default function OptionsPromptFactory() {
                                                     </div>
                                                 </div> */}
 
-                                                <div className="text-sm text-gray-600 pt-[1.73rem]">
+                                                <div className="text-sm text-gray-600 pt-[1.85rem]">
                                                     <Button className="w-[155px] bg-gradient-to-r from-violet-500 to-orange-500 text-white" onClick={() => handleSave()}>
                                                         Save All
                                                     </Button>
