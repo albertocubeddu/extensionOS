@@ -86,7 +86,8 @@ export async function callOpenAIReturn(
          }, 2000);
       }
 
-      if (response.status === 403) {
+      //Extension-os.com || Free Tier Exhausted
+      if (response.status === 403 && vendor === "extension | OS") {
          chrome.tabs.query(
             { active: true, currentWindow: true },
             function (tabs) {
