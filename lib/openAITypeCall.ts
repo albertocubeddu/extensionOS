@@ -86,12 +86,27 @@ export async function callOpenAIReturn(
          }, 2000);
       }
 
+      //Extension-os.com || Free Tier Exhausted
+      if (response.status === 403 && vendor === "extension | OS") {
+         chrome.tabs.query(
+            { active: true, currentWindow: true },
+            function (tabs) {
+               if (tabs[0]?.id) {
+                  chrome.tabs.sendMessage(tabs[0].id, {
+                     action: "subscriptionLimitReached",
+                     text: "3000",
+                  });
+               } else {
+                  throw new Error("No active tab found.");
+               }
+            }
+         );
+      }
+
       if (!response.ok) {
-         if (response.status === 401) {
-            setTimeout(() => chrome.runtime.openOptionsPage(), 2000);
-         }
          throw new Error(
-            data.error?.message || `HTTP error! status: ${response.status}`
+            data.error?.message ||
+               `3rd party API repsponded with HTTP error status: ${response.status}`
          );
       }
 
@@ -101,7 +116,6 @@ export async function callOpenAIReturn(
 
       return { data: data.choices[0].message.content };
    } catch (error) {
-      console.error("Failed to fetch from OpenAI API:", error);
       return {
          errorMessage: error instanceof Error ? error.message : String(error),
       };

@@ -120,6 +120,10 @@ Move it somewhere else ASAP:
 
 # Changelog
 
+### 0.0.12 (Not release to the public)
+- General: Free tier exhaustion. We haven't got a sponsor (yet) to support our community users.
+- Google: Added identity, identity.email to enable automatic log-in using your google credentials.
+
 ### 0.0.11 (Not released to the public)
 - General: Introduced a FREE Tier for users to explore the Extension | OS without needing to understand API Keys.
 - Development: Implemented the CRX Public Key to maintain a consistent extension ID across re-installations during development.

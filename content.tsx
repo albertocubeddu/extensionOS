@@ -3,8 +3,8 @@ import loadingImage from "data-base64:~assets/AppIcons/loading.png"
 import cssText from "data-text:~/plasmo-overlay.css"
 import type { PlasmoCSConfig } from "plasmo"
 import { useEffect, useState } from "react"
-
 import { useStorage } from "@plasmohq/storage/hook"
+import { sendToBackground } from "@plasmohq/messaging"
 
 // We enable the extension to be used in anywebsite with an http/https protocol.
 export const config: PlasmoCSConfig = {
@@ -25,7 +25,18 @@ const PlasmoOverlay = () => {
     const [llmModel] = useStorage("llmModel")
     const [debugInfo] = useStorage("debugInfo")
 
+
     useEffect(() => {
+
+        //Trick to fetch the chrome.profile from the background;
+        const fetchData = async () => {
+            const resp = await sendToBackground({
+                name: "identity",
+            })
+            return resp;
+        }
+
+        //Function to copy text to the clipboard;
         const handleClipboardCopy = async (text) => {
             try {
                 await navigator.clipboard.writeText(text)
@@ -37,7 +48,7 @@ const PlasmoOverlay = () => {
             }
         }
 
-        const messageListener = (request) => {
+        const messageListener = async (request) => {
             switch (request.action) {
                 case "copyToClipboard":
                     setResponseText(request.text)
@@ -56,8 +67,10 @@ const PlasmoOverlay = () => {
                         setErrorDivVisibe(false)
                     }, 15000)
                     break
-                default:
-                    console.warn("Unknown action:", request.action)
+                case "subscriptionLimitReached":
+                    const data = await fetchData()
+                    setIsLoading(false)
+                    window.open(`${process.env.PLASMO_PUBLIC_WEBSITE_EXTENSION_OS}/pricing?email=${data?.data.email}&profile_id=${data?.data.id}`, "_blank")
             }
         }
 
@@ -67,10 +80,14 @@ const PlasmoOverlay = () => {
         return () => chrome.runtime.onMessage.removeListener(messageListener)
     }, [])
 
+
+
     return (
         <>
+
             {/* DEBUG BOX */}
             <div
+
                 style={{
                     padding: "12px",
                     backgroundColor: "white",
