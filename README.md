@@ -121,11 +121,15 @@ Move it somewhere else ASAP:
 
 # Changelog
 
-### 0.0.13 (Not released to the public)
+### 0.0.13 
 
--  Enhanced UI (tooltips are now more noticeable) thanks to Juanjo (We Move Experience)
+-  Enhanced UI (tooltips are now more noticeable) thanks to Juanjo (We Move Experience) and Agostina (PepperStudio)
 -  Prompt Factory: Utilizing AutoTextArea for improved prompt display
 -  Prompt Factory: Removed the ID to improve user experience (non-tech users)
+-  System: Split the systemPrompt from the userPrompt.
+-  UX: Small improvements and removed the complicated items
+
+
 
 ### 0.0.12 (Not released to the public)
 
