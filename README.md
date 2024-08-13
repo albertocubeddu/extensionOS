@@ -117,21 +117,33 @@ Move it somewhere else ASAP:
 -  Plasmo -> The Framework
 -  Groq -> Extra credits
 -  Icons -> icons8
+-  https://shadcnui-expansions.typeart.cc/
 
 # Changelog
 
-### 0.0.12 (Not release to the public)
-- General: Free tier exhaustion. We haven't got a sponsor (yet) to support our community users.
-- Google: Added identity, identity.email to enable automatic log-in using your google credentials.
+### 0.0.13 
+
+-  Enhanced UI (tooltips are now more noticeable) thanks to Juanjo (We Move Experience) and Agostina (PepperStudio)
+-  Prompt Factory: Utilizing AutoTextArea for improved prompt display
+-  Prompt Factory: Removed the ID to improve user experience (non-tech users)
+-  System: Split the systemPrompt from the userPrompt.
+-  UX: Small improvements and removed the complicated items
+
+
+
+### 0.0.12 (Not released to the public)
+
+-  General: Free tier exhaustion. We haven't got a sponsor (yet) to support our community users.
+-  Google: Added identity, identity.email to enable automatic log-in using your google credentials.
 
 ### 0.0.11 (Not released to the public)
-- General: Introduced a FREE Tier for users to explore the Extension | OS without needing to understand API Keys.
-- Development: Implemented the CRX Public Key to maintain a consistent extension ID across re-installations during development.
-- Development: Integrated OAUTH for user authentication when accessing the FREE tier.
-- Permissions: Added identity permissions to facilitate user identity retrieval.
-- Showcase: Updated images for improved visual presentation.
-- Prompt Factory: Set Extension | OS as the default model, enabling users to utilize the extension without prior knowledge of API Key setup.
 
+-  General: Introduced a FREE Tier for users to explore the Extension | OS without needing to understand API Keys.
+-  Development: Implemented the CRX Public Key to maintain a consistent extension ID across re-installations during development.
+-  Development: Integrated OAUTH for user authentication when accessing the FREE tier.
+-  Permissions: Added identity permissions to facilitate user identity retrieval.
+-  Showcase: Updated images for improved visual presentation.
+-  Prompt Factory: Set Extension | OS as the default model, enabling users to utilize the extension without prior knowledge of API Key setup.
 
 ### 0.0.10
 
@@ -177,7 +189,7 @@ Move it somewhere else ASAP:
 -  Vapi Enhancements: Now every prompt can be customised using the
 -  UI: Section for specific configurations
 
-##0.0.4
+## 0.0.4
 
 -  Hotfix: declarativeNetRequest was intercepting every localhost request.
 

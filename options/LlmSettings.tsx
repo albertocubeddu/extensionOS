@@ -213,8 +213,8 @@ export default function LlmSettings({ debugInfo }: { debugInfo: string }) {
 
                 <div>
                     <div className="flex flex-col gap-1">
-                        <LabelWithTooltip keyTooltip={"llmProvider"} labelText={"Default LLM Provider"} tooltipText={"This is the LLM provider that will be used by default."} />
-                        <div className="flex flex-row">
+                        <LabelWithTooltip keyTooltip={"llmProvider"} labelText={"Default Provider"} tooltipText={"This is the LLM provider that will be used by default."} />
+                        <div className="flex flex-row gap-5">
                             <Select value={llmProvider} onValueChange={setLlmProvider}>
                                 <SelectTrigger className="w-[180px]">
                                     <SelectValue placeholder="Select a provider" />
@@ -228,6 +228,9 @@ export default function LlmSettings({ debugInfo }: { debugInfo: string }) {
                                     ))}
                                 </SelectContent>
                             </Select>
+
+                            {llmProvider === "extension | OS" && <ExtensionOsLogin />}
+
 
                             {!llmProvider && (
                                 <>
@@ -249,20 +252,22 @@ export default function LlmSettings({ debugInfo }: { debugInfo: string }) {
                             <div key={provider.name}>
                                 <div className="flex flex-col gap-1">
 
-                                    <LabelWithTooltip keyTooltip={"llmModel"} labelText={"Default LLM Model"} tooltipText={"This is the LLM model that will be used by default."} />
+                                    <LabelWithTooltip keyTooltip={"llmModel"} labelText={"Default Model"} tooltipText={"This is the LLM model that will be used by default."} />
                                     {provider.models.length > 0 ? (
-                                        <Select value={llmModel} onValueChange={setLlmModel}>
-                                            <SelectTrigger className="w-full">
-                                                <SelectValue placeholder="Select a model" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                {provider.models.map((llmModel) => (
-                                                    <SelectItem key={llmModel} value={llmModel}>
-                                                        {llmModel}
-                                                    </SelectItem>
-                                                ))}
-                                            </SelectContent>
-                                        </Select>
+                                        <>
+                                            <Select value={llmModel} onValueChange={setLlmModel}>
+                                                <SelectTrigger className="w-full">
+                                                    <SelectValue placeholder="Select a model" />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    {provider.models.map((llmModel) => (
+                                                        <SelectItem key={llmModel} value={llmModel}>
+                                                            {llmModel}
+                                                        </SelectItem>
+                                                    ))}
+                                                </SelectContent>
+                                            </Select>
+                                        </>
                                     ) : (
                                         <Input
                                             type="text"
@@ -295,7 +300,8 @@ export default function LlmSettings({ debugInfo }: { debugInfo: string }) {
                                             />
                                         </div>
                                     ) :
-                                        <ExtensionOsLogin />}
+                                        // Extension | OS do not need API key as it's integrated
+                                        null}
                                 </div>
                             )
                     )}

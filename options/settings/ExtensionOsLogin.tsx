@@ -28,16 +28,16 @@ export const ExtensionOsLogin = () => {
     return (
         <>
             {showLoginButton ? (
-                <div className="flex flex-row gap-0 mt-2">
+                <div className="flex flex-row gap-0 pl-3">
                     <GoogleButton
                         onClick={() => handleToken(true)} />
                     <ArrowBigLeftDash size={40} strokeWidth={1} className=" mx-5 text-[#ff66cc] animate-[wiggle_1s_ease-in-out_infinite]" />
+                    <Badge className="os-text-gradient" variant="outline"> Free Tier </Badge>
                 </div>
             ) :
-                <div className="flex flex-row gap-2 text-bases items-center">
+                <div className="flex flex-row gap-4 text-bases items-center">
                     <Badge className="os-text-gradient" variant="outline"> Free Tier </Badge>
-                    <p className="font-extrabold"> 20 Request / Day </p>
-
+                    <p className="font">20 Request / Day</p>
                 </div>
             }
         </>

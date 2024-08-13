@@ -118,7 +118,6 @@ const GoogleButton: React.FC<GoogleButtonProps> = ({ onClick }) => {
                     </svg>
                 </div>
                 <span style={buttonContentsStyles}>Continue with Google</span>
-                <span style={{ display: 'none' }}>Continue with Google</span>
             </div>
         </button>
     );

@@ -19,6 +19,8 @@ import { useStorage } from "@plasmohq/storage/hook"
 import LabelWithTooltip from "~components/blocks/LabelWithTooltip"
 import CardHeaderIntro from "~components/blocks/CardHeaderIntro"
 import FakeSaveButton from "~components/blocks/FakeSaveButton"
+import ProviderVoiceInstruction from "./promptFactory/ProviderVoiceInstruction"
+import { ArrowBigLeftDash } from "lucide-react"
 
 export default function VoiceSettingsOutbound({
     debugInfo
@@ -38,12 +40,13 @@ export default function VoiceSettingsOutbound({
                 <CardHeaderIntro title={"Voice Outbound Settings"} description={"The provide you will use to establish an external phone call. At the moment we only support Vapi.ai"} />
             </CardHeader>
             <CardContent>
+                <div className="flex flex-row pb-10 pt-5">
+                    <ProviderVoiceInstruction provider="vapi" />
+                    {/* UX Note: This arrow indicates where users should click to obtain their API keys. */}
+                    <ArrowBigLeftDash size={40} strokeWidth={1} className=" mx-5 text-[#ff66cc] animate-[wiggle_1s_ease-in-out_infinite]" />
+                </div>
+
                 <div>
-                    <img
-                        src={vapiLogo}
-                        alt="VAPI Logo"
-                        className="block max-w-[150px] mb-10 mt-4"
-                    />
                     <div className="flex flex-col gap-1">
 
                         <LabelWithTooltip keyTooltip={"voiceOutboundProvider"} labelText={"Default Voice Outbound Provider"} tooltipText={"This is the Voice provider that will be used by default."} />

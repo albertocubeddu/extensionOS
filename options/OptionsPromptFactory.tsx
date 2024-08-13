@@ -40,6 +40,7 @@ import HelpSheetContext from "./promptFactory/HelpSheetContext";
 import HelpSheetFunctionality from "./promptFactory/HelpSheetFunctionality";
 import { chromeContextsParameters } from "./promptFactory/parameters/chromeContextParameters";
 import { functionalityParameters } from "./promptFactory/parameters/functionalityParameters";
+import { AutosizeTextarea } from "~components/shadcnui-expansions/AutosizeTextarea";
 
 export default function OptionsPromptFactory() {
     const [contextMenuItems, setContextMenuItems] = useState<IContextConfigItems[]>([]);
@@ -108,7 +109,7 @@ export default function OptionsPromptFactory() {
                                         key={key}
                                         className="p-4 pt-6 mb-20 border-t-8 border-l-8 border-2 rounded-lg shadow-lg"
                                     >
-                                        <div className="flex flex-row justify-between gap-4">
+                                        <div className="flex flex-row justify-between gap-4 px-4">
                                             <div className="flex flex-col gap-1 w-3/4">
                                                 <LabelWithTooltip keyTooltip={key} labelText="Display Name" tooltipText="The name displayed in the menu visualised when the user clicks the right-click" />
                                                 <Input
@@ -165,11 +166,11 @@ export default function OptionsPromptFactory() {
                                             </div>
                                         </div>
 
-                                        <div className="flex flex-col gap-5 pt-4 px-4 rounded-lg shadow-inner mt-5 mb-4">
+                                        <div className="flex flex-col gap-5 pt-4 px-4 rounded-lg shadow-inner mb-4">
                                             <div className="text-sm text-white">
                                                 <LabelWithTooltip keyTooltip={key} labelText="Prompt" tooltipText="The prompt for the GPT" />
 
-                                                <Textarea
+                                                <AutosizeTextarea
                                                     id={`prompt-${key}`}
                                                     className="mt-1 p-2 border rounded-md"
                                                     value={contextMenuItems[key].prompt}
@@ -183,9 +184,9 @@ export default function OptionsPromptFactory() {
                                                     placeholder="Enter your prompt here"
                                                 />
                                             </div>
-                                            <div className="flex flex-row gap-4">
-                                                <div className="text-sm text-white w-1/2">
-                                                    <div className="flex flex-col gap-1">
+                                            <div className="flex flex-row gap-4 justify-between">
+                                                <div className="text-sm text-white w-full">
+                                                    <div className="flex flex-col gap-1 ">
 
                                                         <Sheet>
                                                             <SheetTrigger> <LabelWithTooltip keyTooltip={key} labelText="Functionality" tooltipText="The functionality after the prompt is executed. Click for more info" sheetIncluded={true} /></SheetTrigger>
@@ -211,24 +212,28 @@ export default function OptionsPromptFactory() {
                                                         </Select>
                                                     </div>
                                                 </div>
-                                                <div className="text-sm text-gray-600 w-1/2">
+                                                {/* <div className="text-sm text-gray-600 w-1/2">
                                                     <div className="flex flex-col gap-1">
                                                         <LabelWithTooltip keyTooltip={key} labelText="ID" tooltipText="Unique Identification used internally" />
                                                         <p className="p-2 h-10 border rounded-md bg-white">
                                                             {contextMenuItems[key].id}
                                                         </p>
                                                     </div>
+                                                </div> */}
+
+                                                <div className="text-sm text-gray-600 pt-[1.85rem]">
+                                                    <Button className="w-[155px] bg-gradient-to-r from-violet-500 to-orange-500 text-white" onClick={() => handleSave()}>
+                                                        Save All
+                                                    </Button>
                                                 </div>
                                             </div>
                                             {contextMenuItems[key].functionType === "callVoice-ExternalNumber" && (
-                                                <VapiSpecificConfiguration contextMenuItems={contextMenuItems[key]} handleChange={handleChange} />
+                                                <>
+                                                    <VapiSpecificConfiguration contextMenuItems={contextMenuItems[key]} handleChange={handleChange} />
+                                                </>
                                             )}
 
-                                            <div className="flex flex-row justify-center pt-0">
-                                                <Button className="w-full bg-gradient-to-r from-violet-500 to-orange-500 text-white" onClick={() => handleSave()}>
-                                                    Save All
-                                                </Button>
-                                            </div>
+
 
                                         </div>
                                     </div>

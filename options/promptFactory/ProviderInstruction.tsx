@@ -9,6 +9,7 @@ import groqLogo from "data-base64:~assets/AppIcons/groq.png";
 import openAiLogo from "data-base64:~assets/AppIcons/openai.svg";
 import togetherAiLogo from "data-base64:~assets/AppIcons/togetherai.png";
 import extensionOsLogo from "data-base64:~assets/AppIcons/extension-os.svg";
+import InstructionSnippet from "./components/InstructionSnippet";
 
 const providerData = {
     "extension | OS": {
@@ -46,18 +47,6 @@ export default function ProviderInstruction({ provider }: ProviderInstructionPro
     const { logo, links } = providerData[provider] || { logo: extensionOsLogo, links: [] };
 
     return (
-        <div className="flex flex-row gap-5">
-            <img src={logo} alt={`${provider} Logo`} className="block max-w-[163px]" />
-            <div className="flex flex-grow">
-                <p className="border-l-2 border-[#ff66cc] pl-4">
-                    {links.map((link, index) => (
-                        <span key={index}>
-                            <b>{link.label}:</b> <a href={link.url + '?utm_campaign=extension-os'} target="_blank" rel="noopener noreferrer">{link.url}</a> <br />
-                        </span>
-
-                    ))}
-                </p>
-            </div>
-        </div>
+        <InstructionSnippet logo={logo} provider={provider} links={links} />
     );
 }

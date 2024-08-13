@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 //  https://developers.google.com/identity/branding-guidelines
 
@@ -73,16 +73,32 @@ const buttonStateStyles: React.CSSProperties = {
 };
 
 const GoogleButton: React.FC<GoogleButtonProps> = ({ onClick }) => {
+
+    const [isDisabled, setIsDisabled] = useState(false)
+
+
     const handleMouseOver = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.currentTarget.style.boxShadow = '0 1px 2px 0 rgba(60, 64, 67, .30), 0 1px 3px 1px rgba(60, 64, 67, .15)';
+        e.currentTarget.style.opacity = '0.95';
     };
 
     const handleMouseOut = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.currentTarget.style.boxShadow = '';
+        e.currentTarget.style.opacity = '1';
+
     };
 
-    const handleClick = async () => {
-        await onClick();
+    const handleClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
+        if (!isDisabled) {
+            setIsDisabled(true); // Disable the button immediately
+            try {
+                await onClick(); // Ensure onClick is awaited
+            } finally {
+                setTimeout(() => {
+                    setIsDisabled(false);
+                }, 1000);
+            }
+        }
     };
 
     return (
@@ -104,8 +120,7 @@ const GoogleButton: React.FC<GoogleButtonProps> = ({ onClick }) => {
                         <path fill="none" d="M0 0h48v48H0z"></path>
                     </svg>
                 </div>
-                <span style={buttonContentsStyles}>Continue with Google</span>
-                <span style={{ display: 'none' }}>Continue with Google</span>
+                <span style={buttonContentsStyles}>{isDisabled ? 'Loading Google' : 'Continue with Google'}</span>
             </div>
         </button>
     );

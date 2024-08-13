@@ -18,8 +18,8 @@ export default function HelpSheetContext() {
                         <div className="flex flex-col">
                             {chromeContextsParameters.map((context) => (
                                 <>
-                                    <span className="bg-gray-800 rounded-lg p-2 w-fit text-white font-mono mb-2">{`"${context.key}"`}</span>
-                                    <span className="mb-5">{context.description}</span>
+                                    <span className="bg-gray-800 rounded-lg p-2 w-fit text-white font-mono mb-2">{context.key.charAt(0).toUpperCase() + context.key.slice(1)}</span>
+                                    <span className="mb-5">{context.description.charAt(0).toUpperCase() + context.description.slice(1)}</span>
                                 </>
                             ))}
                         </div>
