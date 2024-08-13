@@ -125,6 +125,7 @@ Move it somewhere else ASAP:
 
 -  Enhanced UI (tooltips are now more noticeable) thanks to Juanjo (We Move Experience)
 -  Prompt Factory: Utilizing AutoTextArea for improved prompt display
+-  Prompt Factory: Removed the ID to improve user experience (non-tech users)
 
 ### 0.0.12 (Not released to the public)
 
