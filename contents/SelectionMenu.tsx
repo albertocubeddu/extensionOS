@@ -1,5 +1,5 @@
 import type { PlasmoCSConfig } from "plasmo"
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 
 import {
     Command,
@@ -9,8 +9,6 @@ import {
     CommandList,
 } from "@/components/ui/command"
 
-
-
 import cssText from "data-text:~/globals.css"
 import { initializeStorage } from "~background/init"
 import { cleanProperties } from "~lib/cleanContextMenu"
@@ -18,9 +16,8 @@ import { createCall } from "~lib/vapiOutbound"
 
 import { Storage } from "@plasmohq/storage";
 import { sendToBackground } from "@plasmohq/messaging"
+import { adjustXYSelectionMenu, getRealXY } from "~lib/calculationXY"
 const storage = new Storage();
-
-
 
 // We enable the extension to be used in anywebsite with an http/https protocol.
 export const config: PlasmoCSConfig = {
@@ -33,54 +30,51 @@ export const getStyle = () => {
     return style
 }
 
-
-
 const SelectionMenu = () => {
     const [selectedText, setSelectedText] = useState("")
     const [menuPosition, setMenuPosition] = useState<{ x: number; y: number }>({ x: 0, y: 0 })
     const [menuItems, setMenuItems] = useState<chrome.contextMenus.CreateProperties[]>([]) // Initialize with an empty array
 
 
-    const handleMouseUp = (event: MouseEvent) => {
+    const handleMouseUp = useCallback((event: MouseEvent) => { // Use useCallback
         const selection = window.getSelection()
         const text = selection?.toString() || null
 
-
         if (null !== text && text.trim().length > 0) {
-            setSelectedText(text)
-
-            const viewportHeight = window.innerHeight
-            const viewportWidth = window.innerWidth
-            const menuHeight = 250 // approximate height of your menu (adjust as needed)
-            const menuWidth = 300 // approximate width of your menu (adjust as needed)
-            let xPos = event.pageX
-            let yPos = event.pageY
-
-            // Check for bottom edge case
-            if (event.pageY + menuHeight > viewportHeight) {
-                yPos = viewportHeight - menuHeight - 10 // small margin from the bottom
-            }
-
-            // Check for right edge case
-            if (event.pageX + menuWidth > viewportWidth) {
-                xPos = viewportWidth - menuWidth - 10 // small margin from the right
-            }
-
-            // Adjust for top edge case
-            if (event.pageY < menuHeight && yPos < 0) {
-                yPos = 10 // small margin from the top
-            }
-
-            // Adjust for left edge case
-            if (event.pageX < menuWidth && xPos < 0) {
-                xPos = 10 // small margin from the left
-            }
-
+            setSelectedText(text);
+            //Get Real Coordinate and Adjust them according to the menu size.
+            const { xPos, yPos } = adjustXYSelectionMenu(getRealXY(event));
             setMenuPosition({ x: xPos, y: yPos })
         } else {
             setMenuPosition({ x: 0, y: 0 })
         }
-    }
+    }, []);
+
+    // Separate functions for handling different actions
+    const handleCopyClipboard = async (element) => {
+        const response = await sendToBackground({
+            name: "callOpenAIReturn",
+            body: { prompt: element.prompt, selectedText }
+        });
+        await sendToBackground({ name: "copyTextToClipboard", body: { ...response } });
+    };
+
+    const handleVoiceCall = async (element) => {
+        await createCall(
+            element.prompt,
+            selectedText,
+            element.extraArgs?.vapiRecipientPhoneNumber ?? "Hi, this is your assistant calling. How can I help you?",
+            element.extraArgs?.vapiFirstMessage ?? ""
+        );
+    };
+
+    const handleOpenSidebar = async (element) => {
+        const response = await sendToBackground({
+            name: "callOpenAIReturn",
+            body: { prompt: element.prompt, selectedText }
+        });
+        await sendToBackground({ name: "sendToSidepanel", body: { ...response } });
+    };
 
 
     const handleMenuItemClick = async (info: chrome.contextMenus.CreateProperties) => {
@@ -101,60 +95,30 @@ const SelectionMenu = () => {
         //In the past we've used the hashmap, however it would overcomplicated the rest of the codebase always because we are not able to use the chrome.storage and the sidebar.open in the same function. This can be reviewed and use an hashmap if we find the solution for that bug. At the moment i don't expect having more than 20 prompt per user, so readability and clean code beats efficiency.
         const element = items.find((item) => item.id === info.id);
 
-        switch (info.id) {
-            case element.id:
-                if (element.id === "configuration") {
-                    await sendToBackground({
-                        name: "openOptionPage",
-                    })
-                }
-                if (element.functionType === "callAI-copyClipboard") {
-                    const a = await sendToBackground({
-                        name: "sendLoadingAction",
-                    })
+        if (!element) {
+            console.warn("Unhandled menu item:", info.id);
+            return;
+        }
 
-                    const response = await sendToBackground({
-                        name: "callOpenAIReturn",
-                        body: {
-                            prompt: element.prompt,
-                            selectedText: selectedText
-                        }
-                    })
+        if (element.id === "configuration") {
+            console.log(element)
+            await sendToBackground({
+                name: "openOptionPage",
+            })
+        }
 
-                    const copyToText = await sendToBackground({
-                        name: "copyTextToClipboard",
-                        body: { ...response }
-                    })
-                }
-
-                if (element.functionType === "callVoice-ExternalNumber") {
-                    //In this case we do know that the callVoice will have those argument setup.
-                    await createCall(
-                        element.prompt,
-                        selectedText,
-                        element.extraArgs?.vapiRecipientPhoneNumber ??
-                        "Hi, this is your assistent calling. How can I help you?",
-                        element.extraArgs?.vapiFirstMessage ?? ""
-                    );
-                    break;
-                }
-
-                if (element.functionType === "callAI-openSideBar") {
-                    const response = await sendToBackground({
-                        name: "callOpenAIReturn",
-                        body: {
-                            prompt: element.prompt,
-                            selectedText: selectedText
-                        }
-                    })
-                    const sendToSidepanel = await sendToBackground({
-                        name: "sendToSidepanel",
-                        body: { ...response }
-                    })
-                }
+        switch (element.functionType) {
+            case "callAI-copyClipboard":
+                await handleCopyClipboard(element);
+                break;
+            case "callVoice-ExternalNumber":
+                await handleVoiceCall(element);
+                break;
+            case "callAI-openSideBar":
+                await handleOpenSidebar(element);
                 break;
             default:
-                console.warn("Unhandled menu item:", info.id);
+                console.warn("Unhandled function type:", element.functionType);
         }
     }
 
@@ -191,7 +155,7 @@ const SelectionMenu = () => {
                             <CommandEmpty>No results found.</CommandEmpty>
                             <CommandGroup >
                                 {menuItems.map((item) => (
-                                    <CommandItem className="cursor-pointer opacity-50 hover:opacity-100 hover:bg-[#505050] font-bold m-1 rounded-2xl" key={item.id} onSelect={() => handleMenuItemClick(item)}>
+                                    <CommandItem className="cursor-pointer opacity-50 hover:opacity-100 hover:bg-[#505050] font-bold m-1 rounded-2xl" key={item.id} value={item.title} onSelect={() => handleMenuItemClick(item)}>
                                         <span>{item.title}</span>
                                     </CommandItem>
                                 ))}
@@ -205,3 +169,5 @@ const SelectionMenu = () => {
 }
 
 export default SelectionMenu
+
+
