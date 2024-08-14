@@ -121,15 +121,21 @@ Move it somewhere else ASAP:
 
 # Changelog
 
-### 0.0.13 
+
+
+### 0.0.14
+- Fixed grammar issues, thanks to Luca.
+- Introduced a new menu, courtesy of Denis.
+- The new menu currently does not support phone calls (feature coming soon).
+
+
+### 0.0.13
 
 -  Enhanced UI (tooltips are now more noticeable) thanks to Juanjo (We Move Experience) and Agostina (PepperStudio)
 -  Prompt Factory: Utilizing AutoTextArea for improved prompt display
 -  Prompt Factory: Removed the ID to improve user experience (non-tech users)
 -  System: Split the systemPrompt from the userPrompt.
 -  UX: Small improvements and removed the complicated items
-
-
 
 ### 0.0.12 (Not released to the public)
 
@@ -211,3 +217,9 @@ Move it somewhere else ASAP:
 ## 0.0.1
 
 -  Check the demo video
+
+# Gotchas
+
+-  Ensure that the open.sidePanel is always initialized before the Plasmo Storage.
+-  We currently have two menus that function similarly but not identically; we need to implement a more efficient solution to consolidate them into one.
+-  The Plasmo handler may stop functioning unexpectedly without errors if a response is not returned; ensure to always return a response to prevent this issue.

@@ -37,7 +37,7 @@ export default function VoiceSettingsOutbound({
     return (
         <Card x-chunk="dashboard-04-chunk-1">
             <CardHeader>
-                <CardHeaderIntro title={"Voice Outbound Settings"} description={"The provide you will use to establish an external phone call. At the moment we only support Vapi.ai"} />
+                <CardHeaderIntro title={"Voice Outbound Settings"} description={"The provider you will use to establish an external phone call. At the moment we only support Vapi.ai"} />
             </CardHeader>
             <CardContent>
                 <div className="flex flex-row pb-10 pt-5">
