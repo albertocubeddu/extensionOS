@@ -62,9 +62,13 @@ export default function OptionsPromptFactory() {
         setContextMenuItems(prevItems =>
             prevItems.map(item => {
                 if (item.id === id) {
-                    const newId = item.id.startsWith("side_")
-                        ? value === "callAI-openSideBar" ? item.id : item.id.replace(/^side_/, '')
-                        : value === "callAI-openSideBar" ? `side_${item.id}` : item.id;
+                    let newId = item.id;
+
+                    if (item.id.startsWith("side_") && prop === "functionType" && value !== "callAI-openSideBar") {
+                        newId = item.id.replace(/^side_/, '');
+                    } else if (!item.id.startsWith("side_") && value === "callAI-openSideBar") {
+                        newId = `side_${item.id}`;
+                    }
 
                     return { ...item, [prop]: value, id: newId };
                 }
@@ -109,6 +113,7 @@ export default function OptionsPromptFactory() {
                                         key={key}
                                         className="p-4 pt-6 mb-20 border-t-8 border-l-8 border-2 rounded-lg shadow-lg"
                                     >
+                                        {contextMenuItems[key].id}
                                         <div className="flex flex-row justify-between gap-4 px-4">
                                             <div className="flex flex-col gap-1 w-3/4">
                                                 <LabelWithTooltip keyTooltip={key} labelText="Display Name" tooltipText="The name displayed in the menu visualised when the user clicks the right-click" />

@@ -173,7 +173,7 @@ const SelectionMenu = () => {
         return () => {
             document.removeEventListener("mouseup", handleMouseUp)
         }
-    }, [])
+    }, [menuItems])
 
     return (
         <>
