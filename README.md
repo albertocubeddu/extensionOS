@@ -124,8 +124,9 @@ Move it somewhere else ASAP:
 
 
 ### 0.0.14
-- Grammar error thank to Luca
-- New Menu Thanks to Denis
+- Fixed grammar issues, thanks to Luca.
+- Introduced a new menu, courtesy of Denis.
+- The new menu currently does not support phone calls (feature coming soon).
 
 
 ### 0.0.13
