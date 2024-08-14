@@ -196,24 +196,6 @@ const SelectionMenu = () => {
                                     </CommandItem>
                                 ))}
                             </CommandGroup>
-                            {/* <CommandSeparator />
-                            <CommandGroup heading="Settings">
-                                <CommandItem>
-                                    <User className="mr-2 h-4 w-4" />
-                                    <span>Profile</span>
-                                    <CommandShortcut>⌘P</CommandShortcut>
-                                </CommandItem>
-                                <CommandItem>
-                                    <CreditCard className="mr-2 h-4 w-4" />
-                                    <span>Billing</span>
-                                    <CommandShortcut>⌘B</CommandShortcut>
-                                </CommandItem>
-                                <CommandItem>
-                                    <Settings className="mr-2 h-4 w-4" />
-                                    <span>Settings</span>
-                                    <CommandShortcut>⌘S</CommandShortcut>
-                                </CommandItem>
-                            </CommandGroup> */}
                         </CommandList>
                     </Command>
                 </div>
@@ -223,15 +205,3 @@ const SelectionMenu = () => {
 }
 
 export default SelectionMenu
-
-
-function sendLoadingAction() {
-
-}
-
-
-export type ApiResponse<T> = {
-    data?: T; // Optional data field for successful responses
-    errorMessage?: string; // Optional error message for failed responses
-};
-
