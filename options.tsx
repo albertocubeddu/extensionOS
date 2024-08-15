@@ -9,6 +9,7 @@ import OptionsGeneral from "~options/OptionsGeneral"
 import OptionsHeader from "~options/OptionsHeader"
 import OptionsMixtureOfAgents from "~options/OptionsMixtureOfAgents"
 import OptionsPromptFactory from "~options/OptionsPromptFactory"
+import OptionsSettings from "~options/OptionsSettings"
 
 // ================================
 // MAIN FUNCTION (OPTIONS)
@@ -26,10 +27,11 @@ export default function Options() {
                     <nav
                         className="grid gap-4 text-sm text-muted-foreground"
                         x-chunk="dashboard-04-chunk-0">
-                        {["general", "promptFactory", "mixtureOfAgents", "about"].map(
+                        {["general", "promptFactory", "mixtureOfAgents", "settings", "about"].map(
                             (tab) => (
                                 <div
                                     key={tab}
+                                    id={tab}
                                     className={` font-light text-xl cursor-pointer rounded-lg  ${activeTab === tab ? "bg-black text-[#ff66cc] os-text-gradient" : "text-white"} shadow-md  `}
                                     onClick={() => setActiveTab(tab)}
                                 >
@@ -42,6 +44,7 @@ export default function Options() {
                     {activeTab === "general" && <OptionsGeneral />}
                     {activeTab === "promptFactory" && <OptionsPromptFactory />}
                     {activeTab === "mixtureOfAgents" && <OptionsMixtureOfAgents />}
+                    {activeTab === "settings" && <OptionsSettings />}
                     {activeTab === "about" && <OptionsAbout />}
                 </div>
             </main>

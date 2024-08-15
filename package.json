@@ -1,7 +1,7 @@
 {
    "name": "extension-os",
    "displayName": "Extension-OS: Your AI Partner",
-   "version": "0.0.17",
+   "version": "0.0.18",
    "description": "AI at Your Fingertips, Anytime, Anywhere.",
    "author": "acubeddu87@gmail.com",
    "scripts": {
@@ -24,6 +24,7 @@
       "class-variance-authority": "^0.7.0",
       "clsx": "^2.1.1",
       "cmdk": "1.0.0",
+      "deepmerge": "^4.3.1",
       "install": "^0.13.0",
       "lucide-react": "^0.414.0",
       "plasmo": "0.88.0",

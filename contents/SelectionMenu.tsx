@@ -17,6 +17,9 @@ import { createCall } from "~lib/vapiOutbound"
 import { Storage } from "@plasmohq/storage";
 import { sendToBackground } from "@plasmohq/messaging"
 import { adjustXYSelectionMenu, getRealXY } from "~lib/calculationXY"
+import { useStorage } from "@plasmohq/storage/hook"
+import { defaultGlobalConfig, setGlobalConfig } from "~lib/configurations/globalConfig"
+import deepmerge from "deepmerge"
 const storage = new Storage();
 
 // We enable the extension to be used in anywebsite with an http/https protocol.
@@ -34,6 +37,8 @@ const SelectionMenu = () => {
     const [selectedText, setSelectedText] = useState("")
     const [menuPosition, setMenuPosition] = useState<{ x: number; y: number }>({ x: 0, y: 0 })
     const [menuItems, setMenuItems] = useState<chrome.contextMenus.CreateProperties[]>([]) // Initialize with an empty array
+    let [config] = useStorage("globalConfig", defaultGlobalConfig)
+    config = deepmerge(defaultGlobalConfig, config)
 
 
     const handleMouseUp = useCallback((event: MouseEvent) => { // Use useCallback
@@ -53,6 +58,10 @@ const SelectionMenu = () => {
                 setMenuPosition({ x: 0, y: 0 })
             }, 1);
         }
+    }, []);
+
+    const handleKeyDown = useCallback((event: MouseEvent) => { // Use useCallback
+        setMenuPosition({ x: 0, y: 0 })
     }, []);
 
     // Separate functions for handling different actions
@@ -133,6 +142,7 @@ const SelectionMenu = () => {
 
     useEffect(() => {
         document.addEventListener("mouseup", handleMouseUp)
+        document.addEventListener("keydown", handleKeyDown)
 
         const initialize = async () => {
             const contextConfigItems =
@@ -152,14 +162,15 @@ const SelectionMenu = () => {
 
         return () => {
             document.removeEventListener("mouseup", handleMouseUp)
+            document.removeEventListener("keydown", handleKeyDown)
         }
     }, [])
 
     return (
         <>
-            {menuPosition.x !== 0 && menuPosition.y !== 0 && ( // Check if .x and .y are not equal to 0
+            {config.selectionMenu.display && menuPosition.x !== 0 && menuPosition.y !== 0 && ( // Check if .x and .y are not equal to 0
                 <div id="extension-os-selection-menu">
-                    <Command className="rounded-2xl shadow-lg p-0 bg-[#161616] border border-[#505050] dark:border-[#fff] translate-x-1 translate-y-1 text-white " style={{
+                    <Command className="rounded-2xl shadow-lg p-0 bg-[#161616] border border-[#505050] dark:border-[#fff] translate-x-1 translate-y-1" style={{
                         position: "relative",
                         top: `${menuPosition.y}px`,
                         left: `${menuPosition.x}px`,
@@ -172,7 +183,7 @@ const SelectionMenu = () => {
                             <CommandGroup >
                                 {menuItems.map((item) => (
                                     <CommandItem className="cursor-pointer opacity-50 hover:opacity-100 hover:bg-[#505050] font-bold m-1 rounded-[5px] py-1 text-[0.9rem]" key={item.id} value={item.title} onSelect={() => handleMenuItemClick(item)}>
-                                        <span>{item.title}</span>
+                                        <span className="text-white">{item.title}</span>
                                     </CommandItem>
                                 ))}
                             </CommandGroup>

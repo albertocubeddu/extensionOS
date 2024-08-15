@@ -131,6 +131,11 @@ Move it somewhere else ASAP:
 
 # Changelog
 
+### 0.0.18
+- SelectionMenu: Now you can choose to enable/disable
+- SelectionMenu: When a key is pressed (e.g backspace for remove, or CTRL/CMD + C for copying) the menu automatically disappear
+
+
 ### 0.0.17
 - Development: Integrated Playwright for testing and added a suite of automated tests
 

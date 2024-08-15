@@ -7,7 +7,6 @@ export const test = base.extend<{
 }>({
    context: async ({}, use) => {
       const pathToExtension = path.join(__dirname, "../build/chrome-mv3-prod");
-      console.log(pathToExtension);
       const context = await chromium.launchPersistentContext("", {
          headless: false,
          args: [
