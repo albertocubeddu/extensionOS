@@ -39,3 +39,9 @@ dist/
 .env
 .env.production
 .env.development
+
+#playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/

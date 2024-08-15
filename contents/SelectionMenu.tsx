@@ -158,7 +158,7 @@ const SelectionMenu = () => {
     return (
         <>
             {menuPosition.x !== 0 && menuPosition.y !== 0 && ( // Check if .x and .y are not equal to 0
-                <div>
+                <div id="extension-os-selection-menu">
                     <Command className="rounded-2xl shadow-lg p-0 bg-[#161616] border border-[#505050] dark:border-[#fff] translate-x-1 translate-y-1 text-white " style={{
                         position: "relative",
                         top: `${menuPosition.y}px`,

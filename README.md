@@ -131,6 +131,9 @@ Move it somewhere else ASAP:
 
 # Changelog
 
+### 0.0.17
+- Development: Integrated Playwright for testing and added a suite of automated tests
+
 ### 0.0.16
 - SelectionMenu: Fixed a bug that caused the menu to vanish unexpectedly after the onMouseUp event, leading to confusion regarding item selection for users.
 - SelectionMenu: Adjusted the visual gap to provide more space to the user.
