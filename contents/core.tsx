@@ -59,6 +59,7 @@ const PlasmoOverlay = () => {
                 case "loadingAction":
                     //We want to set to false, as a new action has been triggered.
                     setSuccessDivVisibile(false)
+                    setErrorDivVisibe(false)
                     setIsLoading(true)
                     break
                 case "error":
