@@ -7,7 +7,7 @@ Welcome to Extension | OS: AI at Your Fingertips, Anytime, Anywhere.
 Imagine a world where every user has access to powerful models (LLMs and more) directly within their web browser. By integrating AI into everyday internet browsing, we can revolutionise the way people interact with information online, providing them with instant, intelligent assistance tailored to their needs.
 
 ## Pre-release on Google Chrome Store
-Only up to 100 people.
+Join an exclusive group of up to 100 early adopters and be among the first to experience the future of AI-powered browsing!
 
 [link-chrome]: https://chromewebstore.google.com/detail/bahjnakiionbepnlbogdkojcehaeefnp "Version published on Chrome Web Store"
 
