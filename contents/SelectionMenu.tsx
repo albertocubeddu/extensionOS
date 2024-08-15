@@ -55,6 +55,10 @@ const SelectionMenu = () => {
         }
     }, []);
 
+    const handleKeyDown = useCallback((event: MouseEvent) => { // Use useCallback
+        setMenuPosition({ x: 0, y: 0 })
+    }, []);
+
     // Separate functions for handling different actions
     const handleCopyClipboard = async (element) => {
         const r = await sendToBackground({
@@ -133,6 +137,7 @@ const SelectionMenu = () => {
 
     useEffect(() => {
         document.addEventListener("mouseup", handleMouseUp)
+        document.addEventListener("keydown", handleKeyDown)
 
         const initialize = async () => {
             const contextConfigItems =
@@ -152,6 +157,7 @@ const SelectionMenu = () => {
 
         return () => {
             document.removeEventListener("mouseup", handleMouseUp)
+            document.removeEventListener("keydown", handleKeyDown)
         }
     }, [])
 
@@ -159,7 +165,7 @@ const SelectionMenu = () => {
         <>
             {menuPosition.x !== 0 && menuPosition.y !== 0 && ( // Check if .x and .y are not equal to 0
                 <div id="extension-os-selection-menu">
-                    <Command className="rounded-2xl shadow-lg p-0 bg-[#161616] border border-[#505050] dark:border-[#fff] translate-x-1 translate-y-1 text-white " style={{
+                    <Command className="rounded-2xl shadow-lg p-0 bg-[#161616] border border-[#505050] dark:border-[#fff] translate-x-1 translate-y-1" style={{
                         position: "relative",
                         top: `${menuPosition.y}px`,
                         left: `${menuPosition.x}px`,
@@ -172,7 +178,7 @@ const SelectionMenu = () => {
                             <CommandGroup >
                                 {menuItems.map((item) => (
                                     <CommandItem className="cursor-pointer opacity-50 hover:opacity-100 hover:bg-[#505050] font-bold m-1 rounded-[5px] py-1 text-[0.9rem]" key={item.id} value={item.title} onSelect={() => handleMenuItemClick(item)}>
-                                        <span>{item.title}</span>
+                                        <span className="text-white">{item.title}</span>
                                     </CommandItem>
                                 ))}
                             </CommandGroup>
