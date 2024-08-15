@@ -33,7 +33,7 @@ export const getStyle = () => {
 
 const SelectionMenu = () => {
     const [selectedText, setSelectedText] = useState("")
-    const [menuPosition, setMenuPosition] = useState<{ x: number; y: number }>({ x: 120, y: 120 })
+    const [menuPosition, setMenuPosition] = useState<{ x: number; y: number }>({ x: 0, y: 0 })
     const [menuItems, setMenuItems] = useState<chrome.contextMenus.CreateProperties[]>([]) // Initialize with an empty array
 
 
