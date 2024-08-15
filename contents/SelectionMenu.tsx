@@ -7,6 +7,7 @@ import {
     CommandGroup,
     CommandItem,
     CommandList,
+    CommandSeparator,
 } from "@/components/ui/command"
 
 import cssText from "data-text:~/globals.css"
@@ -32,7 +33,7 @@ export const getStyle = () => {
 
 const SelectionMenu = () => {
     const [selectedText, setSelectedText] = useState("")
-    const [menuPosition, setMenuPosition] = useState<{ x: number; y: number }>({ x: 0, y: 0 })
+    const [menuPosition, setMenuPosition] = useState<{ x: number; y: number }>({ x: 120, y: 120 })
     const [menuItems, setMenuItems] = useState<chrome.contextMenus.CreateProperties[]>([]) // Initialize with an empty array
 
 
@@ -40,7 +41,9 @@ const SelectionMenu = () => {
         const selection = window.getSelection()
         const text = selection?.toString() || null
 
-        if (null !== text && text.trim().length > 0) {
+        //Check if the text is at least two words: WHY? To avoid the menu popping out all the time.
+        //TODO: Make a configuration for this.
+        if (text && text.trim().split(/\s+/).length >= 2) {
             setSelectedText(text);
             //Get Real Coordinate and Adjust them according to the menu size.
             const { xPos, yPos } = adjustXYSelectionMenu(getRealXY(event));
@@ -52,6 +55,10 @@ const SelectionMenu = () => {
 
     // Separate functions for handling different actions
     const handleCopyClipboard = async (element) => {
+        const r = await sendToBackground({
+            name: "sendLoadingAction"
+        });
+
         const response = await sendToBackground({
             name: "callOpenAIReturn",
             body: { prompt: element.prompt, selectedText }
@@ -101,7 +108,6 @@ const SelectionMenu = () => {
         }
 
         if (element.id === "configuration") {
-            console.log(element)
             await sendToBackground({
                 name: "openOptionPage",
             })
@@ -134,16 +140,24 @@ const SelectionMenu = () => {
         }
         initialize();
 
+        //Listen for changes, this allow the user to modify is own prompts, and see the value reflected on the UI straight away.
+        storage.watch({
+            "contextMenuItems": (c) => {
+                const cleanedContextMenuItems = cleanProperties(c.newValue);
+                setMenuItems(cleanedContextMenuItems)
+            },
+        })
+
         return () => {
             document.removeEventListener("mouseup", handleMouseUp)
         }
-    }, [menuItems])
+    }, [])
 
     return (
         <>
             {menuPosition.x !== 0 && menuPosition.y !== 0 && ( // Check if .x and .y are not equal to 0
                 <div>
-                    <Command className="rounded-2xl shadow-md p-2 bg-[#161616] border border-black dark:border-slate-100 translate-x-1 translate-y-1 text-white " style={{
+                    <Command className="rounded-2xl shadow-lg p-0 bg-[#161616] border border-[#505050] dark:border-[#fff] translate-x-1 translate-y-1 text-white " style={{
                         position: "relative",
                         top: `${menuPosition.y}px`,
                         left: `${menuPosition.x}px`,
@@ -155,14 +169,14 @@ const SelectionMenu = () => {
                             <CommandEmpty>No results found.</CommandEmpty>
                             <CommandGroup >
                                 {menuItems.map((item) => (
-                                    <CommandItem className="cursor-pointer opacity-50 hover:opacity-100 hover:bg-[#505050] font-bold m-1 rounded-2xl" key={item.id} value={item.title} onSelect={() => handleMenuItemClick(item)}>
+                                    <CommandItem className="cursor-pointer opacity-50 hover:opacity-100 hover:bg-[#505050] font-bold m-1 rounded-[5px] py-1 text-[0.9rem]" key={item.id} value={item.title} onSelect={() => handleMenuItemClick(item)}>
                                         <span>{item.title}</span>
                                     </CommandItem>
                                 ))}
                             </CommandGroup>
                         </CommandList>
                     </Command>
-                </div>
+                </div >
             )}
         </>
     )
