@@ -7,7 +7,6 @@ import {
     CommandGroup,
     CommandItem,
     CommandList,
-    CommandSeparator,
 } from "@/components/ui/command"
 
 import cssText from "data-text:~/globals.css"
@@ -49,7 +48,11 @@ const SelectionMenu = () => {
             const { xPos, yPos } = adjustXYSelectionMenu(getRealXY(event));
             setMenuPosition({ x: xPos, y: yPos })
         } else {
-            setMenuPosition({ x: 0, y: 0 })
+            /*Some of the elements will be losing the getSelection, therefore the event will be fired before the
+            onSelect from the item Menu, adding a 1 millisecond we're hacking the event queue!*/
+            setTimeout(() => {
+                setMenuPosition({ x: 0, y: 0 })
+            }, 1);
         }
     }, []);
 
