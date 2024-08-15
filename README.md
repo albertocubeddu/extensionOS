@@ -2,9 +2,9 @@
 
 ![logo](./assets/presentation.png)
 
-Welcome to Extension | OS: AI at Your Fingertips, Anytime, Anywhere.
+⭐️ Welcome to Extension | OS: AI at Your Fingertips, Anytime, Anywhere.
 
-Imagine a world where every user has access to powerful models (LLMs and more) directly within their web browser. By integrating AI into everyday internet browsing, we can revolutionise the way people interact with information online, providing them with instant, intelligent assistance tailored to their needs.
+> Imagine a world where every user has access to powerful models (LLMs and more) directly within their web browser. By integrating AI into everyday internet browsing, we can revolutionise the way people interact with information online, providing them with instant, intelligent assistance tailored to their needs.
 
 ## Pre-release on Google Chrome Store
 
@@ -130,6 +130,11 @@ Move it somewhere else ASAP:
 -  https://shadcnui-expansions.typeart.cc/
 
 # Changelog
+
+### 0.0.16
+- SelectionMenu: Fixed a bug that caused the menu to vanish unexpectedly after the onMouseUp event, leading to confusion regarding item selection for users.
+- SelectionMenu: Adjusted the visual gap to provide more space to the user.
+- UI: Eliminated the conflicting success/loading state for a clearer user experience.
 
 ### 0.0.15
 
