@@ -83,7 +83,7 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
          if (element.functionType === "callAI-copyClipboard") {
             await sendLoadingActionHandler();
             response = await callOpenAIReturn(element.prompt, message);
-            await copyTextToClipboardHandler(response.data);
+            await copyTextToClipboardHandler(response);
             break;
          }
 
