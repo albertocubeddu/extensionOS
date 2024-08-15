@@ -57,6 +57,8 @@ const PlasmoOverlay = () => {
                     handleClipboardCopy(request.text)
                     break
                 case "loadingAction":
+                    //We want to set to false, as a new action has been triggered.
+                    setSuccessDivVisibile(false)
                     setIsLoading(true)
                     break
                 case "error":

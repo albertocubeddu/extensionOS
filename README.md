@@ -131,6 +131,11 @@ Move it somewhere else ASAP:
 
 # Changelog
 
+### 0.0.16
+- SelectionMenu: Fixed a bug that caused the menu to vanish unexpectedly after the onMouseUp event, leading to confusion regarding item selection for users.
+- SelectionMenu: Adjusted the visual gap to provide more space to the user.
+- UI: Eliminated the conflicting success/loading state for a clearer user experience.
+
 ### 0.0.15
 
 -  SelectionMenu: Refined the triggering mechanism for improved responsiveness.
