@@ -14,7 +14,7 @@ Join an exclusive group of up to 100 early adopters and be among the first to ex
 
 [link-chrome]: https://chromewebstore.google.com/detail/bahjnakiionbepnlbogdkojcehaeefnp "Version published on Chrome Web Store"
 
-- [<img valign="middle" src="https://img.shields.io/chrome-web-store/v/bahjnakiionbepnlbogdkojcehaeefnp.svg?label=%20">][link-chrome] also compatible with [<img src="./assets/AppIcons/edge.svg" width="24" alt="Edge" valign="middle">][link-chrome] [<img src="./assets/AppIcons/opera.svg" width="24" alt="Opera" valign="middle">][link-chrome] [<img src="./assets/AppIcons/brave.svg" width="24" alt="Brave" valign="middle">][link-chrome]
+-  [<img valign="middle" src="https://img.shields.io/chrome-web-store/v/bahjnakiionbepnlbogdkojcehaeefnp.svg?label=%20">][link-chrome] also compatible with [<img src="./assets/AppIcons/edge.svg" width="24" alt="Edge" valign="middle">][link-chrome] [<img src="./assets/AppIcons/opera.svg" width="24" alt="Opera" valign="middle">][link-chrome] [<img src="./assets/AppIcons/brave.svg" width="24" alt="Brave" valign="middle">][link-chrome]
 
 ## 📸 Screenshots
 
@@ -28,7 +28,7 @@ Customize your look and feel, and unleash your creativity with your own prompts!
 ![Prompt Factory](./assets/showcase/promptFactory.png)
 
 Mixture of Agents (pre-release)
-![Mixture Of Agents](./assets/showcase/moa.png)
+![Mixture Of Agents](./assets/showcase/moa.png)s
 
 ## Help me grow this extension
 
