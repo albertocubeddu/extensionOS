@@ -7,11 +7,14 @@ Welcome to Extension | OS: AI at Your Fingertips, Anytime, Anywhere.
 Imagine a world where every user has access to powerful models (LLMs and more) directly within their web browser. By integrating AI into everyday internet browsing, we can revolutionise the way people interact with information online, providing them with instant, intelligent assistance tailored to their needs.
 
 ## Pre-release on Google Chrome Store
+
 Join an exclusive group of up to 100 early adopters and be among the first to experience the future of AI-powered browsing!
+
+[![Download on Chrome Web Store](./assets/AppIcons/chrome-store.png)](https://chromewebstore.google.com/detail/bahjnakiionbepnlbogdkojcehaeefnp)
 
 [link-chrome]: https://chromewebstore.google.com/detail/bahjnakiionbepnlbogdkojcehaeefnp "Version published on Chrome Web Store"
 
-[<img src="./assets/AppIcons/chrome.svg" width="48" alt="Chrome" valign="middle">][link-chrome] [<img valign="middle" src="https://img.shields.io/chrome-web-store/v/bahjnakiionbepnlbogdkojcehaeefnp.svg?label=%20">][link-chrome] also compatible with [<img src="./assets/AppIcons/edge.svg" width="24" alt="Edge" valign="middle">][link-chrome] [<img src="./assets/AppIcons/opera.svg" width="24" alt="Opera" valign="middle">][link-chrome] [<img src="./assets/AppIcons/brave.svg" width="24" alt="Brave" valign="middle">][link-chrome]
+- [<img valign="middle" src="https://img.shields.io/chrome-web-store/v/bahjnakiionbepnlbogdkojcehaeefnp.svg?label=%20">][link-chrome] also compatible with [<img src="./assets/AppIcons/edge.svg" width="24" alt="Edge" valign="middle">][link-chrome] [<img src="./assets/AppIcons/opera.svg" width="24" alt="Opera" valign="middle">][link-chrome] [<img src="./assets/AppIcons/brave.svg" width="24" alt="Brave" valign="middle">][link-chrome]
 
 ## 📸 Screenshots
 
