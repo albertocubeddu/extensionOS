@@ -192,7 +192,6 @@ export default function LlmSettings({ debugInfo }: { debugInfo: string }) {
             //We need to ensure the selectedProvider is valid
             //E.g. We do change a name in the config -> From OpenAI to ClosedAI (pun intended..)
             if (!isModelValid && selectedProvider) {
-                console.log('passing here isn')
                 setLlmModel(selectedProvider.models[0])
             }
         }
