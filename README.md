@@ -135,6 +135,8 @@ Move it somewhere else ASAP:
 
 # Changelog
 
+### 0.0.20
+
 ### 0.0.19
 
 -  Added more instruction for ollama

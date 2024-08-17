@@ -168,8 +168,10 @@ export const providersData = {
 }
 
 
+
+
 export default function LlmSettings({ debugInfo }: { debugInfo: string }) {
-    const [llmModel, setLlmModel] = useStorage("llmModel", "")
+    const [llmModel, setLlmModel] = useStorage("llmModel", "llama-3.1-70b-versatile")
     const [llmProvider, setLlmProvider] = useStorage("llmProvider", "extension | OS")
     const [llmKeys, setLlmKeys] = useStorage("llmKeys", {})
 
@@ -178,24 +180,29 @@ export default function LlmSettings({ debugInfo }: { debugInfo: string }) {
     //To auto-assign a model when the provider is changed.
     useEffect(() => {
         if (!hasRun.current) {
-            hasRun.current = true; // Set to true after the first run
+            /* Plasmo storage is undefined here, it will read only the default value! */
+            hasRun.current = true;
             return; // Skip the first cycle, so plasmo loads the useStorage correctly...
         }
 
         if (llmProvider) {
-            const selectedProvider = providersData.providers.find(
-                (provider) => provider.name === llmProvider
-            )
-
-            const isModelValid = selectedProvider?.models.includes(llmModel)
-
-            //We need to ensure the selectedProvider is valid
-            //E.g. We do change a name in the config -> From OpenAI to ClosedAI (pun intended..)
-            if (!isModelValid && selectedProvider) {
-                setLlmModel(selectedProvider.models[0])
-            }
+            validateAndSetModel(llmProvider);
         }
     }, [llmProvider])
+
+    const validateAndSetModel = (providerName) => {
+        const selectedProvider = providersData.providers.find(
+            (provider) => provider.name === providerName
+        )
+
+        const isModelValid = selectedProvider?.models.includes(llmModel)
+
+        // We need to ensure the selectedProvider is valid
+        // E.g. We do change a name in the config -> From OpenAI to ClosedAI (pun intended..)
+        if (!isModelValid && selectedProvider) {
+            setLlmModel(selectedProvider.models[0])
+        }
+    }
 
     const handleKeyChange = (provider, key) => {
         setLlmKeys((prevKeys) => ({ ...prevKeys, [provider]: key }))
