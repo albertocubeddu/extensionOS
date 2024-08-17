@@ -9,6 +9,8 @@ import groqLogo from "data-base64:~assets/AppIcons/groq.png";
 import openAiLogo from "data-base64:~assets/AppIcons/openai.svg";
 import togetherAiLogo from "data-base64:~assets/AppIcons/togetherai.png";
 import extensionOsLogo from "data-base64:~assets/AppIcons/extension-os.svg";
+import ollama from "data-base64:~assets/AppIcons//ollama.png";
+
 import InstructionSnippet from "./components/InstructionSnippet";
 
 const providerData = {
@@ -16,7 +18,7 @@ const providerData = {
         logo: extensionOsLogo,
         links: [
             { label: "Official Website", url: "https://extension-os.com" },
-            { label: "More Tiers Available Soon:", url: "https://extension-os.com", }
+            { label: "More Tiers Available Soon", url: "https://extension-os.com", }
         ]
     },
     groq: {
@@ -38,6 +40,13 @@ const providerData = {
         links: [
             { label: "Official Website", url: "https://www.together.ai" },
             { label: "Get API Key", url: "https://api.together.ai/settings/api-keys" }
+        ]
+    },
+    localhost: {
+        logo: ollama,
+        links: [
+            { label: "Official Website", url: "https://ollama.com/" },
+            { label: "Running on", url: "http://localhost:11434" }
         ]
     }
 };

@@ -8,9 +8,9 @@ interface InstructionSnippetProps {
 
 export default function InstructionSnippet({ logo, provider, links }: InstructionSnippetProps) {
     return (
-        <div className="flex flex-row gap-5">
+        <div className="flex flex-row flex-grow gap-5">
             <img src={logo} alt={`${provider} Logo`} className="block max-w-[163px]" />
-            <div className="flex flex-grow">
+            <div className="flex flex-row">
                 <p className="border-l-2 border-[#ff66cc] pl-4">
                     {links.map((link, index) => (
                         <span key={index}>
@@ -19,6 +19,7 @@ export default function InstructionSnippet({ logo, provider, links }: Instructio
                     ))}
                 </p>
             </div>
+
         </div>
     );
 }

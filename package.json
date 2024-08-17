@@ -1,7 +1,7 @@
 {
    "name": "extension-os",
    "displayName": "Extension-OS: Your AI Partner",
-   "version": "0.0.18",
+   "version": "0.0.19",
    "description": "AI at Your Fingertips, Anytime, Anywhere.",
    "author": "acubeddu87@gmail.com",
    "scripts": {
@@ -48,6 +48,9 @@
       "typescript": "5.3.3"
    },
    "manifest": {
+      "host_permissions": [
+         "http://*/*"
+      ],
       "key": "$CRX_PUBLIC_KEY",
       "oauth2": {
          "client_id": "$OAUTH_CLIENT_ID",
