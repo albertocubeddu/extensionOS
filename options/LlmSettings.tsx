@@ -14,7 +14,7 @@ import {
     SelectTrigger,
     SelectValue
 } from "@/components/ui/select"
-import React, { useEffect } from "react"
+import React, { useEffect, useRef } from "react"
 
 import { useStorage } from "@plasmohq/storage/hook"
 import LabelWithTooltip from "~components/blocks/LabelWithTooltip"
@@ -173,12 +173,20 @@ export default function LlmSettings({ debugInfo }: { debugInfo: string }) {
     const [llmProvider, setLlmProvider] = useStorage("llmProvider", "extension | OS")
     const [llmKeys, setLlmKeys] = useStorage("llmKeys", {})
 
+    const hasRun = useRef(false); // Add this line
+
     //To auto-assign a model when the provider is changed.
     useEffect(() => {
+        if (!hasRun.current) {
+            hasRun.current = true; // Set to true after the first run
+            return; // Skip the first cycle, so plasmo loads the useStorage correctly...
+        }
+
         if (llmProvider) {
             const selectedProvider = providersData.providers.find(
                 (provider) => provider.name === llmProvider
             )
+
             const isModelValid = selectedProvider?.models.includes(llmModel)
 
             //We need to ensure the selectedProvider is valid
@@ -216,7 +224,7 @@ export default function LlmSettings({ debugInfo }: { debugInfo: string }) {
                         <LabelWithTooltip keyTooltip={"llmProvider"} labelText={"Default Provider"} tooltipText={"This is the LLM provider that will be used by default."} />
                         <div className="flex flex-row gap-5">
                             <Select value={llmProvider} onValueChange={setLlmProvider}>
-                                <SelectTrigger className="w-[180px]">
+                                <SelectTrigger id="llm-provider" className="w-[180px]">
                                     <SelectValue placeholder="Select a provider" />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -251,12 +259,11 @@ export default function LlmSettings({ debugInfo }: { debugInfo: string }) {
                         llmProvider === provider.name && (
                             <div key={provider.name}>
                                 <div className="flex flex-col gap-1">
-
                                     <LabelWithTooltip keyTooltip={"llmModel"} labelText={"Default Model"} tooltipText={"This is the LLM model that will be used by default."} />
-                                    {provider.models.length > 0 ? (
+                                    {provider.models.length > 0 && provider.name !== "localhost" ? (
                                         <>
                                             <Select value={llmModel} onValueChange={setLlmModel}>
-                                                <SelectTrigger className="w-full">
+                                                <SelectTrigger id="llm-model" className="w-full">
                                                     <SelectValue placeholder="Select a model" />
                                                 </SelectTrigger>
                                                 <SelectContent>
@@ -288,7 +295,7 @@ export default function LlmSettings({ debugInfo }: { debugInfo: string }) {
                         (provider) =>
                             llmProvider === provider.name && (
                                 <div key={provider.name}>
-                                    {provider.models.length > 0 && provider.name !== "extension | OS" ? ( // Added exception for "extensionos": To find a better solution this is smelly code.
+                                    {provider.models.length > 0 && provider.name !== "extension | OS" && provider.name !== "localhost" ? (
                                         <div className="flex flex-col gap-1">
                                             <LabelWithTooltip keyTooltip={"llmProviderKey"} labelText={"API Key"} tooltipText={"This API Key for the selected provider."} />
                                             <Input

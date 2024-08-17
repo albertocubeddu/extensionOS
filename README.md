@@ -63,6 +63,10 @@ All your data is stored locally on your hard drive.
 
 `/Users/<your-username>/Library/Application Support/Google/Chrome/Default/Sync Extension Settings/`
 
+## Localhost
+
+You can run Extension OS using Ollama on your device; Download ollama and the model beforehand.
+
 ## To-Do List
 
 Move it somewhere else ASAP:
@@ -131,18 +135,26 @@ Move it somewhere else ASAP:
 
 # Changelog
 
-### 0.0.18
-- SelectionMenu: Now you can choose to enable/disable
-- SelectionMenu: When a key is pressed (e.g backspace for remove, or CTRL/CMD + C for copying) the menu automatically disappear
+### 0.0.19
 
+-  Added more instruction for ollama
+-  localhost: Add the ability to specify the model by input text (vs select box)
+-  Fixed a useEffect bug
+
+### 0.0.18
+
+-  SelectionMenu: Now you can choose to enable/disable
+-  SelectionMenu: When a key is pressed (e.g backspace for remove, or CTRL/CMD + C for copying) the menu automatically disappear
 
 ### 0.0.17
-- Development: Integrated Playwright for testing and added a suite of automated tests
+
+-  Development: Integrated Playwright for testing and added a suite of automated tests
 
 ### 0.0.16
-- SelectionMenu: Fixed a bug that caused the menu to vanish unexpectedly after the onMouseUp event, leading to confusion regarding item selection for users.
-- SelectionMenu: Adjusted the visual gap to provide more space to the user.
-- UI: Eliminated the conflicting success/loading state for a clearer user experience.
+
+-  SelectionMenu: Fixed a bug that caused the menu to vanish unexpectedly after the onMouseUp event, leading to confusion regarding item selection for users.
+-  SelectionMenu: Adjusted the visual gap to provide more space to the user.
+-  UI: Eliminated the conflicting success/loading state for a clearer user experience.
 
 ### 0.0.15
 
