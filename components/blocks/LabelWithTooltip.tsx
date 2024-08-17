@@ -10,13 +10,14 @@ interface LabelWithTooltipProps {
     labelText: string
     tooltipText: string
     sheetIncluded?: boolean
+    onClick?: () => void
 }
 
-export default function LabelWithTooltip({ keyTooltip, labelText, tooltipText, sheetIncluded = false }: LabelWithTooltipProps) {
+export default function LabelWithTooltip({ keyTooltip, labelText, tooltipText, sheetIncluded = false, onClick }: LabelWithTooltipProps) {
     return (
         <TooltipProvider delayDuration={200}>
             <Tooltip>
-                <TooltipTrigger className="flex flex-row gap-1 items-center">
+                <TooltipTrigger onClick={onClick ? onClick : undefined} className="flex flex-row gap-1 items-center">
 
                     <Label
                         className="text-sm text-gray-200"

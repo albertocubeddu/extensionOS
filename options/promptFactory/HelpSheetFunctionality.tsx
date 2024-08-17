@@ -16,17 +16,15 @@ export default function HelpSheetFunctionality() {
             <SheetHeader>
                 <SheetTitle>Functionality Explaination</SheetTitle>
                 <SheetDescription>
-                    <ScrollArea className="h-[100vh] pr-4">
-                        <div className="flex flex-col">
-                            {functionalityParameters.map((context, index) => (
-                                <React.Fragment key={index}>
-                                    <span className="bg-gray-800 rounded-lg p-2 w-fit text-white font-mono mb-2">{`${context.display.charAt(0).toUpperCase() + context.display.slice(1)}`}</span>
-                                    <span className="mb-5">{context.description.charAt(0).toUpperCase() + context.description.slice(1)}</span>
-                                </React.Fragment>
-                            ))}
-                        </div>
-                        <div className="mb-20"></div>
-                    </ScrollArea>
+                    <span className="flex flex-col">
+                        {functionalityParameters.map((context, index) => (
+                            <React.Fragment key={index}>
+                                <span className="bg-gray-800 rounded-lg p-2 w-fit text-white font-mono mb-2">{`${context.display.charAt(0).toUpperCase() + context.display.slice(1)}`}</span>
+                                <span className="mb-5">{context.description.charAt(0).toUpperCase() + context.description.slice(1)}</span>
+                            </React.Fragment>
+                        ))}
+                    </span>
+                    <span className="mb-20"></span>
                 </SheetDescription>
             </SheetHeader>
         </SheetContent>
