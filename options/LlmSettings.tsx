@@ -162,7 +162,7 @@ export const providersData = {
         },
         {
             name: "localhost",
-            models: ["llama3", "llama3.1"]
+            models: ["llama3"]
         }
     ]
 }
