@@ -145,8 +145,9 @@ Move it somewhere else ASAP:
 
 ### 0.0.20
 
--  SelectionMenu: Now visible on Reddit too! (I may have to prefix all the tailwind classes)
--
+-  SelectionMenu: Now accessible on Reddit as well! (Consider prefixing all Tailwind classes for consistency)
+-  PromptSelector: Resolved all React warnings for a smoother experience
+-  Verified that pre-selection functions correctly (Thanks to E2E testing) 
 
 ### 0.0.19
 
