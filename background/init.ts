@@ -15,6 +15,11 @@ export interface IContextConfigItems {
 export async function initializeStorage() {
    //   https://unicode-table.com/
 
+   if (process.env.NODE_ENV === "development") {
+      //Useful to test a fresh-install
+      // storage.removeAll();
+   }
+
    const initState = await storage.get("contextMenuItems");
 
    if (initState) {

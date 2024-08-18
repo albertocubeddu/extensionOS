@@ -44,6 +44,8 @@ import { AutosizeTextarea } from "~components/shadcnui-expansions/AutosizeTextar
 
 export default function OptionsPromptFactory() {
     const [contextMenuItems, setContextMenuItems] = useState<IContextConfigItems[]>([]);
+    const [openFunctionalitySheet, setOpenFunctionalitySheet] = useState(false);
+    const [openContextSheet, setOpenContextSheet] = useState(false)
 
     useEffect(() => {
         async function getStorage() {
@@ -105,118 +107,114 @@ export default function OptionsPromptFactory() {
                 </CardHeader>
                 <CardContent>
                     {contextMenuItems ? (
-                        <div>
-                            {/* We exclude the separrator and the configuration button as it's not essential for the user to see at this stage */}
-                            {Object.keys(contextMenuItems).filter(key => !contextMenuItems[key].id.startsWith("separator") && contextMenuItems[key].id !== "configuration").map((key) => {
-                                return (
-                                    <div
-                                        key={key}
-                                        className="p-4 pt-6 mb-20 border-t-8 border-l-8 border-2 rounded-lg shadow-lg"
-                                    >
-                                        <div className="flex flex-row justify-between gap-4 px-4">
-                                            <div className="flex flex-col gap-1 w-3/4">
-                                                <LabelWithTooltip keyTooltip={key} labelText="Display Name" tooltipText="The name displayed in the menu visualised when the user clicks the right-click" />
-                                                <Input
-                                                    id={`title-${key}`}
-                                                    className="text-lg font-semibold mb-2"
-                                                    value={contextMenuItems[key].title}
-                                                    onChange={(e) => {
-                                                        handleChange(
-                                                            contextMenuItems[key].id,
-                                                            "title",
-                                                            e.target.value
-                                                        );
-                                                    }}
-                                                />
-                                            </div>
-                                            <div className="flex flex-col gap-1 w-1/4">
-                                                <Label
-                                                    className="text-sm text-gray-600"
-                                                    htmlFor={`context-${key}`}
-                                                >
-                                                    <Sheet>
-
-                                                        <SheetTrigger><LabelWithTooltip keyTooltip={key} labelText="Context" tooltipText="The context in which the item should display. Click for more info" sheetIncluded={true} /></SheetTrigger>
-                                                        <HelpSheetContext />
-                                                    </Sheet>
-
-                                                </Label>
-
-
-                                                <Select
-                                                    value={contextMenuItems[key].contexts.join(", ")}
-                                                    onValueChange={(value) =>
-                                                        handleChange(
-                                                            contextMenuItems[key].id,
-                                                            "contexts",
-                                                            value.split(", ")
-                                                        )
-                                                    }
-                                                >
-                                                    <SelectTrigger className="w-full">
-                                                        <SelectValue placeholder="Select contexts" />
-                                                    </SelectTrigger>
-                                                    <SelectContent>
-                                                        {chromeContextsParameters.map(({ key, display }) => (
-                                                            <SelectItem
-                                                                key={key}
-                                                                value={key}
-                                                            >
-                                                                {display}
-                                                            </SelectItem>
-                                                        ))}
-                                                    </SelectContent>
-                                                </Select>
-                                            </div>
-                                        </div>
-
-                                        <div className="flex flex-col gap-5 pt-4 px-4 rounded-lg shadow-inner mb-4">
-                                            <div className="text-sm text-white">
-                                                <LabelWithTooltip keyTooltip={key} labelText="Prompt" tooltipText="The prompt for the GPT" />
-
-                                                <AutosizeTextarea
-                                                    id={`prompt-${key}`}
-                                                    className="mt-1 p-2 border rounded-md"
-                                                    value={contextMenuItems[key].prompt}
-                                                    onChange={(e) =>
-                                                        handleChange(
-                                                            contextMenuItems[key].id,
-                                                            "prompt",
-                                                            e.target.value
-                                                        )
-                                                    }
-                                                    placeholder="Enter your prompt here"
-                                                />
-                                            </div>
-                                            <div className="flex flex-row gap-4 justify-between">
-                                                <div className="text-sm text-white w-full">
-                                                    <div className="flex flex-col gap-1 ">
-
-                                                        <Sheet>
-                                                            <SheetTrigger> <LabelWithTooltip keyTooltip={key} labelText="Functionality" tooltipText="The functionality after the prompt is executed. Click for more info" sheetIncluded={true} /></SheetTrigger>
-                                                            <HelpSheetFunctionality />
-                                                        </Sheet>
-
-                                                        <Select
-                                                            value={contextMenuItems[key].functionType}
-                                                            onValueChange={(value) =>
-                                                                handleChange(contextMenuItems[key].id, "functionType", value)
-                                                            }
-                                                        >
-                                                            <SelectTrigger className="w-full">
-                                                                <SelectValue placeholder="Select function type" />
-                                                            </SelectTrigger>
-                                                            <SelectContent>
-                                                                {functionalityParameters.map(({ key, display }) => (
-                                                                    <SelectItem key={key} value={key}>
-                                                                        {display}
-                                                                    </SelectItem>
-                                                                ))}
-                                                            </SelectContent>
-                                                        </Select>
-                                                    </div>
+                        <>
+                            <div>
+                                {/* We exclude the separrator and the configuration button as it's not essential for the user to see at this stage */}
+                                {Object.keys(contextMenuItems).filter(key => !contextMenuItems[key].id.startsWith("separator") && contextMenuItems[key].id !== "configuration").map((key) => {
+                                    return (
+                                        <div
+                                            key={key}
+                                            className="p-4 pt-6 mb-20 border-t-8 border-l-8 border-2 rounded-lg shadow-lg"
+                                        >
+                                            <div className="flex flex-row justify-between gap-4 px-4">
+                                                <div className="flex flex-col gap-1 w-3/4">
+                                                    <LabelWithTooltip keyTooltip={key} labelText="Display Name" tooltipText="The name displayed in the menu visualised when the user clicks the right-click" />
+                                                    <Input
+                                                        id={`title-${key}`}
+                                                        className="text-lg font-semibold mb-2"
+                                                        value={contextMenuItems[key].title}
+                                                        onChange={(e) => {
+                                                            handleChange(
+                                                                contextMenuItems[key].id,
+                                                                "title",
+                                                                e.target.value
+                                                            );
+                                                        }}
+                                                    />
                                                 </div>
-                                                {/* <div className="text-sm text-gray-600 w-1/2">
+                                                <div className="flex flex-col gap-1 w-1/4">
+                                                    <Label
+                                                        className="text-sm text-gray-600"
+                                                        htmlFor={`context-${key}`}
+                                                    >
+                                                        <LabelWithTooltip onClick={() => setOpenContextSheet(true)} keyTooltip={key} labelText="Context" tooltipText="The context in which the item should display. Click for more info" sheetIncluded={true} />
+
+
+                                                    </Label>
+
+
+                                                    <Select
+                                                        value={contextMenuItems[key].contexts.join(", ")}
+                                                        onValueChange={(value) =>
+                                                            handleChange(
+                                                                contextMenuItems[key].id,
+                                                                "contexts",
+                                                                value.split(", ")
+                                                            )
+                                                        }
+                                                    >
+                                                        <SelectTrigger className="w-full">
+                                                            <SelectValue placeholder="Select contexts" />
+                                                        </SelectTrigger>
+                                                        <SelectContent>
+                                                            {chromeContextsParameters.map(({ key, display }) => (
+                                                                <SelectItem
+                                                                    key={key}
+                                                                    value={key}
+                                                                >
+                                                                    {display}
+                                                                </SelectItem>
+                                                            ))}
+                                                        </SelectContent>
+                                                    </Select>
+                                                </div>
+                                            </div>
+
+                                            <div className="flex flex-col gap-5 pt-4 px-4 rounded-lg shadow-inner mb-4">
+                                                <div className="text-sm text-white">
+                                                    <LabelWithTooltip keyTooltip={key} labelText="Prompt" tooltipText="The prompt for the GPT" />
+
+                                                    <AutosizeTextarea
+                                                        id={`prompt-${key}`}
+                                                        className="mt-1 p-2 border rounded-md"
+                                                        value={contextMenuItems[key].prompt}
+                                                        onChange={(e) =>
+                                                            handleChange(
+                                                                contextMenuItems[key].id,
+                                                                "prompt",
+                                                                e.target.value
+                                                            )
+                                                        }
+                                                        placeholder="Enter your prompt here"
+                                                    />
+                                                </div>
+                                                <div className="flex flex-row gap-4 justify-between">
+                                                    <div className="text-sm text-white w-full">
+                                                        <div className="flex flex-col gap-1 ">
+
+                                                            <LabelWithTooltip onClick={() => setOpenFunctionalitySheet(true)} keyTooltip={key} labelText="Functionality" tooltipText="The functionality after the prompt is executed. Click for more info" sheetIncluded={true} />
+
+
+                                                            <Select
+                                                                value={contextMenuItems[key].functionType}
+                                                                onValueChange={(value) =>
+                                                                    handleChange(contextMenuItems[key].id, "functionType", value)
+                                                                }
+                                                            >
+                                                                <SelectTrigger className="w-full">
+                                                                    <SelectValue placeholder="Select function type" />
+                                                                </SelectTrigger>
+                                                                <SelectContent>
+                                                                    {functionalityParameters.map(({ key, display }) => (
+                                                                        <SelectItem key={key} value={key}>
+                                                                            {display}
+                                                                        </SelectItem>
+                                                                    ))}
+                                                                </SelectContent>
+                                                            </Select>
+                                                        </div>
+                                                    </div>
+                                                    {/* <div className="text-sm text-gray-600 w-1/2">
                                                     <div className="flex flex-col gap-1">
                                                         <LabelWithTooltip keyTooltip={key} labelText="ID" tooltipText="Unique Identification used internally" />
                                                         <p className="p-2 h-10 border rounded-md bg-white">
@@ -225,26 +223,34 @@ export default function OptionsPromptFactory() {
                                                     </div>
                                                 </div> */}
 
-                                                <div className="text-sm text-gray-600 pt-[1.85rem]">
-                                                    <Button className="w-[155px] bg-gradient-to-r from-violet-500 to-orange-500 text-white" onClick={() => handleSave()}>
-                                                        Save All
-                                                    </Button>
+                                                    <div className="text-sm text-gray-600 pt-[1.85rem]">
+                                                        <Button className="w-[155px] bg-gradient-to-r from-violet-500 to-orange-500 text-white" onClick={() => handleSave()}>
+                                                            Save All
+                                                        </Button>
+                                                    </div>
                                                 </div>
+                                                {contextMenuItems[key].functionType === "callVoice-ExternalNumber" && (
+                                                    <>
+                                                        <VapiSpecificConfiguration contextMenuItems={contextMenuItems[key]} handleChange={handleChange} />
+                                                    </>
+                                                )}
+
+
+
                                             </div>
-                                            {contextMenuItems[key].functionType === "callVoice-ExternalNumber" && (
-                                                <>
-                                                    <VapiSpecificConfiguration contextMenuItems={contextMenuItems[key]} handleChange={handleChange} />
-                                                </>
-                                            )}
-
-
-
                                         </div>
-                                    </div>
 
-                                );
-                            })}
-                        </div >
+                                    );
+                                })}
+                            </div >
+                            {/* Need to stay here to respect ARIA and the REACT Warnings. */}
+                            <Sheet open={openContextSheet} onOpenChange={setOpenContextSheet}>
+                                <HelpSheetContext />
+                            </Sheet>
+                            <Sheet open={openFunctionalitySheet} onOpenChange={setOpenFunctionalitySheet}>
+                                <HelpSheetFunctionality />
+                            </Sheet>
+                        </>
                     ) : (
                         <p>Loading...</p>
                     )}

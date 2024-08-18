@@ -4,6 +4,14 @@
 
 ⭐️ Welcome to Extension | OS: AI at Your Fingertips, Anytime, Anywhere.
 
+## **Tired of the endless back-and-forth with ChatGPT, Claude, and other AI tools just to repeat the same task over and over?**
+
+You're not alone! I felt the same frustration, so I built a solution: **Extension | OS**—an open-source browser extension that makes AI accessible directly where you need it.
+
+Imagine this: you create a prompt like "Fix the grammar for this text," right-click, and job done—no more switching tabs, no more wasted time.
+
+![](./assets/showcase/demo.gif)
+
 > Imagine a world where every user has access to powerful models (LLMs and more) directly within their web browser. By integrating AI into everyday internet browsing, we can revolutionise the way people interact with information online, providing them with instant, intelligent assistance tailored to their needs.
 
 ## Pre-release on Google Chrome Store
@@ -104,9 +112,9 @@ Move it somewhere else ASAP:
 -  [ ] **Prompt Factory**: Add the option to select which LLM to use for each prompt.
 -  [ ] Remove all the silly comments, maybe one day....
 
-# Presentation Video
+# Youtube Video From the Hackathon
 
-[![Video Title](https://img.youtube.com/vi/dM1BOxVoebg/0.jpg)](https://www.youtube.com/watch?v=dM1BOxVoebg)
+[![Extesion | OS - San Francisco Presso](https://img.youtube.com/vi/dM1BOxVoebg/0.jpg)](https://www.youtube.com/watch?v=dM1BOxVoebg)
 
 ## Footage
 
@@ -134,6 +142,12 @@ Move it somewhere else ASAP:
 -  https://shadcnui-expansions.typeart.cc/
 
 # Changelog
+
+### 0.0.20
+
+-  SelectionMenu: Now accessible on Reddit as well! (Consider prefixing all Tailwind classes for consistency)
+-  PromptSelector: Resolved all React warnings for a smoother experience
+-  Verified that pre-selection functions correctly (Thanks to E2E testing) 
 
 ### 0.0.19
 
