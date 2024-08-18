@@ -169,7 +169,7 @@ const SelectionMenu = () => {
     return (
         <>
             {config.selectionMenu.display && menuPosition.x !== 0 && menuPosition.y !== 0 && ( // Check if .x and .y are not equal to 0
-                <div id="extension-os-selection-menu">
+                <div id="extension-os-selection-menu" className="w-max">
                     <Command className="rounded-2xl shadow-lg p-0 bg-[#161616] border border-[#505050] dark:border-[#fff] translate-x-1 translate-y-1" style={{
                         position: "relative",
                         top: `${menuPosition.y}px`,
@@ -182,7 +182,7 @@ const SelectionMenu = () => {
                             <CommandEmpty>No results found.</CommandEmpty>
                             <CommandGroup >
                                 {menuItems.map((item) => (
-                                    <CommandItem className="cursor-pointer opacity-50 hover:opacity-100 hover:bg-[#505050] font-bold m-1 rounded-[5px] py-1 text-[0.9rem]" key={item.id} value={item.title} onSelect={() => handleMenuItemClick(item)}>
+                                    <CommandItem className="cursor-pointer opacity-50 hover:opacity-100 hover:bg-[#505050] font-bold m-1 rounded-[5px] py-1 text-[16px]" key={item.id} value={item.title} onSelect={() => handleMenuItemClick(item)}>
                                         <span className="text-white">{item.title}</span>
                                     </CommandItem>
                                 ))}

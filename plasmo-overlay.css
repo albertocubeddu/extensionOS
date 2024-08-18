@@ -16,3 +16,7 @@
    margin-top: 10px;
    color: black;
 }
+
+plasmo-csui {
+   visibility: visible !important;
+}
