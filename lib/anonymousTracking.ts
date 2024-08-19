@@ -1,4 +1,7 @@
 const insertStatisticsRow = async (table: string, data: any) => {
+   // If you want to add tracking, provide two keys from SUPABASE;
+   // DO NOT TRACK USER EMAIL WITHOUT CONSENT.
+   // Use the getOrCreateClientUUID if you want an anonymous but consisted UUID.
    const supabaseUrl = process.env.PLASMO_PUBLIC_SUPABASE_URL;
    const supabaseKey = process.env.PLASMO_PUBLIC_SUPABASE_ANON_KEY; // This key is safe to use in a browser if you have enabled Row Level Security for your tables and configured policies.
 
