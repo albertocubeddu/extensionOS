@@ -41,6 +41,8 @@ import HelpSheetFunctionality from "./promptFactory/HelpSheetFunctionality";
 import { chromeContextsParameters } from "./promptFactory/parameters/chromeContextParameters";
 import { functionalityParameters } from "./promptFactory/parameters/functionalityParameters";
 import { AutosizeTextarea } from "~components/shadcnui-expansions/AutosizeTextarea";
+import { Alert, AlertDescription, AlertTitle } from "~components/ui/alert";
+import { Terminal } from "lucide-react";
 
 export default function OptionsPromptFactory() {
     const [contextMenuItems, setContextMenuItems] = useState<IContextConfigItems[]>([]);
@@ -170,13 +172,21 @@ export default function OptionsPromptFactory() {
                                                 </div>
                                             </div>
 
+
+
                                             <div className="flex flex-col gap-5 pt-4 px-4 rounded-lg shadow-inner mb-4">
+                                                <Alert className="mt-1">
+                                                    <AlertTitle className="text-[#f6c]">Heads up!</AlertTitle>
+                                                    <AlertDescription>
+                                                        When you choose "Selection" as the Context, any text you highlight while using Extension | OS will be added to the end of your prompt automatically.
+                                                    </AlertDescription>
+                                                </Alert>
                                                 <div className="text-sm text-white">
                                                     <LabelWithTooltip keyTooltip={key} labelText="Prompt" tooltipText="The prompt for the GPT" />
 
                                                     <AutosizeTextarea
                                                         id={`prompt-${key}`}
-                                                        className="mt-1 p-2 border rounded-md"
+                                                        className="mt-1 p-4 rounded-md border-none bg-gray-800 text-white"
                                                         value={contextMenuItems[key].prompt}
                                                         onChange={(e) =>
                                                             handleChange(
@@ -187,6 +197,9 @@ export default function OptionsPromptFactory() {
                                                         }
                                                         placeholder="Enter your prompt here"
                                                     />
+
+
+
                                                 </div>
                                                 <div className="flex flex-row gap-4 justify-between">
                                                     <div className="text-sm text-white w-full">
