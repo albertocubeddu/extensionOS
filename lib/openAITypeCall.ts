@@ -5,6 +5,7 @@
 import { Storage } from "@plasmohq/storage";
 import { useUserInfo } from "./providers/UserInfoContext";
 import { getOrCreateClientUUID } from "./clientUUID";
+import { insertStatisticsRow } from "./anonymousTracking";
 
 // Function to map vendor names to their respective API endpoints
 function vendorToEndpoint(vendor: string): string {

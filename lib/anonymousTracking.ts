@@ -1,4 +1,4 @@
-const insertStatisticsRow = async (table: string, data: any) => {
+export const insertStatisticsRow = async (table: string, data: any) => {
    // If you want to add tracking, provide two keys from SUPABASE;
    // DO NOT TRACK USER EMAIL WITHOUT CONSENT.
    // Use the getOrCreateClientUUID if you want an anonymous but consisted UUID.
@@ -31,8 +31,6 @@ const insertStatisticsRow = async (table: string, data: any) => {
       }
       return { success: true }; // Indicate success
    } catch (error) {
-      console.log("error");
-      console.error("Unexpected error:", error);
       return { success: false, error: String(error) }; // Handle unexpected errors
    }
 };
