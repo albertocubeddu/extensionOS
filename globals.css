@@ -61,6 +61,12 @@
    }
 }
 
+/* Yup this is an hack */
+.custom-switcher {
+   --background: 222.2 84% 4.9%;
+   --input: 217.2 32.6% 17.5%;
+}
+
 @layer base {
    * {
       @apply border-border;

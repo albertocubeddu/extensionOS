@@ -143,6 +143,12 @@ Move it somewhere else ASAP:
 
 # Changelog
 
+### 0.0.21
+
+-  Chaged the introductory GIF demonstrating how to use the Extension | OS.
+-  PromptFactory: Implemented a notification to inform users that any selected text will be automatically appended to the end of the prompt.
+-  Settings: Using Switch vs CheckBoxes
+
 ### 0.0.20
 
 -  SelectionMenu: Now accessible on Reddit as well! (Consider prefixing all Tailwind classes for consistency)

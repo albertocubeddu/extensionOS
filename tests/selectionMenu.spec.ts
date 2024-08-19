@@ -24,11 +24,12 @@ test("Selection Menu: Must show with the default config", async ({ page }) => {
 test("Selection Menu: Must NOT show when the config is set to false", async ({
    page,
 }) => {
-   await page.waitForTimeout(1000);
+   await page.waitForTimeout(300);
 
    await page.click("#settings");
-   await page.waitForTimeout(1000);
    await page.uncheck("#display-selection-menu");
+   await page.waitForTimeout(500);
+
    await page.goto("https://www.york.ac.uk/teaching/cws/wws/webpage1.html");
    const pageTitle = await page.title();
    await expect(pageTitle).toBe("webpage1");
