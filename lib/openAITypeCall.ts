@@ -3,6 +3,8 @@
 // ------------------------------------------------------------------------------------
 
 import { Storage } from "@plasmohq/storage";
+import { useUserInfo } from "./providers/UserInfoContext";
+import { getOrCreateClientUUID } from "./clientUUID";
 
 // Function to map vendor names to their respective API endpoints
 function vendorToEndpoint(vendor: string): string {
@@ -55,6 +57,17 @@ export async function callOpenAIReturn(
          storage.get("llmKeys").then((key) => key ?? ""),
       ]);
 
+      //Capture statistics, so that we can provide prioritarisation for features based on the provider/model most used.
+      try {
+         await insertStatisticsRow("statistics", {
+            llmModel: storedModel,
+            llmProvider: storedVendor,
+            chromeUUID: await getOrCreateClientUUID(), //This is generated random; We want to track
+         });
+      } catch (error) {
+         console.error("Failed to insert statistics row:", error); // Log the error
+      }
+
       const openAIModel = overrideModel || storedModel;
       const vendor = overrideProvider || storedVendor;
       const apiKey = llmKeys ? llmKeys[vendor] : "";
@@ -68,8 +81,8 @@ export async function callOpenAIReturn(
       const bodyReq = JSON.stringify({
          model: openAIModel,
          messages: [
-            { role: "system", content: systemPrompt }, // Added system role
-            { role: "user", content: message }, // Updated user content
+            { role: "system", content: systemPrompt }, // The prompt defined by the user
+            { role: "user", content: message }, // The text selected by the user
          ],
          stream: false,
       });

@@ -2,13 +2,13 @@
 
 ![logo](./assets/presentation.png)
 
-⭐️ Welcome to Extension | OS: AI at Your Fingertips, Anytime, Anywhere.
+⭐️ Welcome to Extension | OS
 
 ## **Tired of the endless back-and-forth with ChatGPT, Claude, and other AI tools just to repeat the same task over and over?**
 
 You're not alone! I felt the same frustration, so I built a solution: **Extension | OS**—an open-source browser extension that makes AI accessible directly where you need it.
 
-Imagine this: you create a prompt like "Fix the grammar for this text," right-click, and job done—no more switching tabs, no more wasted time.
+**Imagine**: You create a prompt like "Fix the grammar for this text," right-click, and job done—no more switching tabs, no more wasted time.
 
 ![](./assets/showcase/demo.gif)
 
@@ -143,11 +143,18 @@ Move it somewhere else ASAP:
 
 # Changelog
 
+### 0.0.21
+
+-  Chaged the introductory GIF demonstrating how to use the Extension | OS.
+-  PromptFactory: Implemented a notification to inform users that any selected text will be automatically appended to the end of the prompt.
+-  Settings: Using Switch vs CheckBoxes
+-  Implemented anonymous tracking to monitor usage patterns, including the most frequently used models and vendors.
+
 ### 0.0.20
 
 -  SelectionMenu: Now accessible on Reddit as well! (Consider prefixing all Tailwind classes for consistency)
 -  PromptSelector: Resolved all React warnings for a smoother experience
--  Verified that pre-selection functions correctly (Thanks to E2E testing) 
+-  Verified that pre-selection functions correctly (Thanks to E2E testing)
 
 ### 0.0.19
 
