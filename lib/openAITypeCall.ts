@@ -48,37 +48,6 @@ export async function callOpenAIReturn(
 ): Promise<ApiResponse<any>> {
    const storage = new Storage();
 
-   const insertRow = async (table: string, data: any) => {
-      const supabaseUrl = process.env.PLASMO_PUBLIC_SUPABASE_URL;
-      const supabaseKey = process.env.PLASMO_PUBLIC_SUPABASE_ANON_KEY; // Ensure this is set in your environment
-      try {
-         const response = await fetch(`${supabaseUrl}/rest/v1/${table}`, {
-            method: "POST",
-            headers: {
-               "Content-Type": "application/json",
-               Authorization: `Bearer ${supabaseKey}`,
-               apikey: supabaseKey,
-            },
-            body: JSON.stringify(data),
-         });
-
-         if (!response.ok) {
-            const errorData = await response.json();
-            console.log(errorData);
-            console.error("Error inserting row:", errorData);
-            return {
-               success: false,
-               error: `Error inserting row: ${response.status} ${response.statusText}`,
-            };
-         }
-         return { success: true }; // Indicate success
-      } catch (error) {
-         console.log("error");
-         console.error("Unexpected error:", error);
-         return { success: false, error: String(error) }; // Handle unexpected errors
-      }
-   };
-
    try {
       const [storedModel, storedVendor, llmKeys] = await Promise.all([
          storage.get("llmModel").then((model) => model ?? DEFAULT_MODEL),
@@ -88,15 +57,16 @@ export async function callOpenAIReturn(
          storage.get("llmKeys").then((key) => key ?? ""),
       ]);
 
-      console.log("passing");
-
+      //Capture statistics, so that we can provide prioritarisation for features based on the provider/model most used.
       try {
-         await insertRow("statistics", {
+         await insertStatisticsRow("statistics", {
             llmModel: storedModel,
             llmProvider: storedVendor,
-            chromeUUID: await getOrCreateClientUUID(),
+            chromeUUID: await getOrCreateClientUUID(), //This is generated random; We want to track
          });
-      } catch (error) {}
+      } catch (error) {
+         console.error("Failed to insert statistics row:", error); // Log the error
+      }
 
       const openAIModel = overrideModel || storedModel;
       const vendor = overrideProvider || storedVendor;
@@ -111,8 +81,8 @@ export async function callOpenAIReturn(
       const bodyReq = JSON.stringify({
          model: openAIModel,
          messages: [
-            { role: "system", content: systemPrompt }, // Added system role
-            { role: "user", content: message }, // Updated user content
+            { role: "system", content: systemPrompt }, // The prompt defined by the user
+            { role: "user", content: message }, // The text selected by the user
          ],
          stream: false,
       });
