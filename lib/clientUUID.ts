@@ -8,7 +8,5 @@ export async function getOrCreateClientUUID() {
       clientId = self.crypto.randomUUID();
       await storage.set("clientUUID", clientId);
    }
-
-   console.log(clientId);
    return clientId;
 }
