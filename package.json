@@ -64,18 +64,8 @@
          "contextMenus",
          "clipboard",
          "sidePanel",
-         "declarativeNetRequest",
          "identity",
          "identity.email"
-      ],
-      "declarative_net_request": {
-         "rule_resources": [
-            {
-               "id": "ruleset_1",
-               "enabled": true,
-               "path": "~rules/ollama.json"
-            }
-         ]
-      }
+      ]
    }
 }
