@@ -3,15 +3,14 @@ import { Storage } from "@plasmohq/storage";
 const storage = new Storage();
 
 export interface IContextConfigItems {
-   id: string;
-   title?: string;
-   contexts?: string[];
-   prompt?: string;
-   functionType?: string;
-   type?: string;
-   extraArgs?: any;
+   id: string; //The internal ID
+   title?: string; //The display name
+   contexts?: string[]; //Chrome Context (https://developer.chrome.com/docs/extensions/reference/api/contextMenus#enum)
+   prompt?: string; //The prompt to be executed
+   functionType?: string; //The functionality when you press the item (copyToClipboard, etc.)
+   type?: string; //Used for the "separator"
+   extraArgs?: any; //Used for the future
 }
-
 
 export async function initializeStorage() {
    //   https://unicode-table.com/
