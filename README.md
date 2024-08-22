@@ -73,7 +73,47 @@ All your data is stored locally on your hard drive.
 
 ## Localhost
 
-You can run Extension OS using Ollama on your device; Download ollama and the model beforehand.
+To utilize the localhost option and perform LLM inference, you must set up a local Ollama server. You can download and install Ollama along with the CLI [here](https://ollama.ai/).
+
+### Pull Image
+
+Example:
+
+```
+ollama pull llama3.1
+```
+
+### Start Server
+
+Example:
+
+```
+OLLAMA_ORIGINS=chrome-extension://* ollama serve
+```
+
+**Important**: You need to configure the environment variable `OLLAMA_ORIGINS` to `chrome-extension://*` to permit requests from the Chrome extension. If `OLLAMA_ORIGINS` is not correctly configured, you will encounter an error in the Chrome extension.
+
+**Secutity** the `*` in `chrome-extension://*` should be replaced with the extension id. If you have downloaded Extension | OS from chrome, please use `chrome-extension://bahjnakiionbepnlbogdkojcehaeefnp`
+
+### macOS
+
+Run `launchctl setenv` to set `OLLAMA_ORIGINS`.
+
+```
+launchctl setenv OLLAMA_ORIGINS "chrome-extension://bahjnakiionbepnlbogdkojcehaeefnp"
+```
+
+[Setting environment variables on Mac (Ollama)](https://github.com/ollama/ollama/blob/main/docs/faq.md#setting-environment-variables-on-mac)
+
+### Docker
+
+The Ollama server can also be [run in a Docker container](https://hub.docker.com/r/ollama/ollama). The container should have the `OLLAMA_ORIGINS` environment variable set to `chrome-extension://*`.
+
+Run `docker run` with the `-e` flag to set the `OLLAMA_ORIGINS` environment variable:
+
+```
+docker run -e OLLAMA_ORIGINS="chrome-extension://bahjnakiionbepnlbogdkojcehaeefnp" -d -v ollama:/root/.ollama -p 11434:11434 --name ollama ollama/ollama
+```
 
 ## To-Do List
 
@@ -143,12 +183,17 @@ Move it somewhere else ASAP:
 
 # Changelog
 
+### 0.0.22
+
+-  Fixed the X,Y positioning in page like LinkedIn, Reddit and so on.
+-  The declarativeNetRequest has been removed to enhance the release lifecycle in light of Chrome Store authorization requirements. Ollama continue to be fully supported, and detailed configuration instructions can be found in the README.
+
 ### 0.0.21
 
 -  Chaged the introductory GIF demonstrating how to use the Extension | OS.
 -  PromptFactory: Implemented a notification to inform users that any selected text will be automatically appended to the end of the prompt.
 -  Settings: Using Switch vs CheckBoxes
--  Implemented anonymous tracking to monitor usage patterns, including the most frequently used models and vendors.
+-  Implemented optional (disabled by default) anonymous tracking to monitor usage patterns, including the most frequently used models and vendors.
 
 ### 0.0.20
 

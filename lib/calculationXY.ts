@@ -32,7 +32,6 @@ export function getRealXY(e: MouseEvent): XYCoords {
       pageY = e.pageY - (e.clientY - window.innerHeight);
       clientY = window.innerHeight;
    }
-
    return { pageX, pageY, clientX, clientY };
 }
 
@@ -45,14 +44,9 @@ export function adjustXYSelectionMenu(coords: XYCoords) {
    // // Check for right edge case
    if (coords.clientX + menuWidth > viewportWidth) {
       coords.pageX = Math.max(coords.pageX - menuWidth, 0);
-      coords.pageY += visualGap;
    } else {
       coords.pageX += visualGap;
    }
 
-   // Check for bottom edge case
-   if (coords.clientY + menuHeight > window.innerHeight) {
-      coords.pageY = Math.max(coords.pageY - menuHeight, 0);
-   }
-   return { xPos: coords.pageX, yPos: coords.pageY };
+   return { xPos: coords.pageX, yPos: coords.clientY };
 }

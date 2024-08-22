@@ -1,7 +1,7 @@
 {
    "name": "extension-os",
    "displayName": "Extension-OS: Your AI Partner",
-   "version": "0.0.21",
+   "version": "0.0.22",
    "description": "AI at Your Fingertips, Anytime, Anywhere.",
    "author": "acubeddu87@gmail.com",
    "scripts": {
@@ -64,18 +64,8 @@
          "contextMenus",
          "clipboard",
          "sidePanel",
-         "declarativeNetRequest",
          "identity",
          "identity.email"
-      ],
-      "declarative_net_request": {
-         "rule_resources": [
-            {
-               "id": "ruleset_1",
-               "enabled": true,
-               "path": "~rules/ollama.json"
-            }
-         ]
-      }
+      ]
    }
 }
