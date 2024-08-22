@@ -26,7 +26,7 @@ Join an exclusive group of up to 100 early adopters and be among the first to ex
 
 ## 📸 Screenshots
 
-Select, right-click and selecte the functionality—it's that easy!
+Select, right-click and select the functionality—it's that easy!
 ![action](./assets/showcase/action.png)
 
 Pick your favorite provider and select the model that excites you the most.
