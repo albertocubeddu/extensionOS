@@ -51,7 +51,6 @@ const SelectionMenu = () => {
             setSelectedText(text);
             //Get Real Coordinate and Adjust them according to the menu size.
             const { xPos, yPos } = adjustXYSelectionMenu(getRealXY(event));
-            console.log("final", xPos, yPos)
             setMenuPosition({ x: xPos, y: yPos })
         } else {
             // Some elements may lose the window.getSelection() (e.g., Gmail's reply box). This causes the event to fire before the onSelect from the menu, resulting in an empty selection and the menu closing prematurely. To mitigate this, we add a 1-millisecond delay to queue the event, effectively preventing the menu from closing too quickly.

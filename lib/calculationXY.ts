@@ -32,9 +32,6 @@ export function getRealXY(e: MouseEvent): XYCoords {
       pageY = e.pageY - (e.clientY - window.innerHeight);
       clientY = window.innerHeight;
    }
-
-   console.log(pageX, pageY, clientX, clientY);
-
    return { pageX, pageY, clientX, clientY };
 }
 

@@ -22,7 +22,6 @@ export const insertStatisticsRow = async (table: string, data: any) => {
 
       if (!response.ok) {
          const errorData = await response.json();
-         console.log(errorData);
          console.error("Error inserting row:", errorData);
          return {
             success: false,
