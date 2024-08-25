@@ -21,19 +21,22 @@ const storage = new Storage();
 // Fired when the extension is first installed, when the extension is updated to a new version, and when Chrome is updated to a new version.
 // */
 chrome.runtime.onInstalled.addListener(async (details) => {
-   if (details.reason === chrome.runtime.OnInstalledReason.UPDATE) {
+   if (details.reason == chrome.runtime.OnInstalledReason.INSTALL) {
+      if (process.env.NODE_ENV === "production") {
+         chrome.runtime.openOptionsPage();
+      }
+   } else if (details.reason === chrome.runtime.OnInstalledReason.UPDATE) {
       console.log(
          "Extension updated from version",
          details.previousVersion,
          "to",
          chrome.runtime.getManifest().version
       );
-      // Perform any update-specific tasks here
    }
 
-   if (process.env.NODE_ENV === "production") {
-      chrome.runtime.openOptionsPage();
-   }
+   //Setup the uninstall page
+   const uninstallUrl = process.env.PLASMO_PUBLIC_WEBSITE_EXTENSION_OS || "";
+   chrome.runtime.setUninstallURL(uninstallUrl + "/uninstall");
 
    // It need to change in the future, unless i use two lists and i use the ID as a intersection?
    const contextConfigItems =

@@ -183,6 +183,10 @@ Move it somewhere else ASAP:
 
 # Changelog
 
+### 0.0.23
+
+-  Adding the uninstall hook to understand what can we improve.
+
 ### 0.0.22
 
 -  Fixed the X,Y positioning in page like LinkedIn, Reddit and so on.
