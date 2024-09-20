@@ -20,11 +20,6 @@ import {
 
 import {
     Sheet,
-    SheetContent,
-    SheetDescription,
-    SheetHeader,
-    SheetTitle,
-    SheetTrigger,
 } from "@/components/ui/sheet"
 
 import { Textarea } from "~components/ui/textarea";
@@ -42,7 +37,6 @@ import { chromeContextsParameters } from "./promptFactory/parameters/chromeConte
 import { functionalityParameters } from "./promptFactory/parameters/functionalityParameters";
 import { AutosizeTextarea } from "~components/shadcnui-expansions/AutosizeTextarea";
 import { Alert, AlertDescription, AlertTitle } from "~components/ui/alert";
-import { Terminal } from "lucide-react";
 
 export default function OptionsPromptFactory() {
     const [contextMenuItems, setContextMenuItems] = useState<IContextConfigItems[]>([]);
