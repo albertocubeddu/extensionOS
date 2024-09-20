@@ -183,6 +183,10 @@ Move it somewhere else ASAP:
 
 # Changelog
 
+### 0.0.24
+
+-  Adding the ability to specify a custom URL
+
 ### 0.0.23
 
 -  Adding the uninstall hook to understand what can we improve.

@@ -174,6 +174,7 @@ export default function LlmSettings({ debugInfo }: { debugInfo: string }) {
     const [llmModel, setLlmModel] = useStorage("llmModel", "llama-3.1-70b-versatile")
     const [llmProvider, setLlmProvider] = useStorage("llmProvider", "extension | OS")
     const [llmKeys, setLlmKeys] = useStorage("llmKeys", {})
+    const [llmCustomEndpoint, setLlmCustomEndpoint] = useStorage("llmCustomEndpoint", (v) => v === undefined ? "http://localhost:11434/v1/chat/completions" : v)
 
     const hasRun = useRef(false); // Add this line
 
@@ -285,13 +286,34 @@ export default function LlmSettings({ debugInfo }: { debugInfo: string }) {
                                     ) : (
                                         <Input
                                             type="text"
-                                            id="model-input"
+                                            id="llm-model"
                                             value={llmModel}
                                             onChange={(e) => setLlmModel(e.target.value)}
                                             placeholder="Enter LLM model name"
                                             className="border border-input rounded-md p-2 w-full"
                                         />
                                     )}
+                                </div>
+                            </div>
+                        )
+                )}
+                <br />
+                {providersData.providers.map(
+                    (provider) =>
+                        llmProvider === provider.name && provider.name === "localhost" && (
+                            <div key={provider.name}>
+                                <div className="flex flex-col gap-1">
+                                    <LabelWithTooltip keyTooltip={"llmModel"} labelText={"Default Endpoint"} tooltipText={"This is the endpoint that will be used by default."} />
+                                    {
+                                        <Input
+                                            type="text"
+                                            id="model-input"
+                                            value={llmCustomEndpoint}
+                                            onChange={(e) => setLlmCustomEndpoint(e.target.value)}
+                                            placeholder="Enter LLM model name"
+                                            className="border border-input rounded-md p-2 w-full"
+                                        />
+                                    }
                                 </div>
                             </div>
                         )
