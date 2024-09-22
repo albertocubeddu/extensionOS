@@ -123,7 +123,7 @@ const PlasmoOverlay = () => {
                     wordBreak: "break-word",
                     display: successDivVisibe ? "block" : "none"
                 }}>
-                <img src={successImage} className="w-full h-auto" />
+                <img id="success" src={successImage} className="w-full h-auto" />
             </div>
 
             {/* Loading box */}

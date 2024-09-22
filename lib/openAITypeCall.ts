@@ -3,19 +3,25 @@
 // ------------------------------------------------------------------------------------
 
 import { Storage } from "@plasmohq/storage";
-import { useUserInfo } from "./providers/UserInfoContext";
 import { getOrCreateClientUUID } from "./clientUUID";
 import { insertStatisticsRow } from "./anonymousTracking";
 
 // Function to map vendor names to their respective API endpoints
-function vendorToEndpoint(vendor: string): string {
+async function vendorToEndpoint(vendor: string): Promise<string> {
+   const storage = new Storage();
+
+   if (vendor === "localhost") {
+      const customUrl = await storage.get("llmCustomEndpoint");
+      return customUrl;
+   }
+
    const endpoints: { [key: string]: string } = {
       "extension | OS": process.env.PLASMO_PUBLIC_EXTENSION_OS_API_ENDPOINT,
       openai: "https://api.openai.com/v1/chat/completions",
       groq: "https://api.groq.com/openai/v1/chat/completions",
       together: "https://api.together.xyz/v1/chat/completions",
-      localhost: "http://localhost:11434/v1/chat/completions",
    };
+
    return endpoints[vendor] || endpoints["groq"];
 }
 
@@ -72,7 +78,7 @@ export async function callOpenAIReturn(
       const openAIModel = overrideModel || storedModel;
       const vendor = overrideProvider || storedVendor;
       const apiKey = llmKeys ? llmKeys[vendor] : "";
-      const openAIEndpoint = vendorToEndpoint(vendor);
+      const openAIEndpoint = await vendorToEndpoint(vendor);
 
       const headers = new Headers({
          "Content-Type": "application/json",
