@@ -227,99 +227,96 @@ export default function LlmSettings({ debugInfo }: { debugInfo: string }) {
                     )}
                 </div>
 
-                <div>
-                    <div className="flex flex-col gap-1">
-                        <LabelWithTooltip keyTooltip={"llmProvider"} labelText={"Default Provider"} tooltipText={"This is the LLM provider that will be used by default."} />
-                        <div className="flex flex-row gap-5">
-                            <Select value={llmProvider} onValueChange={setLlmProvider}>
-                                <SelectTrigger id="llm-provider" className="w-[180px]">
-                                    <SelectValue placeholder="Select a provider" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    {providersData.providers.map((provider) => (
-                                        <SelectItem key={provider.name} value={provider.name}>
-                                            {provider.name.charAt(0).toUpperCase() +
-                                                provider.name.slice(1)}
-                                        </SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
+                <div className="flex flex-col gap-3">
+                    <div>
+                        <div className="flex flex-col gap-1">
+                            <LabelWithTooltip keyTooltip={"llmProvider"} labelText={"Default Provider"} tooltipText={"This is the LLM provider that will be used by default."} />
+                            <div className="flex flex-row gap-5">
+                                <Select value={llmProvider} onValueChange={setLlmProvider}>
+                                    <SelectTrigger id="llm-provider" className="w-[180px]">
+                                        <SelectValue placeholder="Select a provider" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {providersData.providers.map((provider) => (
+                                            <SelectItem key={provider.name} value={provider.name}>
+                                                {provider.name.charAt(0).toUpperCase() +
+                                                    provider.name.slice(1)}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
 
-                            {llmProvider === "extension | OS" && <ExtensionOsLogin />}
-
-
-                            {!llmProvider && (
-                                <>
-                                    <ArrowBigLeftDash size={40} strokeWidth={1} className=" mx-5 text-[#ff66cc] animate-[wiggle_1s_ease-in-out_infinite]" />
-                                    <strong className="mr-2">Instructions:</strong> Choose a provider from the list on your left.<br /> The selected provider will be set as the default.
-                                </>
-                            )}
+                                {llmProvider === "extension | OS" && <ExtensionOsLogin />}
 
 
+                                {!llmProvider && (
+                                    <>
+                                        <ArrowBigLeftDash size={40} strokeWidth={1} className=" mx-5 text-[#ff66cc] animate-[wiggle_1s_ease-in-out_infinite]" />
+                                        <strong className="mr-2">Instructions:</strong> Choose a provider from the list on your left.<br /> The selected provider will be set as the default.
+                                    </>
+                                )}
 
 
+
+
+                            </div>
                         </div>
                     </div>
-                </div>
-                <br />
-                {providersData.providers.map(
-                    (provider) =>
-                        llmProvider === provider.name && (
-                            <div key={provider.name}>
-                                <div className="flex flex-col gap-1">
-                                    <LabelWithTooltip keyTooltip={"llmModel"} labelText={"Default Model"} tooltipText={"This is the LLM model that will be used by default."} />
-                                    {provider.models.length > 0 && provider.name !== "localhost" ? (
-                                        <>
-                                            <Select value={llmModel} onValueChange={setLlmModel}>
-                                                <SelectTrigger id="llm-model" className="w-full">
-                                                    <SelectValue placeholder="Select a model" />
-                                                </SelectTrigger>
-                                                <SelectContent>
-                                                    {provider.models.map((llmModel) => (
-                                                        <SelectItem key={llmModel} value={llmModel}>
-                                                            {llmModel}
-                                                        </SelectItem>
-                                                    ))}
-                                                </SelectContent>
-                                            </Select>
-                                        </>
-                                    ) : (
-                                        <Input
-                                            type="text"
-                                            id="llm-model"
-                                            value={llmModel}
-                                            onChange={(e) => setLlmModel(e.target.value)}
-                                            placeholder="Enter LLM model name"
-                                            className="border border-input rounded-md p-2 w-full"
-                                        />
-                                    )}
+                    {providersData.providers.map(
+                        (provider) =>
+                            llmProvider === provider.name && (
+                                <div key={provider.name}>
+                                    <div className="flex flex-col gap-1">
+                                        <LabelWithTooltip keyTooltip={"llmModel"} labelText={"Default Model"} tooltipText={"This is the LLM model that will be used by default."} />
+                                        {provider.models.length > 0 && provider.name !== "localhost" ? (
+                                            <>
+                                                <Select value={llmModel} onValueChange={setLlmModel}>
+                                                    <SelectTrigger id="llm-model" className="w-full">
+                                                        <SelectValue placeholder="Select a model" />
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        {provider.models.map((llmModel) => (
+                                                            <SelectItem key={llmModel} value={llmModel}>
+                                                                {llmModel}
+                                                            </SelectItem>
+                                                        ))}
+                                                    </SelectContent>
+                                                </Select>
+                                            </>
+                                        ) : (
+                                            <Input
+                                                type="text"
+                                                id="llm-model"
+                                                value={llmModel}
+                                                onChange={(e) => setLlmModel(e.target.value)}
+                                                placeholder="Enter LLM model name"
+                                                className="border border-input rounded-md p-2 w-full"
+                                            />
+                                        )}
+                                    </div>
                                 </div>
-                            </div>
-                        )
-                )}
-                <br />
-                {providersData.providers.map(
-                    (provider) =>
-                        llmProvider === provider.name && provider.name === "localhost" && (
-                            <div key={provider.name}>
-                                <div className="flex flex-col gap-1">
-                                    <LabelWithTooltip keyTooltip={"llmModel"} labelText={"Default Endpoint"} tooltipText={"This is the endpoint that will be used by default."} />
-                                    {
-                                        <Input
-                                            type="text"
-                                            id="model-input"
-                                            value={llmCustomEndpoint}
-                                            onChange={(e) => setLlmCustomEndpoint(e.target.value)}
-                                            placeholder="Enter LLM model name"
-                                            className="border border-input rounded-md p-2 w-full"
-                                        />
-                                    }
+                            )
+                    )}
+                    {providersData.providers.map(
+                        (provider) =>
+                            llmProvider === provider.name && provider.name === "localhost" && (
+                                <div key={provider.name}>
+                                    <div className="flex flex-col gap-1">
+                                        <LabelWithTooltip keyTooltip={"llmModel"} labelText={"Default Endpoint"} tooltipText={"This is the endpoint that will be used by default."} />
+                                        {
+                                            <Input
+                                                type="text"
+                                                id="model-input"
+                                                value={llmCustomEndpoint}
+                                                onChange={(e) => setLlmCustomEndpoint(e.target.value)}
+                                                placeholder="Enter LLM model name"
+                                                className="border border-input rounded-md p-2 w-full"
+                                            />
+                                        }
+                                    </div>
                                 </div>
-                            </div>
-                        )
-                )}
-                <br />
-                <div>
+                            )
+                    )}
                     {providersData.providers.map(
                         (provider) =>
                             llmProvider === provider.name && (
@@ -329,7 +326,7 @@ export default function LlmSettings({ debugInfo }: { debugInfo: string }) {
                                             <LabelWithTooltip keyTooltip={"llmProviderKey"} labelText={"API Key"} tooltipText={"This API Key for the selected provider."} />
                                             <Input
                                                 type="password"
-                                                id="llmKey"
+                                                id="llm-key"
                                                 disabled={!llmProvider}
                                                 value={getCurrentKey()}
                                                 onChange={(e) => handleKeyChange(llmProvider, e.target.value)}

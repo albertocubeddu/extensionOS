@@ -12,7 +12,6 @@ async function vendorToEndpoint(vendor: string): Promise<string> {
 
    if (vendor === "localhost") {
       const customUrl = await storage.get("llmCustomEndpoint");
-      console.log("here", customUrl);
       return customUrl;
    }
 
