@@ -1,7 +1,7 @@
 {
    "name": "extension-os",
    "displayName": "Extension-OS: Your AI Partner",
-   "version": "0.0.24",
+   "version": "0.0.25",
    "description": "AI at Your Fingertips, Anytime, Anywhere.",
    "author": "acubeddu87@gmail.com",
    "scripts": {
@@ -28,7 +28,7 @@
       "deepmerge": "^4.3.1",
       "install": "^0.13.0",
       "lucide-react": "^0.414.0",
-      "plasmo": "0.88.0",
+      "plasmo": "0.89.4",
       "pnpm": "^9.6.0",
       "react": "18.2.0",
       "react-dom": "18.2.0",
