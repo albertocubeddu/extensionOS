@@ -183,6 +183,10 @@ Move it somewhere else ASAP:
 
 # Changelog
 
+### 0.0.26
+
+- Adding more LLMs
+
 ### 0.0.25
 
 - Adding new llama3.3
