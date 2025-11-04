@@ -183,6 +183,9 @@ Move it somewhere else ASAP:
 
 # Changelog
 
+### 0.0.27
+- [patch] Default LLM changed to llama-3.3-70b-versatile
+
 ### 0.0.26
 
 - Adding more LLMs
