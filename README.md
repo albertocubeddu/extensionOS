@@ -345,3 +345,11 @@ Move it somewhere else ASAP:
 - Ensure that the open.sidePanel is always initialized before the Plasmo Storage.
 - We currently have two menus that function similarly but not identically; we need to implement a more efficient solution to consolidate them into one.
 - The Plasmo handler may stop functioning unexpectedly without errors if a response is not returned; ensure to always return a response to prevent this issue.
+
+
+# Deployment Instruction for production
+- Google Store: https://chrome.google.com/webstore/devconsole/2415d173-bc87-467d-aca3-0fbd673ef09f/bahjnakiionbepnlbogdkojcehaeefnp/edit/package
+
+- pnpm run package
+
+- upload the package to the store

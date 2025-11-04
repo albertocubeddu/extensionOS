@@ -181,7 +181,7 @@ export const providersData = {
 export default function LlmSettings({ debugInfo }: { debugInfo: string }) {
   const [llmModel, setLlmModel] = useStorage(
     "llmModel",
-    "llama-3.1-70b-versatile"
+    "llama-3.3-70b-versatile"
   );
   const [llmProvider, setLlmProvider] = useStorage(
     "llmProvider",
