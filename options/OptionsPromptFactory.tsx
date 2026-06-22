@@ -22,12 +22,18 @@ import {
     Sheet,
 } from "@/components/ui/sheet"
 
-import { Textarea } from "~components/ui/textarea";
-import { cleanProperties } from "~lib/cleanContextMenu";
+import { isChromeApiError, recreateContextMenus } from "~lib/chromeApi";
+import {
+    isSidebarMenuId,
+    normalizeContextMenuItems,
+    toChromeContextMenuItems,
+    withSidebarMenuPrefix,
+    withoutSidebarMenuPrefix,
+    type ContextMenuItem,
+} from "~lib/configurations/contextMenuItems";
 
 const storage = new Storage();
 
-import type { IContextConfigItems } from "~background/init";
 import LabelWithTooltip from "../components/blocks/LabelWithTooltip";
 import CardHeaderIntro from "~components/blocks/CardHeaderIntro";
 import VapiSpecificConfiguration from "./promptFactory/VapiSpecificConfiguration";
@@ -39,13 +45,14 @@ import { AutosizeTextarea } from "~components/shadcnui-expansions/AutosizeTextar
 import { Alert, AlertDescription, AlertTitle } from "~components/ui/alert";
 
 export default function OptionsPromptFactory() {
-    const [contextMenuItems, setContextMenuItems] = useState<IContextConfigItems[]>([]);
+    const [contextMenuItems, setContextMenuItems] = useState<ContextMenuItem[]>([]);
     const [openFunctionalitySheet, setOpenFunctionalitySheet] = useState(false);
     const [openContextSheet, setOpenContextSheet] = useState(false)
 
     useEffect(() => {
         async function getStorage() {
-            const items = await storage.get<Array<IContextConfigItems>>("contextMenuItems");
+            const items = normalizeContextMenuItems(await storage.get("contextMenuItems"));
+            await storage.set("contextMenuItems", items);
             setContextMenuItems(items);
         }
 
@@ -56,16 +63,16 @@ export default function OptionsPromptFactory() {
     This is needed, because we don't have any context when we are calling the listener on the background
     that is the one aware of opening the sidebar. Need to find a solution for the chrome.storage ASAP.
     */
-    const handleChange = useCallback((id, prop, value) => {
+    const handleChange = useCallback((id: string, prop: string, value: any) => {
         setContextMenuItems(prevItems =>
             prevItems.map(item => {
                 if (item.id === id) {
                     let newId = item.id;
 
-                    if (item.id.startsWith("side_") && prop === "functionType" && value !== "callAI-openSideBar") {
-                        newId = item.id.replace(/^side_/, '');
-                    } else if (!item.id.startsWith("side_") && value === "callAI-openSideBar") {
-                        newId = `side_${item.id}`;
+                    if (isSidebarMenuId(item.id) && prop === "functionType" && value !== "callAI-openSideBar") {
+                        newId = withoutSidebarMenuPrefix(item.id);
+                    } else if (!isSidebarMenuId(item.id) && value === "callAI-openSideBar") {
+                        newId = withSidebarMenuPrefix(item.id);
                     }
 
                     return { ...item, [prop]: value, id: newId };
@@ -78,13 +85,17 @@ export default function OptionsPromptFactory() {
     //What a shit show, saving two things together. Best practice thrown in the bin. TODO: Refactor the smelly code. (10:00PM - night)
     const handleSave = async () => {
         try {
-            await storage.set("contextMenuItems", contextMenuItems);
-            const cleanedContextMenuItems = cleanProperties(contextMenuItems);
+            const normalizedItems = normalizeContextMenuItems(contextMenuItems);
+            await storage.set("contextMenuItems", normalizedItems);
+            setContextMenuItems(normalizedItems);
 
-            // Remove all existing context menu items
-            chrome.contextMenus.removeAll(() => {
-                cleanedContextMenuItems.forEach(item => chrome.contextMenus.create(item));
-            });
+            const result = await recreateContextMenus(
+                toChromeContextMenuItems(normalizedItems)
+            );
+
+            if (isChromeApiError(result)) {
+                throw new Error(result.error);
+            }
 
             alert("Changes saved!");
         } catch (error) {
@@ -106,22 +117,22 @@ export default function OptionsPromptFactory() {
                         <>
                             <div>
                                 {/* We exclude the separrator and the configuration button as it's not essential for the user to see at this stage */}
-                                {Object.keys(contextMenuItems).filter(key => !contextMenuItems[key].id.startsWith("separator") && contextMenuItems[key].id !== "configuration").map((key) => {
+                                {contextMenuItems.filter(item => item.type !== "separator" && item.id !== "configuration").map((item, index) => {
                                     return (
                                         <div
-                                            key={key}
+                                            key={item.id}
                                             className="p-4 pt-6 mb-20 border-t-8 border-l-8 border-2 rounded-lg shadow-lg"
                                         >
                                             <div className="flex flex-row justify-between gap-4 px-4">
                                                 <div className="flex flex-col gap-1 w-3/4">
-                                                    <LabelWithTooltip keyTooltip={key} labelText="Display Name" tooltipText="The name displayed in the menu visualised when the user clicks the right-click" />
+                                                    <LabelWithTooltip keyTooltip={item.id} labelText="Display Name" tooltipText="The name displayed in the menu visualised when the user clicks the right-click" />
                                                     <Input
-                                                        id={`title-${key}`}
+                                                        id={`title-${index}`}
                                                         className="text-lg font-semibold mb-2"
-                                                        value={contextMenuItems[key].title}
+                                                        value={item.title ?? ""}
                                                         onChange={(e) => {
                                                             handleChange(
-                                                                contextMenuItems[key].id,
+                                                                item.id,
                                                                 "title",
                                                                 e.target.value
                                                             );
@@ -131,19 +142,19 @@ export default function OptionsPromptFactory() {
                                                 <div className="flex flex-col gap-1 w-1/4">
                                                     <Label
                                                         className="text-sm text-gray-600"
-                                                        htmlFor={`context-${key}`}
+                                                        htmlFor={`context-${index}`}
                                                     >
-                                                        <LabelWithTooltip onClick={() => setOpenContextSheet(true)} keyTooltip={key} labelText="Context" tooltipText="The context in which the item should display. Click for more info" sheetIncluded={true} />
+                                                        <LabelWithTooltip onClick={() => setOpenContextSheet(true)} keyTooltip={item.id} labelText="Context" tooltipText="The context in which the item should display. Click for more info" sheetIncluded={true} />
 
 
                                                     </Label>
 
 
                                                     <Select
-                                                        value={contextMenuItems[key].contexts.join(", ")}
+                                                        value={item.contexts.join(", ")}
                                                         onValueChange={(value) =>
                                                             handleChange(
-                                                                contextMenuItems[key].id,
+                                                                item.id,
                                                                 "contexts",
                                                                 value.split(", ")
                                                             )
@@ -176,15 +187,15 @@ export default function OptionsPromptFactory() {
                                                     </AlertDescription>
                                                 </Alert>
                                                 <div className="text-sm text-white">
-                                                    <LabelWithTooltip keyTooltip={key} labelText="Prompt" tooltipText="The prompt for the GPT" />
+                                                    <LabelWithTooltip keyTooltip={item.id} labelText="Prompt" tooltipText="The prompt for the GPT" />
 
                                                     <AutosizeTextarea
-                                                        id={`prompt-${key}`}
+                                                        id={`prompt-${index}`}
                                                         className="mt-1 p-4 rounded-md border-none bg-gray-800 text-white"
-                                                        value={contextMenuItems[key].prompt}
+                                                        value={item.prompt ?? ""}
                                                         onChange={(e) =>
                                                             handleChange(
-                                                                contextMenuItems[key].id,
+                                                                item.id,
                                                                 "prompt",
                                                                 e.target.value
                                                             )
@@ -199,13 +210,13 @@ export default function OptionsPromptFactory() {
                                                     <div className="text-sm text-white w-full">
                                                         <div className="flex flex-col gap-1 ">
 
-                                                            <LabelWithTooltip onClick={() => setOpenFunctionalitySheet(true)} keyTooltip={key} labelText="Functionality" tooltipText="The functionality after the prompt is executed. Click for more info" sheetIncluded={true} />
+                                                            <LabelWithTooltip onClick={() => setOpenFunctionalitySheet(true)} keyTooltip={item.id} labelText="Functionality" tooltipText="The functionality after the prompt is executed. Click for more info" sheetIncluded={true} />
 
 
                                                             <Select
-                                                                value={contextMenuItems[key].functionType}
+                                                                value={item.functionType}
                                                                 onValueChange={(value) =>
-                                                                    handleChange(contextMenuItems[key].id, "functionType", value)
+                                                                    handleChange(item.id, "functionType", value)
                                                                 }
                                                             >
                                                                 <SelectTrigger className="w-full">
@@ -236,9 +247,9 @@ export default function OptionsPromptFactory() {
                                                         </Button>
                                                     </div>
                                                 </div>
-                                                {contextMenuItems[key].functionType === "callVoice-ExternalNumber" && (
+                                                {item.functionType === "callVoice-ExternalNumber" && (
                                                     <>
-                                                        <VapiSpecificConfiguration contextMenuItems={contextMenuItems[key]} handleChange={handleChange} />
+                                                        <VapiSpecificConfiguration contextMenuItems={item} handleChange={handleChange} />
                                                     </>
                                                 )}
 

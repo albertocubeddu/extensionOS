@@ -1,28 +1,42 @@
 import { test, expect } from "./fixtures";
+import type { Page } from "@playwright/test";
+import { DEFAULT_LLM_MODEL } from "../lib/configurations/llmProviders";
 const groqKey = process.env.E2E_TEST_GROQ_KEY;
+
+async function openOptionsPage(page: Page, extensionId: string) {
+   await page.goto(`chrome-extension://${extensionId}/options.html`);
+   await expect(page).toHaveTitle("Extension-OS: Your AI Partner");
+}
+
+async function selectFixtureText(page: Page) {
+   const box = await page.locator("#selection-text").boundingBox();
+   if (!box) {
+      throw new Error("Selection fixture text was not visible.");
+   }
+
+   await page.mouse.move(box.x + 5, box.y + 10);
+   await page.mouse.down();
+   await page.mouse.move(box.x + Math.min(box.width - 5, 520), box.y + 10);
+   await page.mouse.up();
+}
 
 test("be able to use groq and succesfully execute a query", async ({
    page,
+   extensionId,
 }) => {
-   await page.waitForTimeout(300);
-   const pageTitle = await page.title();
-   await expect(pageTitle).toBe("Extension-OS: Your AI Partner");
+   test.skip(!groqKey, "Requires E2E_TEST_GROQ_KEY.");
+
+   await openOptionsPage(page, extensionId);
    await page.click("#llm-provider");
    await page.click('div[role="option"] >> text="Groq"');
-   await expect(page.locator("#llm-model > span")).toHaveText(
-      "llama-3.1-70b-versatile"
-   );
+   await expect(page.locator("#llm-model > span")).toHaveText(DEFAULT_LLM_MODEL);
 
    const llmKeyInput = await page.locator("#llm-key"); // Changed from getById to locator
-   await llmKeyInput.fill(groqKey);
+   await llmKeyInput.fill(groqKey ?? "");
 
-   await page.goto("https://www.york.ac.uk/teaching/cws/wws/webpage1.html");
-   const pageTitle2 = await page.title();
-   await expect(pageTitle2).toBe("webpage1");
-   await page.mouse.move(100, 100); // Move the mouse to the starting position (x: 100, y: 100)
-   await page.mouse.down(); // Press the mouse button down to start selecting
-   await page.mouse.move(200, 120); // Move the mouse to the end position (x: 300, y: 300) to select text
-   await page.mouse.up(); // Release the mouse button to complete the selection
+   await page.goto("/selection.html");
+   await expect(page).toHaveTitle("ExtensionOS selection fixture");
+   await selectFixtureText(page);
 
    const options = await page.getByRole("option");
    const optionsCount = await options.count();
@@ -34,22 +48,19 @@ test("be able to use groq and succesfully execute a query", async ({
 
 test("be able to use default localhost and succesfully execute a query", async ({
    page,
+   extensionId,
 }) => {
-   await page.waitForTimeout(300);
-   const pageTitle = await page.title();
-   await expect(pageTitle).toBe("Extension-OS: Your AI Partner");
+   test.skip(!process.env.E2E_TEST_OLLAMA, "Requires E2E_TEST_OLLAMA.");
+
+   await openOptionsPage(page, extensionId);
    await page.click("#llm-provider");
    await page.click('div[role="option"] >> text="Localhost"');
    const modelText = await page.locator("#llm-model").inputValue(); // Retrieve the text from the input
    await expect(modelText).toBe("llama3"); //
 
-   await page.goto("https://www.york.ac.uk/teaching/cws/wws/webpage1.html");
-   const pageTitle2 = await page.title();
-   await expect(pageTitle2).toBe("webpage1");
-   await page.mouse.move(100, 100); // Move the mouse to the starting position (x: 100, y: 100)
-   await page.mouse.down(); // Press the mouse button down to start selecting
-   await page.mouse.move(200, 120); // Move the mouse to the end position (x: 300, y: 300) to select text
-   await page.mouse.up(); // Release the mouse button to complete the selection
+   await page.goto("/selection.html");
+   await expect(page).toHaveTitle("ExtensionOS selection fixture");
+   await selectFixtureText(page);
 
    const options = await page.getByRole("option");
    const optionsCount = await options.count();

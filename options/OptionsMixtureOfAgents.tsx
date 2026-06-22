@@ -17,8 +17,8 @@ import { useState } from "react"
 import { useStorage } from "@plasmohq/storage/hook"
 
 import { callOpenAIReturn } from "~lib/openAITypeCall"
+import { LLM_PROVIDERS } from "~lib/configurations/llmProviders"
 
-import { providersData } from "./LlmSettings"
 import { Textarea } from "~components/ui/textarea"
 import { Separator } from "@/components/ui/separator"
 import { Button } from "~components/ui/button"
@@ -70,7 +70,7 @@ export default function OptionsMixtureOfAgents() {
 
 
     // Filter GROQ provider and its models
-    const groqProvider = providersData.providers.find(
+    const groqProvider = LLM_PROVIDERS.find(
         (provider) => provider.name === "groq"
     )
     const groqModels = groqProvider ? groqProvider.models : []

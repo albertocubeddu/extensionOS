@@ -20,180 +20,44 @@ import { useStorage } from "@plasmohq/storage/hook";
 import LabelWithTooltip from "~components/blocks/LabelWithTooltip";
 import CardHeaderIntro from "~components/blocks/CardHeaderIntro";
 import FakeSaveButton from "~components/blocks/FakeSaveButton";
+import {
+  DEFAULT_LLM_MODEL,
+  DEFAULT_LLM_PROVIDER,
+  DEFAULT_LOCALHOST_ENDPOINT,
+  LLM_PROVIDERS,
+  getDefaultModelForProvider,
+  type ProviderName,
+} from "~lib/configurations/llmProviders";
 import ProviderInstruction from "./promptFactory/ProviderInstruction";
-import { ArrowBigLeftDash, ArrowBigUpDash } from "lucide-react";
+import { ArrowBigLeftDash } from "lucide-react";
 import { ExtensionOsLogin } from "./settings/ExtensionOsLogin";
 
-// Add more combination here for the future
-// TODO: I may refactor it to be easier to access but whatever.
-export const providersData = {
-  providers: [
-    {
-      name: "extension | OS",
-      models: [
-        "llama-3.3-70b-versatile",
-        "llama-3.1-8b-instant",
-        "openai/gpt-oss-120b",
-        "openai/gpt-oss-20b"
-      ],
-    },
-    {
-      name: "groq",
-      models: [
-        "llama-3.3-70b-versatile",
-        "llama-3.1-8b-instant",
-        "openai/gpt-oss-120b",
-        "openai/gpt-oss-20b"
-      ],
-    },
-    {
-      name: "openai",
-      models: ["gpt-4", 
-        "gpt-5",
-        "gpt-5-mini",
-        "gpt-5-nano",
-        "gpt-5-pro",
-        "gpt-4o-mini", 
-        "gpt-3.5-turbo",
-        "gpt-4o",
-        "gpt-4o-mini",
-        "gpt-4.1",
-        "o1-mini",
-        "o1",
-        "o1-pro",
-        "o3-mini",
-        "o3",
-],
-    },
-    {
-      name: "together",
-      models: [
-        "Austism/chronos-hermes-13b",
-        "Gryphe/MythoMax-L2-13b",
-        "HuggingFaceH4/zephyr-7b-beta",
-        "NousResearch/Hermes-2-Theta-Llama-3-70B",
-        "NousResearch/Nous-Capybara-7B-V1p9",
-        "NousResearch/Nous-Hermes-2-Mistral-7B-DPO",
-        "NousResearch/Nous-Hermes-2-Mixtral-8x7B-DPO",
-        "NousResearch/Nous-Hermes-2-Mixtral-8x7B-SFT",
-        "NousResearch/Nous-Hermes-2-Yi-34B",
-        "NousResearch/Nous-Hermes-Llama2-13b",
-        "NousResearch/Nous-Hermes-Llama2-70b",
-        "NousResearch/Nous-Hermes-llama-2-7b",
-        "Open-Orca/Mistral-7B-OpenOrca",
-        "Qwen/Qwen1.5-0.5B-Chat",
-        "Qwen/Qwen1.5-1.8B-Chat",
-        "Qwen/Qwen1.5-110B-Chat",
-        "Qwen/Qwen1.5-14B-Chat",
-        "Qwen/Qwen1.5-32B-Chat",
-        "Qwen/Qwen1.5-4B-Chat",
-        "Qwen/Qwen1.5-72B-Chat",
-        "Qwen/Qwen1.5-7B-Chat",
-        "Qwen/Qwen2-1.5B-Instruct",
-        "Qwen/Qwen2-72B",
-        "Qwen/Qwen2-72B-Instruct",
-        "Qwen/Qwen2-7B",
-        "Qwen/Qwen2-7B-Instruct",
-        "Snowflake/snowflake-arctic-instruct",
-        "Undi95/ReMM-SLERP-L2-13B",
-        "Undi95/Toppy-M-7B",
-        "WizardLM/WizardLM-13B-V1.2",
-        "allenai/OLMo-7B-Instruct",
-        "carson/ml31405bit",
-        "carson/ml3170bit",
-        "carson/ml318bit",
-        "carson/ml318br",
-        "codellama/CodeLlama-13b-Instruct-hf",
-        "codellama/CodeLlama-34b-Instruct-hf",
-        "codellama/CodeLlama-70b-Instruct-hf",
-        "codellama/CodeLlama-7b-Instruct-hf",
-        "cognitivecomputations/dolphin-2.5-mixtral-8x7b",
-        "databricks/dbrx-instruct",
-        "deepseek-ai/deepseek-coder-33b-instruct",
-        "deepseek-ai/deepseek-llm-67b-chat",
-        "garage-bAInd/Platypus2-70B-instruct",
-        "google/gemma-2-27b-it",
-        "google/gemma-2-9b-it",
-        "google/gemma-2b-it",
-        "google/gemma-7b-it",
-        "gradientai/Llama-3-70B-Instruct-Gradient-1048k",
-        "lmsys/vicuna-13b-v1.3",
-        "lmsys/vicuna-13b-v1.5",
-        "lmsys/vicuna-13b-v1.5-16k",
-        "lmsys/vicuna-7b-v1.3",
-        "lmsys/vicuna-7b-v1.5",
-        "meta-llama/Llama-2-13b-chat-hf",
-        "meta-llama/Llama-2-70b-chat-hf",
-        "meta-llama/Llama-2-7b-chat-hf",
-        "meta-llama/Llama-3-70b-chat-hf",
-        "meta-llama/Llama-3-8b-chat-hf",
-        "meta-llama/Meta-Llama-3-70B-Instruct",
-        "meta-llama/Meta-Llama-3-70B-Instruct-Lite",
-        "meta-llama/Meta-Llama-3-70B-Instruct-Turbo",
-        "meta-llama/Meta-Llama-3-8B-Instruct",
-        "meta-llama/Meta-Llama-3-8B-Instruct-Lite",
-        "meta-llama/Meta-Llama-3-8B-Instruct-Turbo",
-        "meta-llama/Meta-Llama-3.1-405B-Instruct-Turbo",
-        "meta-llama/Meta-Llama-3.1-70B-Instruct-Reference",
-        "meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo",
-        "meta-llama/Meta-Llama-3.1-70B-Reference",
-        "meta-llama/Meta-Llama-3.1-8B-Instruct-Reference",
-        "meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo",
-        "microsoft/WizardLM-2-8x22B",
-        "mistralai/Mistral-7B-Instruct-v0.1",
-        "mistralai/Mistral-7B-Instruct-v0.2",
-        "mistralai/Mistral-7B-Instruct-v0.3",
-        "mistralai/Mixtral-8x22B-Instruct-v0.1",
-        "mistralai/Mixtral-8x7B-Instruct-v0.1",
-        "openchat/openchat-3.5-1210",
-        "snorkelai/Snorkel-Mistral-PairRM-DPO",
-        "teknium/OpenHermes-2-Mistral-7B",
-        "teknium/OpenHermes-2p5-Mistral-7B",
-        "togethercomputer/CodeLlama-13b-Instruct",
-        "togethercomputer/CodeLlama-34b-Instruct",
-        "togethercomputer/CodeLlama-7b-Instruct",
-        "togethercomputer/Koala-13B",
-        "togethercomputer/Koala-7B",
-        "togethercomputer/Llama-2-7B-32K-Instruct",
-        "togethercomputer/Llama-3-8b-chat-hf-int4",
-        "togethercomputer/Llama-3-8b-chat-hf-int8",
-        "togethercomputer/SOLAR-10.7B-Instruct-v1.0-int4",
-        "togethercomputer/StripedHyena-Nous-7B",
-        "togethercomputer/alpaca-7b",
-        "togethercomputer/guanaco-13b",
-        "togethercomputer/guanaco-33b",
-        "togethercomputer/guanaco-65b",
-        "togethercomputer/guanaco-7b",
-        "togethercomputer/llama-2-13b-chat",
-        "togethercomputer/llama-2-70b-chat",
-        "togethercomputer/llama-2-7b-chat",
-        "upstage/SOLAR-10.7B-Instruct-v1.0",
-        "zero-one-ai/Yi-34B-Chat",
-      ],
-    },
-    {
-      name: "localhost",
-      models: ["llama3"],
-    },
-  ],
-};
+function formatProviderName(providerName: string) {
+  return providerName.charAt(0).toUpperCase() + providerName.slice(1);
+}
 
 export default function LlmSettings({ debugInfo }: { debugInfo: string }) {
-  const [llmModel, setLlmModel] = useStorage(
+  const [llmModel, setLlmModel] = useStorage<string>(
     "llmModel",
-    "llama-3.3-70b-versatile"
+    DEFAULT_LLM_MODEL
   );
-  const [llmProvider, setLlmProvider] = useStorage(
+  const [llmProvider, setLlmProvider] = useStorage<ProviderName | string>(
     "llmProvider",
-    "extension | OS"
+    DEFAULT_LLM_PROVIDER
   );
-  const [llmKeys, setLlmKeys] = useStorage("llmKeys", {});
-  const [llmCustomEndpoint, setLlmCustomEndpoint] = useStorage(
+  const [llmKeys, setLlmKeys] = useStorage<Record<string, string>>(
+    "llmKeys",
+    {}
+  );
+  const [llmCustomEndpoint, setLlmCustomEndpoint] = useStorage<string>(
     "llmCustomEndpoint",
-    (v) => (v === undefined ? "http://localhost:11434/v1/chat/completions" : v)
+    (value) => (value === undefined ? DEFAULT_LOCALHOST_ENDPOINT : value)
   );
 
-  const hasRun = useRef(false); // Add this line
+  const hasRun = useRef(false);
+  const selectedProvider = LLM_PROVIDERS.find(
+    (provider) => provider.name === llmProvider
+  );
 
   //To auto-assign a model when the provider is changed.
   useEffect(() => {
@@ -203,30 +67,20 @@ export default function LlmSettings({ debugInfo }: { debugInfo: string }) {
       return; // Skip the first cycle, so plasmo loads the useStorage correctly...
     }
 
-    if (llmProvider) {
-      validateAndSetModel(llmProvider);
+    if (!selectedProvider) {
+      return;
     }
-  }, [llmProvider]);
 
-  const validateAndSetModel = (providerName) => {
-    const selectedProvider = providersData.providers.find(
-      (provider) => provider.name === providerName
-    );
-
-    const isModelValid = selectedProvider?.models.includes(llmModel);
-
-    // We need to ensure the selectedProvider is valid
-    // E.g. We do change a name in the config -> From OpenAI to ClosedAI (pun intended..)
-    if (!isModelValid && selectedProvider) {
-      setLlmModel(selectedProvider.models[0]);
+    if (!selectedProvider.models.includes(llmModel)) {
+      setLlmModel(getDefaultModelForProvider(llmProvider));
     }
-  };
+  }, [llmProvider, selectedProvider]);
 
-  const handleKeyChange = (provider, key) => {
+  const handleKeyChange = (provider: string, key: string) => {
     setLlmKeys((prevKeys) => ({ ...prevKeys, [provider]: key }));
   };
 
-  const getCurrentKey = () => llmKeys[llmProvider] || "";
+  const getCurrentKey = () => llmKeys?.[llmProvider] || "";
 
   return (
     <Card x-chunk="dashboard-04-chunk-1">
@@ -271,10 +125,9 @@ export default function LlmSettings({ debugInfo }: { debugInfo: string }) {
                     <SelectValue placeholder="Select a provider" />
                   </SelectTrigger>
                   <SelectContent>
-                    {providersData.providers.map((provider) => (
+                    {LLM_PROVIDERS.map((provider) => (
                       <SelectItem key={provider.name} value={provider.name}>
-                        {provider.name.charAt(0).toUpperCase() +
-                          provider.name.slice(1)}
+                        {formatProviderName(provider.name)}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -297,103 +150,90 @@ export default function LlmSettings({ debugInfo }: { debugInfo: string }) {
               </div>
             </div>
           </div>
-          {providersData.providers.map(
-            (provider) =>
-              llmProvider === provider.name && (
-                <div key={provider.name}>
-                  <div className="flex flex-col gap-1">
-                    <LabelWithTooltip
-                      keyTooltip={"llmModel"}
-                      labelText={"Default Model"}
-                      tooltipText={
-                        "This is the LLM model that will be used by default."
-                      }
-                    />
-                    {provider.models.length > 0 &&
-                    provider.name !== "localhost" ? (
-                      <>
-                        <Select value={llmModel} onValueChange={setLlmModel}>
-                          <SelectTrigger id="llm-model" className="w-full">
-                            <SelectValue placeholder="Select a model" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {provider.models.map((llmModel) => (
-                              <SelectItem key={llmModel} value={llmModel}>
-                                {llmModel}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </>
-                    ) : (
-                      <Input
-                        type="text"
-                        id="llm-model"
-                        value={llmModel}
-                        onChange={(e) => setLlmModel(e.target.value)}
-                        placeholder="Enter LLM model name"
-                        className="border border-input rounded-md p-2 w-full"
-                      />
-                    )}
-                  </div>
-                </div>
-              )
+
+          {selectedProvider && (
+            <div>
+              <div className="flex flex-col gap-1">
+                <LabelWithTooltip
+                  keyTooltip={"llmModel"}
+                  labelText={"Default Model"}
+                  tooltipText={
+                    "This is the LLM model that will be used by default."
+                  }
+                />
+                {selectedProvider.models.length > 0 &&
+                selectedProvider.name !== "localhost" ? (
+                  <Select value={llmModel} onValueChange={setLlmModel}>
+                    <SelectTrigger id="llm-model" className="w-full">
+                      <SelectValue placeholder="Select a model" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {selectedProvider.models.map((model) => (
+                        <SelectItem key={model} value={model}>
+                          {model}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                ) : (
+                  <Input
+                    type="text"
+                    id="llm-model"
+                    value={llmModel}
+                    onChange={(e) => setLlmModel(e.target.value)}
+                    placeholder="Enter LLM model name"
+                    className="border border-input rounded-md p-2 w-full"
+                  />
+                )}
+              </div>
+            </div>
           )}
-          {providersData.providers.map(
-            (provider) =>
-              llmProvider === provider.name &&
-              provider.name === "localhost" && (
-                <div key={provider.name}>
-                  <div className="flex flex-col gap-1">
-                    <LabelWithTooltip
-                      keyTooltip={"llmModel"}
-                      labelText={"Default Endpoint"}
-                      tooltipText={
-                        "This is the endpoint that will be used by default."
-                      }
-                    />
-                    {
-                      <Input
-                        type="text"
-                        id="model-input"
-                        value={llmCustomEndpoint}
-                        onChange={(e) => setLlmCustomEndpoint(e.target.value)}
-                        placeholder="Enter LLM model name"
-                        className="border border-input rounded-md p-2 w-full"
-                      />
+
+          {selectedProvider?.name === "localhost" && (
+            <div>
+              <div className="flex flex-col gap-1">
+                <LabelWithTooltip
+                  keyTooltip={"llmModel"}
+                  labelText={"Default Endpoint"}
+                  tooltipText={
+                    "This is the endpoint that will be used by default."
+                  }
+                />
+                <Input
+                  type="text"
+                  id="model-input"
+                  value={llmCustomEndpoint}
+                  onChange={(e) => setLlmCustomEndpoint(e.target.value)}
+                  placeholder="Enter LLM endpoint"
+                  className="border border-input rounded-md p-2 w-full"
+                />
+              </div>
+            </div>
+          )}
+
+          {selectedProvider &&
+            selectedProvider.models.length > 0 &&
+            selectedProvider.name !== "extension | OS" &&
+            selectedProvider.name !== "localhost" && (
+              <div>
+                <div className="flex flex-col gap-1">
+                  <LabelWithTooltip
+                    keyTooltip={"llmProviderKey"}
+                    labelText={"API Key"}
+                    tooltipText={"This API Key for the selected provider."}
+                  />
+                  <Input
+                    type="password"
+                    id="llm-key"
+                    disabled={!llmProvider}
+                    value={getCurrentKey()}
+                    onChange={(e) =>
+                      handleKeyChange(llmProvider, e.target.value)
                     }
-                  </div>
+                  />
                 </div>
-              )
-          )}
-          {providersData.providers.map(
-            (provider) =>
-              llmProvider === provider.name && (
-                <div key={provider.name}>
-                  {provider.models.length > 0 &&
-                  provider.name !== "extension | OS" &&
-                  provider.name !== "localhost" ? (
-                    <div className="flex flex-col gap-1">
-                      <LabelWithTooltip
-                        keyTooltip={"llmProviderKey"}
-                        labelText={"API Key"}
-                        tooltipText={"This API Key for the selected provider."}
-                      />
-                      <Input
-                        type="password"
-                        id="llm-key"
-                        disabled={!llmProvider}
-                        value={getCurrentKey()}
-                        onChange={(e) =>
-                          handleKeyChange(llmProvider, e.target.value)
-                        }
-                      />
-                    </div>
-                  ) : // Extension | OS do not need API key as it's integrated
-                  null}
-                </div>
-              )
-          )}
+              </div>
+            )}
         </div>
       </CardContent>
       <CardFooter className="border-t px-6 py-4">

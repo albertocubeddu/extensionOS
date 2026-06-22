@@ -5,29 +5,14 @@
 import { Storage } from "@plasmohq/storage";
 import { getOrCreateClientUUID } from "./clientUUID";
 import { insertStatisticsRow } from "./anonymousTracking";
-
-// Function to map vendor names to their respective API endpoints
-async function vendorToEndpoint(vendor: string): Promise<string> {
-   const storage = new Storage();
-
-   if (vendor === "localhost") {
-      const customUrl = await storage.get("llmCustomEndpoint");
-      return customUrl;
-   }
-
-   const endpoints: { [key: string]: string } = {
-      "extension | OS": process.env.PLASMO_PUBLIC_EXTENSION_OS_API_ENDPOINT,
-      openai: "https://api.openai.com/v1/chat/completions",
-      groq: "https://api.groq.com/openai/v1/chat/completions",
-      together: "https://api.together.xyz/v1/chat/completions",
-   };
-
-   return endpoints[vendor] || endpoints["groq"];
-}
-
-// Constants
-const DEFAULT_MODEL = "llama-3.1-70b-versatile";
-const DEFAULT_VENDOR = "extension | OS";
+import { sendMessageToActiveTab } from "./chromeApi";
+import {
+   DEFAULT_LLM_MODEL,
+   DEFAULT_LLM_PROVIDER,
+   DEFAULT_LOCALHOST_ENDPOINT,
+   getProviderEndpoint,
+   type ProviderName,
+} from "./configurations/llmProviders";
 
 // TODO: move somewhere else
 const getAccessToken = async (): Promise<string> => {
@@ -51,18 +36,24 @@ export async function callOpenAIReturn(
    systemPrompt: string,
    message: any,
    overrideModel?: string,
-   overrideProvider?: string
+   overrideProvider?: ProviderName | string
 ): Promise<ApiResponse<any>> {
    const storage = new Storage();
 
    try {
-      const [storedModel, storedVendor, llmKeys] = await Promise.all([
-         storage.get("llmModel").then((model) => model ?? DEFAULT_MODEL),
-         storage
-            .get("llmProvider")
-            .then((provider) => provider ?? DEFAULT_VENDOR),
-         storage.get("llmKeys").then((key) => key ?? ""),
-      ]);
+      const [storedModel, storedVendor, llmKeys, customEndpoint] =
+         await Promise.all([
+            storage
+               .get<string>("llmModel")
+               .then((model) => model ?? DEFAULT_LLM_MODEL),
+            storage
+               .get<ProviderName>("llmProvider")
+               .then((provider) => provider ?? DEFAULT_LLM_PROVIDER),
+            storage.get<Record<string, string>>("llmKeys").then((key) => key ?? {}),
+            storage
+               .get<string>("llmCustomEndpoint")
+               .then((endpoint) => endpoint ?? DEFAULT_LOCALHOST_ENDPOINT),
+         ]);
 
       //Capture statistics, so that we can provide prioritarisation for features based on the provider/model most used.
       try {
@@ -78,7 +69,7 @@ export async function callOpenAIReturn(
       const openAIModel = overrideModel || storedModel;
       const vendor = overrideProvider || storedVendor;
       const apiKey = llmKeys ? llmKeys[vendor] : "";
-      const openAIEndpoint = await vendorToEndpoint(vendor);
+      const openAIEndpoint = getProviderEndpoint(vendor, customEndpoint);
 
       const headers = new Headers({
          "Content-Type": "application/json",
@@ -111,19 +102,10 @@ export async function callOpenAIReturn(
 
       //Extension-os.com || Free Tier Exhausted
       if (response.status === 403 && vendor === "extension | OS") {
-         chrome.tabs.query(
-            { active: true, currentWindow: true },
-            function (tabs) {
-               if (tabs[0]?.id) {
-                  chrome.tabs.sendMessage(tabs[0].id, {
-                     action: "subscriptionLimitReached",
-                     text: "3000",
-                  });
-               } else {
-                  throw new Error("No active tab found.");
-               }
-            }
-         );
+         await sendMessageToActiveTab({
+            action: "subscriptionLimitReached",
+            text: "3000",
+         });
       }
 
       if (!response.ok) {

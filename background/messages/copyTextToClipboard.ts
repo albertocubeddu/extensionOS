@@ -1,50 +1,38 @@
 import type { PlasmoMessaging } from "@plasmohq/messaging";
+import {
+   sendMessageToActiveTab,
+   type ChromeApiResult,
+} from "~lib/chromeApi";
 
 export type RequestBody = {
    errorMessage: string;
    data: string;
 };
 
-export type RequestResponse = string;
+export type RequestResponse = ChromeApiResult<void>;
 
-export async function copyTextToClipboardHandler(req) {
+export async function copyTextToClipboardHandler(
+   req: Partial<RequestBody>
+): Promise<ChromeApiResult<void>> {
    if (!req.errorMessage) {
-      try {
-         chrome.tabs.query(
-            { active: true, currentWindow: true },
-            function (tabs) {
-               if (tabs[0]?.id) {
-                  chrome.tabs.sendMessage(tabs[0].id, {
-                     action: "copyToClipboard",
-                     text: req.data,
-                  });
-               } else {
-                  throw new Error("No active tab found.");
-               }
-            }
-         );
-      } catch (error) {
-         console.error("Failed to copy text to clipboard:", error);
-      }
-   } else {
-      chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-         if (tabs[0]?.id) {
-            chrome.tabs.sendMessage(tabs[0].id, {
-               action: "error",
-               text: req.errorMessage,
-            });
-         } else {
-            throw new Error("No active tab found.");
-         }
+      return sendMessageToActiveTab({
+         action: "copyToClipboard",
+         text: req.data,
       });
    }
+
+   return sendMessageToActiveTab({
+      action: "error",
+      text: req.errorMessage,
+   });
 }
 
 const handler: PlasmoMessaging.MessageHandler<
    RequestBody,
    RequestResponse | undefined
 > = async (req, res) => {
-   copyTextToClipboardHandler(req.body);
+   const result = await copyTextToClipboardHandler(req.body);
+   res.send(result);
 };
 
 export default handler;

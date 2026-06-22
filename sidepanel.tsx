@@ -12,6 +12,7 @@ function IndexSidePanel() {
             if (request.action === "send_to_sidepanel") {
                 setData(request.payload)
             }
+            sendResponse({ ok: true })
         }
 
         chrome.runtime.onMessage.addListener(messageListener)

@@ -48,7 +48,7 @@ const PlasmoOverlay = () => {
             }
         }
 
-        const messageListener = async (request) => {
+        const messageListener = (request, sender, sendResponse) => {
             switch (request.action) {
                 case "copyToClipboard":
                     setResponseText(request.text)
@@ -71,10 +71,13 @@ const PlasmoOverlay = () => {
                     }, 15000)
                     break
                 case "subscriptionLimitReached":
-                    const data = await fetchData()
-                    setIsLoading(false)
-                    window.open(`${process.env.PLASMO_PUBLIC_WEBSITE_EXTENSION_OS}/pricing?email=${data?.data.email}&profile_id=${data?.data.id}`, "_blank")
+                    fetchData().then((data) => {
+                        setIsLoading(false)
+                        window.open(`${process.env.PLASMO_PUBLIC_WEBSITE_EXTENSION_OS}/pricing?email=${data?.data.email}&profile_id=${data?.data.id}`, "_blank")
+                    })
+                    break
             }
+            sendResponse({ ok: true })
         }
 
         chrome.runtime.onMessage.addListener(messageListener)

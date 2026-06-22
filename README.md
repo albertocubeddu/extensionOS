@@ -184,6 +184,7 @@ Move it somewhere else ASAP:
 # Changelog
 
 ### 0.0.27
+
 - [patch] Default LLM changed to llama-3.3-70b-versatile
 
 ### 0.0.26
@@ -349,8 +350,28 @@ Move it somewhere else ASAP:
 - We currently have two menus that function similarly but not identically; we need to implement a more efficient solution to consolidate them into one.
 - The Plasmo handler may stop functioning unexpectedly without errors if a response is not returned; ensure to always return a response to prevent this issue.
 
-
 # Deployment Instruction for production
+
+## QA gates
+
+Use these commands before promoting a build:
+
+- `pnpm test`: PR gate. Runs TypeScript, unit tests, production build, and deterministic Playwright extension tests.
+- `pnpm test:release`: release gate. Runs the PR gate plus `plasmo package` and validates the generated Chrome MV3 artifact.
+- `pnpm test:live`: optional live-provider smoke. Requires provider-specific env vars such as `E2E_TEST_GROQ_KEY` or `E2E_TEST_OLLAMA`.
+
+CI runs `pnpm test` for pull requests and `pnpm test:release` on pushes to `main`.
+
+## GitHub release
+
+Releases are published by `.github/workflows/release.yml`.
+
+1. Bump `package.json` to the version that should ship.
+2. Run the Release workflow from `main`. Leave `version` blank to use `package.json`, or enter the same SemVer explicitly.
+3. The workflow runs the full release gate, creates the `vX.Y.Z` tag when needed, and publishes a GitHub release with `chrome-mv3-prod.zip`.
+
+Pushing an existing `vX.Y.Z` tag also runs the same release workflow. The tag version must match `package.json`.
+
 - Google Store: https://chrome.google.com/webstore/devconsole/2415d173-bc87-467d-aca3-0fbd673ef09f/bahjnakiionbepnlbogdkojcehaeefnp/edit/package
 
 - pnpm run package

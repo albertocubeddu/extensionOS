@@ -1,18 +1,15 @@
 import type { PlasmoMessaging } from "@plasmohq/messaging";
+import {
+   sendMessageToActiveTab,
+   type ChromeApiResult,
+} from "~lib/chromeApi";
 
-export async function sendLoadingActionHandler() {
-   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-      if (tabs[0]?.id) {
-         chrome.tabs.sendMessage(tabs[0].id, {
-            action: "loadingAction",
-         });
-      } else {
-         throw new Error("No active tab found.");
-      }
+export async function sendLoadingActionHandler(): Promise<
+   ChromeApiResult<void>
+> {
+   return sendMessageToActiveTab({
+      action: "loadingAction",
    });
-   return {
-      message: "Options page opened",
-   };
 }
 
 const handler: PlasmoMessaging.MessageHandler = async (req, res) => {

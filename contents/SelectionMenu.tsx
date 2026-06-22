@@ -11,14 +11,19 @@ import {
 
 import cssText from "data-text:~/globals.css"
 import { initializeStorage } from "~background/init"
-import { cleanProperties } from "~lib/cleanContextMenu"
 import { createCall } from "~lib/vapiOutbound"
 
 import { Storage } from "@plasmohq/storage";
 import { sendToBackground } from "@plasmohq/messaging"
 import { adjustXYSelectionMenu, getRealXY } from "~lib/calculationXY"
 import { useStorage } from "@plasmohq/storage/hook"
-import { defaultGlobalConfig, setGlobalConfig } from "~lib/configurations/globalConfig"
+import {
+    isSidebarMenuId,
+    normalizeContextMenuItems,
+    toChromeContextMenuItems,
+    type ContextMenuItem,
+} from "~lib/configurations/contextMenuItems"
+import { defaultGlobalConfig } from "~lib/configurations/globalConfig"
 import deepmerge from "deepmerge"
 const storage = new Storage();
 
@@ -65,8 +70,8 @@ const SelectionMenu = () => {
     }, []);
 
     // Separate functions for handling different actions
-    const handleCopyClipboard = async (element) => {
-        const r = await sendToBackground({
+    const handleCopyClipboard = async (element: ContextMenuItem) => {
+        await sendToBackground({
             name: "sendLoadingAction"
         });
 
@@ -77,19 +82,19 @@ const SelectionMenu = () => {
         await sendToBackground({ name: "copyTextToClipboard", body: { ...response } });
     };
 
-    const handleVoiceCall = async (element) => {
+    const handleVoiceCall = async (element: ContextMenuItem) => {
         await createCall(
-            element.prompt,
+            element.prompt ?? "",
             selectedText,
             element.extraArgs?.vapiRecipientPhoneNumber ?? "Hi, this is your assistant calling. How can I help you?",
             element.extraArgs?.vapiFirstMessage ?? ""
         );
     };
 
-    const handleOpenSidebar = async (element) => {
+    const handleOpenSidebar = async (element: ContextMenuItem) => {
         const response = await sendToBackground({
             name: "callOpenAIReturn",
-            body: { prompt: element.prompt, selectedText }
+            body: { prompt: element.prompt ?? "", selectedText }
         });
         await sendToBackground({ name: "sendToSidepanel", body: { ...response } });
     };
@@ -101,17 +106,16 @@ const SelectionMenu = () => {
         setMenuPosition({ x: 0, y: 0 })
 
         //THIS THING NEED TO BE BEFORE THE BLOODY storage yet again... 
-        const itemId = info.id as String;
-        if (itemId.startsWith("side_")) {
+        const itemId = String(info.id);
+        if (isSidebarMenuId(itemId)) {
             await sendToBackground({
                 name: "openSidePanel"
             })
         }
 
-        const items = (await storage.get("contextMenuItems")) as any[];
+        const items = normalizeContextMenuItems(await storage.get("contextMenuItems"));
 
-        //In the past we've used the hashmap, however it would overcomplicated the rest of the codebase always because we are not able to use the chrome.storage and the sidebar.open in the same function. This can be reviewed and use an hashmap if we find the solution for that bug. At the moment i don't expect having more than 20 prompt per user, so readability and clean code beats efficiency.
-        const element = items.find((item) => item.id === info.id);
+        const element = items.find((item) => item.id === itemId);
 
         if (!element) {
             console.warn("Unhandled menu item:", info.id);
@@ -147,7 +151,7 @@ const SelectionMenu = () => {
         const initialize = async () => {
             const contextConfigItems =
                 (await initializeStorage()) as unknown as chrome.contextMenus.CreateProperties[];
-            const cleanedContextMenuItems = cleanProperties(contextConfigItems);
+            const cleanedContextMenuItems = toChromeContextMenuItems(contextConfigItems);
             setMenuItems(cleanedContextMenuItems)
         }
         initialize();
@@ -155,7 +159,7 @@ const SelectionMenu = () => {
         //Listen for changes, this allow the user to modify is own prompts, and see the value reflected on the UI straight away.
         storage.watch({
             "contextMenuItems": (c) => {
-                const cleanedContextMenuItems = cleanProperties(c.newValue);
+                const cleanedContextMenuItems = toChromeContextMenuItems(c.newValue);
                 setMenuItems(cleanedContextMenuItems)
             },
         })
@@ -196,5 +200,3 @@ const SelectionMenu = () => {
 }
 
 export default SelectionMenu
-
-
