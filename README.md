@@ -183,6 +183,10 @@ Move it somewhere else ASAP:
 
 # Changelog
 
+### 0.0.28
+
+- Upgrade to the latest version after the release workflow was implemented.
+
 ### 0.0.27
 
 - [patch] Default LLM changed to llama-3.3-70b-versatile
@@ -360,20 +364,13 @@ Use these commands before promoting a build:
 - `pnpm test:release`: release gate. Runs the PR gate plus `plasmo package` and validates the generated Chrome MV3 artifact.
 - `pnpm test:live`: optional live-provider smoke. Requires provider-specific env vars such as `E2E_TEST_GROQ_KEY` or `E2E_TEST_OLLAMA`.
 
-CI runs `pnpm test` for pull requests and `pnpm test:release` on pushes to `main`.
-
-## GitHub release
-
-Releases are published by `.github/workflows/release.yml`.
+## Local release
 
 1. Bump `package.json` to the version that should ship.
-2. Run the Release workflow from `main`. Leave `version` blank to use `package.json`, or enter the same SemVer explicitly.
-3. The workflow runs the full release gate, creates the `vX.Y.Z` tag when needed, and publishes a GitHub release with `chrome-mv3-prod.zip`.
+2. Make sure the required Plasmo production values are available in `.env.production` or the current shell.
+3. Run `pnpm test:release`.
+4. Upload `build/chrome-mv3-prod.zip` to the Chrome Web Store.
 
-Pushing an existing `vX.Y.Z` tag also runs the same release workflow. The tag version must match `package.json`.
+Required production values: `CRX_PUBLIC_KEY`, `OAUTH_CLIENT_ID`, `PLASMO_PUBLIC_EXTENSION_OS_API_ENDPOINT`, and `PLASMO_PUBLIC_WEBSITE_EXTENSION_OS`.
 
 - Google Store: https://chrome.google.com/webstore/devconsole/2415d173-bc87-467d-aca3-0fbd673ef09f/bahjnakiionbepnlbogdkojcehaeefnp/edit/package
-
-- pnpm run package
-
-- upload the package to the store
