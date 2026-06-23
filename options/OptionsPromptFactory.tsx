@@ -32,6 +32,7 @@ import {
 
 import {
     isSidebarMenuId,
+    isBuiltInUtilityMenuId,
     withSidebarMenuPrefix,
     withoutSidebarMenuPrefix,
     type ContextMenuItem,
@@ -128,8 +129,8 @@ export default function OptionsPromptFactory() {
                     {contextMenuItems ? (
                         <>
                             <div>
-                                {/* We exclude the separrator and the configuration button as it's not essential for the user to see at this stage */}
-                                {contextMenuItems.filter(item => item.type !== "separator" && item.id !== "configuration").map((item, index) => {
+                                {/* We exclude separators and built-in utility actions as they are not user prompts. */}
+                                {contextMenuItems.filter(item => item.type !== "separator" && !isBuiltInUtilityMenuId(item.id)).map((item, index) => {
                                     return (
                                         <div
                                             key={item.id}

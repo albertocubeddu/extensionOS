@@ -22,6 +22,13 @@ export type ContextMenuItem = {
 };
 
 const SIDEBAR_PREFIX = "side_";
+export const CONFIGURATION_MENU_ITEM_ID = "configuration";
+export const DEACTIVATE_SELECTION_MENU_ITEM_ID = "deactivateSelectionMenu";
+
+const BUILT_IN_UTILITY_MENU_ITEM_IDS = [
+   CONFIGURATION_MENU_ITEM_ID,
+   DEACTIVATE_SELECTION_MENU_ITEM_ID,
+] as const;
 
 const FUNCTION_TYPES: ContextMenuFunctionType[] = [
    "callAI-copyClipboard",
@@ -119,14 +126,28 @@ Adopt these roles to create a productive and enriching conversation that leverag
       contexts: ["all"],
    },
    {
-      id: "configuration",
+      id: CONFIGURATION_MENU_ITEM_ID,
       title: "Setup Your Own Prompt",
+      contexts: ["all"],
+   },
+   {
+      id: DEACTIVATE_SELECTION_MENU_ITEM_ID,
+      title: "Deactivate this menu",
       contexts: ["all"],
    },
 ];
 
 export function isSidebarMenuId(id: unknown): id is string {
    return typeof id === "string" && id.startsWith(SIDEBAR_PREFIX);
+}
+
+export function isBuiltInUtilityMenuId(id: unknown): id is string {
+   return (
+      typeof id === "string" &&
+      BUILT_IN_UTILITY_MENU_ITEM_IDS.includes(
+         id as (typeof BUILT_IN_UTILITY_MENU_ITEM_IDS)[number]
+      )
+   );
 }
 
 export function withSidebarMenuPrefix(id: string): string {
@@ -197,7 +218,11 @@ function normalizeItem(value: unknown): ContextMenuItem | undefined {
    const functionType = normalizeFunctionType(value.functionType);
    const type = value.type === "separator" ? "separator" : undefined;
 
-   if (!type && value.id !== "configuration" && !functionType) {
+   if (
+      !type &&
+      !isBuiltInUtilityMenuId(value.id) &&
+      !functionType
+   ) {
       return undefined;
    }
 
@@ -219,6 +244,63 @@ function normalizeItem(value: unknown): ContextMenuItem | undefined {
    };
 }
 
+function getDefaultContextMenuItem(id: string) {
+   const item = DEFAULT_CONTEXT_MENU_ITEMS.find((item) => item.id === id);
+
+   if (!item) {
+      throw new Error(`Missing default context menu item: ${id}`);
+   }
+
+   return { ...item };
+}
+
+function insertAfterMenuItem(
+   items: ContextMenuItem[],
+   targetId: string,
+   item: ContextMenuItem
+) {
+   const targetIndex = items.findIndex((candidate) => candidate.id === targetId);
+
+   if (targetIndex === -1) {
+      return [...items, item];
+   }
+
+   return [
+      ...items.slice(0, targetIndex + 1),
+      item,
+      ...items.slice(targetIndex + 1),
+   ];
+}
+
+function withBuiltInUtilityMenuItems(items: ContextMenuItem[]) {
+   let normalizedItems = items;
+
+   if (
+      !normalizedItems.some(
+         (item) => item.id === CONFIGURATION_MENU_ITEM_ID
+      )
+   ) {
+      normalizedItems = [
+         ...normalizedItems,
+         getDefaultContextMenuItem(CONFIGURATION_MENU_ITEM_ID),
+      ];
+   }
+
+   if (
+      !normalizedItems.some(
+         (item) => item.id === DEACTIVATE_SELECTION_MENU_ITEM_ID
+      )
+   ) {
+      normalizedItems = insertAfterMenuItem(
+         normalizedItems,
+         CONFIGURATION_MENU_ITEM_ID,
+         getDefaultContextMenuItem(DEACTIVATE_SELECTION_MENU_ITEM_ID)
+      );
+   }
+
+   return normalizedItems;
+}
+
 export function normalizeContextMenuItems(value: unknown): ContextMenuItem[] {
    const candidateItems = Array.isArray(value) ? value : Object.values(value ?? {});
    const normalizedItems = candidateItems
@@ -226,7 +308,7 @@ export function normalizeContextMenuItems(value: unknown): ContextMenuItem[] {
       .filter((item): item is ContextMenuItem => Boolean(item));
 
    return normalizedItems.length
-      ? normalizedItems
+      ? withBuiltInUtilityMenuItems(normalizedItems)
       : DEFAULT_CONTEXT_MENU_ITEMS.map((item) => ({ ...item }));
 }
 

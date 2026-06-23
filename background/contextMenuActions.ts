@@ -7,6 +7,8 @@ import {
    type ChromeApiResult,
 } from "~lib/chromeApi";
 import {
+   CONFIGURATION_MENU_ITEM_ID,
+   DEACTIVATE_SELECTION_MENU_ITEM_ID,
    normalizeContextMenuItems,
    type ContextMenuItem,
 } from "~lib/configurations/contextMenuItems";
@@ -41,8 +43,17 @@ async function executeContextMenuAction(
    selectedText?: string
 ): Promise<ContextMenuActionResponse> {
    try {
-      if (element.id === "configuration") {
+      if (element.id === CONFIGURATION_MENU_ITEM_ID) {
          const result = await openOptionsPageHandler();
+         return {
+            ok: true,
+            action: "openOptionsPage",
+            data: result,
+         };
+      }
+
+      if (element.id === DEACTIVATE_SELECTION_MENU_ITEM_ID) {
+         const result = await openOptionsPageHandler("settings");
          return {
             ok: true,
             action: "openOptionsPage",

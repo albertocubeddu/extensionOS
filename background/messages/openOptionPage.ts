@@ -6,8 +6,17 @@ export type RequestResponse = {
    message: string;
 };
 
-export async function openOptionsPageHandler() {
-   await extensionStorage.set(STORAGE_KEYS.activeTab, "promptFactory");
+type OptionsActiveTab =
+   | "general"
+   | "promptFactory"
+   | "mixtureOfAgents"
+   | "settings"
+   | "about";
+
+export async function openOptionsPageHandler(
+   activeTab: OptionsActiveTab = "promptFactory"
+) {
+   await extensionStorage.set(STORAGE_KEYS.activeTab, activeTab);
    chrome.runtime.openOptionsPage();
    return {
       message: "Options page opened",

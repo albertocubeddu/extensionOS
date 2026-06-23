@@ -63,7 +63,7 @@ describe("context menu item configuration", () => {
          },
       ]);
 
-      expect(items).toHaveLength(1);
+      expect(items).toHaveLength(3);
       expect(items[0]).toMatchObject({
          id: "voice",
          contexts: ["selection"],
@@ -72,6 +72,8 @@ describe("context menu item configuration", () => {
             vapiRecipientPhoneNumber: "+15555555555",
          },
       });
+      expect(items[1]?.id).toBe("configuration");
+      expect(items[2]?.id).toBe("deactivateSelectionMenu");
    });
 
    it("converts stored items to the Chrome context-menu surface only", () => {
@@ -100,6 +102,16 @@ describe("context menu item configuration", () => {
             id: "separator1",
             contexts: ["all"],
             type: "separator",
+         },
+         {
+            id: "configuration",
+            contexts: ["all"],
+            title: "Setup Your Own Prompt",
+         },
+         {
+            id: "deactivateSelectionMenu",
+            contexts: ["all"],
+            title: "Deactivate this menu",
          },
       ]);
    });

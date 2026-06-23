@@ -32,6 +32,7 @@ import type {
 import { adjustXYSelectionMenu, getRealXY } from "~lib/calculationXY"
 import { useStorage } from "@plasmohq/storage/hook"
 import {
+    DEFAULT_CONTEXT_MENU_ITEMS,
     isSidebarMenuId,
     toChromeContextMenuItems,
 } from "~lib/configurations/contextMenuItems"
@@ -89,7 +90,9 @@ export const getStyle: PlasmoGetStyle = () => {
 const SelectionMenu = () => {
     const [selectedText, setSelectedText] = useState("")
     const [menuPosition, setMenuPosition] = useState<{ x: number; y: number }>({ x: 0, y: 0 })
-    const [menuItems, setMenuItems] = useState<chrome.contextMenus.CreateProperties[]>([]) // Initialize with an empty array
+    const [menuItems, setMenuItems] = useState<chrome.contextMenus.CreateProperties[]>(
+        () => toChromeContextMenuItems(DEFAULT_CONTEXT_MENU_ITEMS)
+    )
     let [config] = useStorage<typeof defaultGlobalConfig>(
         storageKey(STORAGE_KEYS.globalConfig),
         defaultGlobalConfig
