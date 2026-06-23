@@ -13,9 +13,17 @@ import LlmSettings from "./LlmSettings"
 import VoiceSettingsOutbound from "./VoiceSettingsOutbound"
 import CardHeaderIntro from "~components/blocks/CardHeaderIntro"
 import FakeSaveButton from "~components/blocks/FakeSaveButton"
+import {
+    DEFAULT_STORAGE_VALUES,
+    storageKey,
+    STORAGE_KEYS,
+} from "~lib/storage"
 
 export default function OptionsGeneral() {
-    const [debugInfo, setDebugInfo] = useStorage("debugInfo", "unchecked")
+    const [debugInfo, setDebugInfo] = useStorage<string>(
+        storageKey(STORAGE_KEYS.debugInfo),
+        DEFAULT_STORAGE_VALUES.debugInfo
+    )
 
     return (
         <div className="grid gap-6">

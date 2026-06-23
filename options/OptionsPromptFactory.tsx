@@ -7,7 +7,15 @@ import {
 
 import { useCallback, useEffect, useState } from "react";
 import { Label } from "~components/ui/label";
-import { Storage } from "@plasmohq/storage";
+import { sendToBackground } from "@plasmohq/messaging";
+import type {
+    RequestBody as InitializeContextMenuItemsBody,
+    RequestResponse as InitializeContextMenuItemsResponse,
+} from "~background/messages/initializeContextMenuItems";
+import type {
+    RequestBody as SaveContextMenuItemsBody,
+    RequestResponse as SaveContextMenuItemsResponse,
+} from "~background/messages/saveContextMenuItems";
 
 import { Input } from "~components/ui/input";
 import {
@@ -22,17 +30,12 @@ import {
     Sheet,
 } from "@/components/ui/sheet"
 
-import { isChromeApiError, recreateContextMenus } from "~lib/chromeApi";
 import {
     isSidebarMenuId,
-    normalizeContextMenuItems,
-    toChromeContextMenuItems,
     withSidebarMenuPrefix,
     withoutSidebarMenuPrefix,
     type ContextMenuItem,
 } from "~lib/configurations/contextMenuItems";
-
-const storage = new Storage();
 
 import LabelWithTooltip from "../components/blocks/LabelWithTooltip";
 import CardHeaderIntro from "~components/blocks/CardHeaderIntro";
@@ -51,9 +54,15 @@ export default function OptionsPromptFactory() {
 
     useEffect(() => {
         async function getStorage() {
-            const items = normalizeContextMenuItems(await storage.get("contextMenuItems"));
-            await storage.set("contextMenuItems", items);
-            setContextMenuItems(items);
+            const response = await sendToBackground<
+                InitializeContextMenuItemsBody,
+                InitializeContextMenuItemsResponse
+            >({
+                name: "initializeContextMenuItems",
+                body: {},
+            });
+
+            setContextMenuItems(response.items);
         }
 
         getStorage();
@@ -85,18 +94,21 @@ export default function OptionsPromptFactory() {
     //What a shit show, saving two things together. Best practice thrown in the bin. TODO: Refactor the smelly code. (10:00PM - night)
     const handleSave = async () => {
         try {
-            const normalizedItems = normalizeContextMenuItems(contextMenuItems);
-            await storage.set("contextMenuItems", normalizedItems);
-            setContextMenuItems(normalizedItems);
+            const result = await sendToBackground<
+                SaveContextMenuItemsBody,
+                SaveContextMenuItemsResponse
+            >({
+                name: "saveContextMenuItems",
+                body: {
+                    items: contextMenuItems,
+                },
+            });
 
-            const result = await recreateContextMenus(
-                toChromeContextMenuItems(normalizedItems)
-            );
-
-            if (isChromeApiError(result)) {
-                throw new Error(result.error);
+            if ("errorMessage" in result) {
+                throw new Error(result.errorMessage);
             }
 
+            setContextMenuItems(result.items);
             alert("Changes saved!");
         } catch (error) {
             console.error("Failed to save changes:", error);

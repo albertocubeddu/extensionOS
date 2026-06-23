@@ -1,12 +1,11 @@
-import { Storage } from "@plasmohq/storage";
+import { extensionStorage } from "~lib/storage";
 
 export async function getOrCreateClientUUID() {
-   const storage = new Storage();
-   let clientId = await storage.get("clientUUID");
+   let clientId = await extensionStorage.get("clientUUID");
    if (!clientId) {
       // Generate a unique client ID, the actual value is not relevant
       clientId = self.crypto.randomUUID();
-      await storage.set("clientUUID", clientId);
+      await extensionStorage.set("clientUUID", clientId);
    }
    return clientId;
 }

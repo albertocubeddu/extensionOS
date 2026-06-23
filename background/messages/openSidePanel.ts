@@ -1,7 +1,16 @@
 import type { PlasmoMessaging } from "@plasmohq/messaging";
-import { openSidePanelForTab } from "~lib/chromeApi";
+import {
+   openSidePanelForTab,
+   type ChromeApiResult,
+} from "~lib/chromeApi";
 
-const handler: PlasmoMessaging.MessageHandler = async (req, res) => {
+export type RequestBody = undefined;
+export type RequestResponse = ChromeApiResult<void>;
+
+const handler: PlasmoMessaging.MessageHandler<
+   RequestBody,
+   RequestResponse
+> = async (req, res) => {
    const result = await openSidePanelForTab(req.sender.tab?.id);
    res.send(result);
 };

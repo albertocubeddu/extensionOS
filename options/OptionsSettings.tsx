@@ -8,6 +8,7 @@ import deepmerge from "deepmerge"
 import CardHeaderIntro from "~components/blocks/CardHeaderIntro"
 import { Checkbox } from "~components/ui/checkbox"
 import { defaultGlobalConfig, setGlobalConfig } from "~lib/configurations/globalConfig"
+import { storageKey, STORAGE_KEYS } from "~lib/storage"
 
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
@@ -16,7 +17,10 @@ import { Switch } from "@/components/ui/switch"
 
 export default function OptionsSettings() {
     //We're setting to the default if nothing exists.
-    let [config] = useStorage("globalConfig", defaultGlobalConfig)
+    let [config] = useStorage<typeof defaultGlobalConfig>(
+        storageKey(STORAGE_KEYS.globalConfig),
+        defaultGlobalConfig
+    )
     config = deepmerge(defaultGlobalConfig, config)
 
     return (

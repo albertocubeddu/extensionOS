@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import type { IContextConfigItems } from "~background/init";
 import LabelWithTooltip from "~components/blocks/LabelWithTooltip";
 import { Input } from "~components/ui/input";
+import type { ContextMenuItem } from "~lib/configurations/contextMenuItems";
 
 interface VapiSpecificConfigurationProps {
-    contextMenuItems: IContextConfigItems;
+    contextMenuItems: ContextMenuItem;
     handleChange: (id: string, prop: string, value: any) => void;
 }
 

@@ -1,4 +1,9 @@
-import type { PlasmoCSConfig } from "plasmo"
+import type {
+    PlasmoCSConfig,
+    PlasmoGetShadowHostId,
+    PlasmoGetStyle,
+    PlasmoMountShadowHost,
+} from "plasmo"
 import { useCallback, useEffect, useState } from "react"
 
 import {
@@ -10,31 +15,74 @@ import {
 } from "@/components/ui/command"
 
 import cssText from "data-text:~/globals.css"
-import { initializeStorage } from "~background/init"
-import { createCall } from "~lib/vapiOutbound"
 
-import { Storage } from "@plasmohq/storage";
 import { sendToBackground } from "@plasmohq/messaging"
+import type {
+    RequestBody as InitializeContextMenuItemsBody,
+    RequestResponse as InitializeContextMenuItemsResponse,
+} from "~background/messages/initializeContextMenuItems"
+import type {
+    RequestBody as OpenSidePanelBody,
+    RequestResponse as OpenSidePanelResponse,
+} from "~background/messages/openSidePanel"
+import type {
+    RequestBody as RunContextMenuActionBody,
+    RequestResponse as RunContextMenuActionResponse,
+} from "~background/messages/runContextMenuAction"
 import { adjustXYSelectionMenu, getRealXY } from "~lib/calculationXY"
 import { useStorage } from "@plasmohq/storage/hook"
 import {
     isSidebarMenuId,
-    normalizeContextMenuItems,
     toChromeContextMenuItems,
-    type ContextMenuItem,
 } from "~lib/configurations/contextMenuItems"
 import { defaultGlobalConfig } from "~lib/configurations/globalConfig"
+import {
+    extensionStorage,
+    storageKey,
+    STORAGE_KEYS,
+} from "~lib/storage"
 import deepmerge from "deepmerge"
-const storage = new Storage();
 
 // We enable the extension to be used in anywebsite with an http/https protocol.
 export const config: PlasmoCSConfig = {
     matches: ["https://*/*", "http://*/*"]
 }
 
-export const getStyle = () => {
+export const getShadowHostId: PlasmoGetShadowHostId = () =>
+    "extension-os-selection-menu-shadow-host"
+
+export const mountShadowHost: PlasmoMountShadowHost = ({ shadowHost }) => {
+    const existingHost = document.getElementById(
+        "extension-os-selection-menu-shadow-host"
+    )
+
+    if (existingHost && existingHost !== shadowHost) {
+        existingHost.remove()
+    }
+
+    document.documentElement.appendChild(shadowHost)
+}
+
+export const getStyle: PlasmoGetStyle = () => {
     const style = document.createElement("style")
-    style.textContent = cssText
+    style.textContent = `${cssText}
+      :host {
+        all: initial;
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 2147483647;
+      }
+
+      #plasmo-shadow-container {
+        position: static !important;
+        pointer-events: none;
+      }
+
+      #extension-os-selection-menu {
+        pointer-events: auto;
+      }
+    `
     return style
 }
 
@@ -42,7 +90,10 @@ const SelectionMenu = () => {
     const [selectedText, setSelectedText] = useState("")
     const [menuPosition, setMenuPosition] = useState<{ x: number; y: number }>({ x: 0, y: 0 })
     const [menuItems, setMenuItems] = useState<chrome.contextMenus.CreateProperties[]>([]) // Initialize with an empty array
-    let [config] = useStorage("globalConfig", defaultGlobalConfig)
+    let [config] = useStorage<typeof defaultGlobalConfig>(
+        storageKey(STORAGE_KEYS.globalConfig),
+        defaultGlobalConfig
+    )
     config = deepmerge(defaultGlobalConfig, config)
 
 
@@ -65,40 +116,9 @@ const SelectionMenu = () => {
         }
     }, []);
 
-    const handleKeyDown = useCallback((event: MouseEvent) => { // Use useCallback
+    const handleKeyDown = useCallback((event: KeyboardEvent) => { // Use useCallback
         setMenuPosition({ x: 0, y: 0 })
     }, []);
-
-    // Separate functions for handling different actions
-    const handleCopyClipboard = async (element: ContextMenuItem) => {
-        await sendToBackground({
-            name: "sendLoadingAction"
-        });
-
-        const response = await sendToBackground({
-            name: "callOpenAIReturn",
-            body: { prompt: element.prompt, selectedText }
-        });
-        await sendToBackground({ name: "copyTextToClipboard", body: { ...response } });
-    };
-
-    const handleVoiceCall = async (element: ContextMenuItem) => {
-        await createCall(
-            element.prompt ?? "",
-            selectedText,
-            element.extraArgs?.vapiRecipientPhoneNumber ?? "Hi, this is your assistant calling. How can I help you?",
-            element.extraArgs?.vapiFirstMessage ?? ""
-        );
-    };
-
-    const handleOpenSidebar = async (element: ContextMenuItem) => {
-        const response = await sendToBackground({
-            name: "callOpenAIReturn",
-            body: { prompt: element.prompt ?? "", selectedText }
-        });
-        await sendToBackground({ name: "sendToSidepanel", body: { ...response } });
-    };
-
 
     const handleMenuItemClick = async (info: chrome.contextMenus.CreateProperties) => {
 
@@ -108,38 +128,24 @@ const SelectionMenu = () => {
         //THIS THING NEED TO BE BEFORE THE BLOODY storage yet again... 
         const itemId = String(info.id);
         if (isSidebarMenuId(itemId)) {
-            await sendToBackground({
+            await sendToBackground<OpenSidePanelBody, OpenSidePanelResponse>({
                 name: "openSidePanel"
             })
         }
 
-        const items = normalizeContextMenuItems(await storage.get("contextMenuItems"));
+        const result = await sendToBackground<
+            RunContextMenuActionBody,
+            RunContextMenuActionResponse
+        >({
+            name: "runContextMenuAction",
+            body: {
+                itemId,
+                selectedText,
+            },
+        })
 
-        const element = items.find((item) => item.id === itemId);
-
-        if (!element) {
-            console.warn("Unhandled menu item:", info.id);
-            return;
-        }
-
-        if (element.id === "configuration") {
-            await sendToBackground({
-                name: "openOptionPage",
-            })
-        }
-
-        switch (element.functionType) {
-            case "callAI-copyClipboard":
-                await handleCopyClipboard(element);
-                break;
-            case "callVoice-ExternalNumber":
-                await handleVoiceCall(element);
-                break;
-            case "callAI-openSideBar":
-                await handleOpenSidebar(element);
-                break;
-            default:
-                console.warn("Unhandled function type:", element.functionType);
+        if (result.ok === false) {
+            console.warn(result.error)
         }
     }
 
@@ -149,24 +155,30 @@ const SelectionMenu = () => {
         document.addEventListener("keydown", handleKeyDown)
 
         const initialize = async () => {
-            const contextConfigItems =
-                (await initializeStorage()) as unknown as chrome.contextMenus.CreateProperties[];
-            const cleanedContextMenuItems = toChromeContextMenuItems(contextConfigItems);
-            setMenuItems(cleanedContextMenuItems)
+            const response = await sendToBackground<
+                InitializeContextMenuItemsBody,
+                InitializeContextMenuItemsResponse
+            >({
+                name: "initializeContextMenuItems",
+                body: {},
+            })
+            setMenuItems(response.chromeItems)
         }
         initialize();
 
         //Listen for changes, this allow the user to modify is own prompts, and see the value reflected on the UI straight away.
-        storage.watch({
-            "contextMenuItems": (c) => {
+        const watchMap = {
+            [STORAGE_KEYS.contextMenuItems]: (c) => {
                 const cleanedContextMenuItems = toChromeContextMenuItems(c.newValue);
                 setMenuItems(cleanedContextMenuItems)
             },
-        })
+        }
+        extensionStorage.watch(watchMap)
 
         return () => {
             document.removeEventListener("mouseup", handleMouseUp)
             document.removeEventListener("keydown", handleKeyDown)
+            extensionStorage.unwatch(watchMap)
         }
     }, [])
 

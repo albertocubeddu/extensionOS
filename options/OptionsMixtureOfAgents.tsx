@@ -1,4 +1,3 @@
-import { Badge } from "@/components/ui/badge"
 import {
     Card,
     CardContent,
@@ -15,9 +14,14 @@ import groqLogo from "data-base64:~assets/AppIcons/groq.png"
 import { useState } from "react"
 
 import { useStorage } from "@plasmohq/storage/hook"
+import { sendToBackground } from "@plasmohq/messaging"
+import type {
+    RequestBody as RunMixtureOfAgentsBody,
+    RequestResponse as RunMixtureOfAgentsResponse,
+} from "~background/messages/runMixtureOfAgents"
 
-import { callOpenAIReturn } from "~lib/openAITypeCall"
 import { LLM_PROVIDERS } from "~lib/configurations/llmProviders"
+import { storageKey } from "~lib/storage"
 
 import { Textarea } from "~components/ui/textarea"
 import { Separator } from "@/components/ui/separator"
@@ -47,19 +51,19 @@ const ModelSelect = ({ label, value, onValueChange, models }) => (
 export default function OptionsMixtureOfAgents() {
     // Use Plasmo storage for LLM models
     const [mixtureOfAgentsModel1, setMixtureOfAgentsModel1] = useStorage(
-        "mixtureOfAgentsModel1",
+        storageKey("mixtureOfAgentsModel1"),
         ""
     )
     const [mixtureOfAgentsModel2, setMixtureOfAgentsModel2] = useStorage(
-        "mixtureOfAgentsModel2",
+        storageKey("mixtureOfAgentsModel2"),
         ""
     )
     const [mixtureOfAgentsModel3, setMixtureOfAgentsModel3] = useStorage(
-        "mixtureOfAgentsModel3",
+        storageKey("mixtureOfAgentsModel3"),
         ""
     )
     const [mixtureOfAgentsModelAggregator, setMixtureOfAgentsModelAggregator] =
-        useStorage("mixtureOfAgentsModelAggregator", "")
+        useStorage(storageKey("mixtureOfAgentsModelAggregator"), "")
 
     const [agent1Response, setAgent1Response] = useState("")
     const [agent2Response, setAgent2Response] = useState("")
@@ -78,29 +82,28 @@ export default function OptionsMixtureOfAgents() {
     const asyncMoA = async () => {
         setLoading(true) // Set loading to true
         try {
-            const systemMessage = "You're a helpful assistant"
-            const aggregatorMessage = `You have been provided with a set of responses from various open-source models to the latest user query. Your task is to synthesize these responses into a single, high-quality response. It is crucial to critically evaluate the information provided in these responses, recognizing that some of it may be biased or incorrect. Your response should not simply replicate the given answers but should offer a refined, accurate, and comprehensive reply to the instruction. Ensure your response is well-structured, coherent, and adheres to the highest standards of accuracy and reliability.
+            const response = await sendToBackground<
+                RunMixtureOfAgentsBody,
+                RunMixtureOfAgentsResponse
+            >({
+                name: "runMixtureOfAgents",
+                body: {
+                    aggregatorModel: mixtureOfAgentsModelAggregator,
+                    model1: mixtureOfAgentsModel1,
+                    model2: mixtureOfAgentsModel2,
+                    model3: mixtureOfAgentsModel3,
+                    userMessage,
+                },
+            })
 
-Responses from models:`
+            if ("errorMessage" in response) {
+                throw new Error(response.errorMessage)
+            }
 
-            const [agent1, agent2, agent3] = await Promise.all([
-                callOpenAIReturn(systemMessage, userMessage, mixtureOfAgentsModel1, "groq"),
-                callOpenAIReturn(systemMessage, userMessage, mixtureOfAgentsModel2, "groq"),
-                callOpenAIReturn(systemMessage, userMessage, mixtureOfAgentsModel3, "groq")
-            ])
-
-            const combinedResponse = `${agent1.data}\n\n\n${agent2.data}\n\n\n${agent3.data}`
-
-            const aggregator = await callOpenAIReturn(
-                aggregatorMessage,
-                combinedResponse,
-                mixtureOfAgentsModelAggregator,
-                "groq"
-            )
-            setAgent1Response(agent1.data)
-            setAgent2Response(agent2.data)
-            setAgent3Response(agent3.data)
-            setAggregatorResponse(aggregator.data)
+            setAgent1Response(response.data.agent1)
+            setAgent2Response(response.data.agent2)
+            setAgent3Response(response.data.agent3)
+            setAggregatorResponse(response.data.aggregator)
 
         } catch (error) {
             console.error("Error during Mixture of Agents processing:", error)
