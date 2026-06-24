@@ -34,7 +34,7 @@ import { useStorage } from "@plasmohq/storage/hook"
 import {
     DEFAULT_CONTEXT_MENU_ITEMS,
     isSidebarMenuId,
-    toChromeContextMenuItems,
+    toSelectionMenuItems,
 } from "~lib/configurations/contextMenuItems"
 import { defaultGlobalConfig } from "~lib/configurations/globalConfig"
 import {
@@ -91,7 +91,7 @@ const SelectionMenu = () => {
     const [selectedText, setSelectedText] = useState("")
     const [menuPosition, setMenuPosition] = useState<{ x: number; y: number }>({ x: 0, y: 0 })
     const [menuItems, setMenuItems] = useState<chrome.contextMenus.CreateProperties[]>(
-        () => toChromeContextMenuItems(DEFAULT_CONTEXT_MENU_ITEMS)
+        () => toSelectionMenuItems(DEFAULT_CONTEXT_MENU_ITEMS)
     )
     let [config] = useStorage<typeof defaultGlobalConfig>(
         storageKey(STORAGE_KEYS.globalConfig),
@@ -165,14 +165,14 @@ const SelectionMenu = () => {
                 name: "initializeContextMenuItems",
                 body: {},
             })
-            setMenuItems(response.chromeItems)
+            setMenuItems(toSelectionMenuItems(response.items))
         }
         initialize();
 
         //Listen for changes, this allow the user to modify is own prompts, and see the value reflected on the UI straight away.
         const watchMap = {
             [STORAGE_KEYS.contextMenuItems]: (c) => {
-                const cleanedContextMenuItems = toChromeContextMenuItems(c.newValue);
+                const cleanedContextMenuItems = toSelectionMenuItems(c.newValue);
                 setMenuItems(cleanedContextMenuItems)
             },
         }

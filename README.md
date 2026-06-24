@@ -183,6 +183,17 @@ Move it somewhere else ASAP:
 
 # Changelog
 
+### 0.0.30
+
+- Prompt Factory: Added support for creating and deleting custom prompts.
+- Prompt Factory: Added prompt ordering controls; the Prompt Factory order is now the menu order.
+- Prompt Factory: Added animated reorder feedback and auto-scroll so moved prompts stay visible.
+- Prompt Factory: Hid the Context selector while prompts are selection-based by default.
+- Prompt Factory: Polished the prompt card header with aligned icon-only controls for visibility, ordering, and delete actions.
+- Prompt Factory: Replaced the large selected-text alert with a compact `Selected text added here` badge inside the prompt field.
+- Selection Menu: Added star-based visibility controls so users can choose up to 5 prompts for the compact selection menu.
+- Selection Menu: Kept backward compatibility by making the first 5 legacy prompts visible by default.
+- Development: Added QA coverage for add, remove, reorder, visibility limits, selected-text badge behavior, and empty prompt-list edge cases.
 
 ### 0.0.29
 - Full Refactor (Codebase, UI, UX, etc.) 

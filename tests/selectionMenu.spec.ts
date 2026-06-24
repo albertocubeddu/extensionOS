@@ -42,15 +42,15 @@ test("Selection Menu: Must show with the default config", async ({ page }) => {
    await selectFixtureText(page);
 
    const options = page.getByRole("option");
-   // Must be 8 as you have to count the +3 (separator, Setup Your Own Prompt, Deactivate this menu).
-   await expect(options).toHaveCount(8);
+   // Five visible prompts plus the two built-in utility actions.
+   await expect(options).toHaveCount(7);
 
    const isGrammarFixerPresent = await page
       .getByRole("option", { name: "❗Grammar Fixer" })
       .isVisible();
    expect(isGrammarFixerPresent).toBe(true);
-   await expect(options.nth(6)).toHaveText("Setup Your Own Prompt");
-   await expect(options.nth(7)).toHaveText("Deactivate this menu");
+   await expect(options.nth(5)).toHaveText("Setup Your Own Prompt");
+   await expect(options.nth(6)).toHaveText("Deactivate this menu");
 });
 
 test("Selection Menu: Must NOT show when the config is set to false", async ({

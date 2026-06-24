@@ -19,9 +19,11 @@ export type ContextMenuItem = {
    functionType?: ContextMenuFunctionType;
    type?: ChromeItemType;
    extraArgs?: ContextMenuExtraArgs;
+   selectionMenuVisible?: boolean;
 };
 
 const SIDEBAR_PREFIX = "side_";
+export const MAX_SELECTION_MENU_ITEMS = 5;
 export const CONFIGURATION_MENU_ITEM_ID = "configuration";
 export const DEACTIVATE_SELECTION_MENU_ITEM_ID = "deactivateSelectionMenu";
 
@@ -60,6 +62,7 @@ export const DEFAULT_CONTEXT_MENU_ITEMS: ContextMenuItem[] = [
       prompt:
          "You're a helpful assistant expert in replying to Social Media posts in the form of a comment. It needs to be short, sweet, and coherent to the message. Do not reply with any text, only the fixed sentence, and without any quotation marks. This is the message:",
       functionType: "callAI-copyClipboard",
+      selectionMenuVisible: true,
    },
    {
       id: "grammarFixer",
@@ -74,6 +77,7 @@ export const DEFAULT_CONTEXT_MENU_ITEMS: ContextMenuItem[] = [
 
         This is the sentence i want you to fix:`,
       functionType: "callAI-copyClipboard",
+      selectionMenuVisible: true,
    },
    {
       id: "side_summariseText",
@@ -81,6 +85,7 @@ export const DEFAULT_CONTEXT_MENU_ITEMS: ContextMenuItem[] = [
       contexts: ["selection"],
       prompt: `You're expert in summarising snippet of text; Give me only the summarisation of this text:`,
       functionType: "callAI-openSideBar",
+      selectionMenuVisible: true,
    },
    {
       id: "callPhoneToTalkAboutSelection",
@@ -112,6 +117,7 @@ Adopt these roles to create a productive and enriching conversation that leverag
 
 # Text`,
       functionType: "callVoice-ExternalNumber",
+      selectionMenuVisible: true,
    },
    {
       id: "linkedinPostEmoji",
@@ -119,6 +125,7 @@ Adopt these roles to create a productive and enriching conversation that leverag
       contexts: ["selection"],
       functionType: "callAI-copyClipboard",
       prompt: `Respond to a LinkedIn post only using emojis but avoid hashtags`,
+      selectionMenuVisible: true,
    },
    {
       id: "separator1",
@@ -148,6 +155,20 @@ export function isBuiltInUtilityMenuId(id: unknown): id is string {
          id as (typeof BUILT_IN_UTILITY_MENU_ITEM_IDS)[number]
       )
    );
+}
+
+export function isUserPromptMenuItem(item: ContextMenuItem) {
+   return (
+      item.type !== "separator" &&
+      !isBuiltInUtilityMenuId(item.id) &&
+      Boolean(item.functionType)
+   );
+}
+
+export function isSelectionMenuEligibleContext(
+   contexts: [ChromeContextType, ...ChromeContextType[]]
+) {
+   return contexts.includes("selection") || contexts.includes("all");
 }
 
 export function withSidebarMenuPrefix(id: string): string {
@@ -241,6 +262,10 @@ function normalizeItem(value: unknown): ContextMenuItem | undefined {
       functionType,
       type,
       extraArgs: normalizeExtraArgs(value.extraArgs),
+      selectionMenuVisible:
+         typeof value.selectionMenuVisible === "boolean"
+            ? value.selectionMenuVisible
+            : undefined,
    };
 }
 
@@ -301,34 +326,94 @@ function withBuiltInUtilityMenuItems(items: ContextMenuItem[]) {
    return normalizedItems;
 }
 
+function withSelectionMenuVisibilityDefaults(items: ContextMenuItem[]) {
+   let visibleCount = 0;
+
+   return items.map((item) => {
+      if (!isUserPromptMenuItem(item)) {
+         const { selectionMenuVisible, ...itemWithoutSelectionMenuVisible } = item;
+         return itemWithoutSelectionMenuVisible;
+      }
+
+      if (!isSelectionMenuEligibleContext(item.contexts)) {
+         return { ...item, selectionMenuVisible: false };
+      }
+
+      if (typeof item.selectionMenuVisible === "boolean") {
+         if (!item.selectionMenuVisible) {
+            return item;
+         }
+
+         if (visibleCount < MAX_SELECTION_MENU_ITEMS) {
+            visibleCount += 1;
+            return item;
+         }
+
+         return { ...item, selectionMenuVisible: false };
+      }
+
+      const selectionMenuVisible = visibleCount < MAX_SELECTION_MENU_ITEMS;
+      if (selectionMenuVisible) {
+         visibleCount += 1;
+      }
+
+      return { ...item, selectionMenuVisible };
+   });
+}
+
+function toChromeContextMenuItem(
+   item: ContextMenuItem
+): chrome.contextMenus.CreateProperties {
+   const chromeItem: chrome.contextMenus.CreateProperties = {
+      id: item.id,
+      contexts: item.contexts,
+   };
+
+   if (item.title) {
+      chromeItem.title = item.title;
+   }
+
+   if (item.type) {
+      chromeItem.type = item.type;
+   }
+
+   return chromeItem;
+}
+
 export function normalizeContextMenuItems(value: unknown): ContextMenuItem[] {
    const candidateItems = Array.isArray(value) ? value : Object.values(value ?? {});
    const normalizedItems = candidateItems
       .map(normalizeItem)
       .filter((item): item is ContextMenuItem => Boolean(item));
 
-   return normalizedItems.length
+   const items = normalizedItems.length
       ? withBuiltInUtilityMenuItems(normalizedItems)
       : DEFAULT_CONTEXT_MENU_ITEMS.map((item) => ({ ...item }));
+
+   return withSelectionMenuVisibilityDefaults(items);
 }
 
 export function toChromeContextMenuItems(
    items: unknown
 ): chrome.contextMenus.CreateProperties[] {
-   return normalizeContextMenuItems(items).map((item) => {
-      const chromeItem: chrome.contextMenus.CreateProperties = {
-         id: item.id,
-         contexts: item.contexts,
-      };
+   return normalizeContextMenuItems(items).map(toChromeContextMenuItem);
+}
 
-      if (item.title) {
-         chromeItem.title = item.title;
-      }
+export function toSelectionMenuItems(
+   items: unknown
+): chrome.contextMenus.CreateProperties[] {
+   const normalizedItems = normalizeContextMenuItems(items);
+   const visiblePromptItems = normalizedItems
+      .filter(
+         (item) =>
+            isUserPromptMenuItem(item) &&
+            item.selectionMenuVisible &&
+            isSelectionMenuEligibleContext(item.contexts)
+      )
+      .slice(0, MAX_SELECTION_MENU_ITEMS);
+   const utilityItems = normalizedItems.filter((item) =>
+      isBuiltInUtilityMenuId(item.id)
+   );
 
-      if (item.type) {
-         chromeItem.type = item.type;
-      }
-
-      return chromeItem;
-   });
+   return [...visiblePromptItems, ...utilityItems].map(toChromeContextMenuItem);
 }

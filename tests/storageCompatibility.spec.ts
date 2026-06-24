@@ -71,3 +71,32 @@ test("reads existing custom prompt factory items from the original storage key",
       0
    );
 });
+
+test("legacy prompt factory items default the first 5 prompts into the compact selection menu", async ({
+   page,
+   extensionId,
+}) => {
+   await openOptionsPage(page, extensionId);
+   await setPlasmoStorage(page, {
+      contextMenuItems: Array.from({ length: 6 }, (_, index) => ({
+         contexts: ["selection"],
+         functionType: "callAI-copyClipboard",
+         id: `legacyPrompt${index}`,
+         prompt: `Legacy prompt ${index}.`,
+         title: `Legacy Prompt ${index}`,
+      })),
+   });
+
+   await openSelectionFixtureAndSelectText(page);
+
+   for (let index = 0; index < 5; index += 1) {
+      await expect(
+         page.getByRole("option", { name: `Legacy Prompt ${index}` })
+      ).toBeVisible();
+   }
+
+   await expect(
+      page.getByRole("option", { name: "Legacy Prompt 5" })
+   ).toHaveCount(0);
+   await expect(page.getByRole("option")).toHaveCount(7);
+});
