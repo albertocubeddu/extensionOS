@@ -14,13 +14,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import { useStorage } from "@plasmohq/storage/hook";
 import LabelWithTooltip from "~components/blocks/LabelWithTooltip";
 import CardHeaderIntro from "~components/blocks/CardHeaderIntro";
 import FakeSaveButton from "~components/blocks/FakeSaveButton";
 import {
+  CUSTOM_LLM_MODEL_LABEL,
+  CUSTOM_LLM_MODEL_VALUE,
   LLM_PROVIDERS,
   getDefaultModelForProvider,
   type ProviderName,
@@ -39,15 +41,18 @@ function formatProviderName(providerName: string) {
 }
 
 export default function LlmSettings({ debugInfo }: { debugInfo: string }) {
-  const [llmModel, setLlmModel] = useStorage<string>(
-    storageKey(STORAGE_KEYS.llmModel),
-    (value) => value ?? DEFAULT_STORAGE_VALUES.llmModel
-  );
+  const [isManualModelInputVisible, setIsManualModelInputVisible] =
+    useState(false);
+  const [llmModel, setLlmModel, { isLoading: isLlmModelLoading }] =
+    useStorage<string>(
+      storageKey(STORAGE_KEYS.llmModel),
+      (value) => value ?? DEFAULT_STORAGE_VALUES.llmModel
+    );
   const [llmProvider, setLlmProvider, { isLoading: isLlmProviderLoading }] =
     useStorage<ProviderName | string>(
       storageKey(STORAGE_KEYS.llmProvider),
       (value) => value ?? DEFAULT_STORAGE_VALUES.llmProvider
-  );
+    );
   const [llmKeys, setLlmKeys] = useStorage<Record<string, string>>(
     storageKey(STORAGE_KEYS.llmKeys),
     (value) => value ?? DEFAULT_STORAGE_VALUES.llmKeys
@@ -60,10 +65,19 @@ export default function LlmSettings({ debugInfo }: { debugInfo: string }) {
   const selectedProvider = LLM_PROVIDERS.find(
     (provider) => provider.name === llmProvider
   );
+  const isKnownProviderModel =
+    selectedProvider?.models.includes(llmModel) ?? false;
+  const modelSelectValue = isKnownProviderModel
+    ? llmModel
+    : CUSTOM_LLM_MODEL_VALUE;
+  const isCustomProviderModel =
+    !!selectedProvider &&
+    selectedProvider.name !== "localhost" &&
+    (isManualModelInputVisible || !isKnownProviderModel);
 
-  //To auto-assign a model when the provider is changed.
+  // Initialize an empty stored model without replacing hydrated custom values.
   useEffect(() => {
-    if (isLlmProviderLoading) {
+    if (isLlmModelLoading || isLlmProviderLoading) {
       return;
     }
 
@@ -71,13 +85,38 @@ export default function LlmSettings({ debugInfo }: { debugInfo: string }) {
       return;
     }
 
-    if (!selectedProvider.models.includes(llmModel)) {
+    if (!llmModel && !isManualModelInputVisible) {
       setLlmModel(getDefaultModelForProvider(llmProvider));
     }
-  }, [isLlmProviderLoading, llmModel, llmProvider, selectedProvider, setLlmModel]);
+  }, [
+    isManualModelInputVisible,
+    isLlmModelLoading,
+    isLlmProviderLoading,
+    llmModel,
+    llmProvider,
+    selectedProvider,
+    setLlmModel,
+  ]);
+
+  const handleProviderChange = (provider: ProviderName | string) => {
+    setIsManualModelInputVisible(false);
+    setLlmProvider(provider);
+    setLlmModel(getDefaultModelForProvider(provider));
+  };
 
   const handleKeyChange = (provider: string, key: string) => {
     setLlmKeys((prevKeys) => ({ ...prevKeys, [provider]: key }));
+  };
+
+  const handleModelChange = (model: string) => {
+    if (model === CUSTOM_LLM_MODEL_VALUE) {
+      setIsManualModelInputVisible(true);
+      setLlmModel("");
+      return;
+    }
+
+    setIsManualModelInputVisible(false);
+    setLlmModel(model);
   };
 
   const getCurrentKey = () => llmKeys?.[llmProvider] || "";
@@ -120,7 +159,7 @@ export default function LlmSettings({ debugInfo }: { debugInfo: string }) {
                 }
               />
               <div className="flex flex-row gap-5">
-                <Select value={llmProvider} onValueChange={setLlmProvider}>
+                <Select value={llmProvider} onValueChange={handleProviderChange}>
                   <SelectTrigger id="llm-provider" className="w-[180px]">
                     <SelectValue placeholder="Select a provider" />
                   </SelectTrigger>
@@ -163,18 +202,37 @@ export default function LlmSettings({ debugInfo }: { debugInfo: string }) {
                 />
                 {selectedProvider.models.length > 0 &&
                 selectedProvider.name !== "localhost" ? (
-                  <Select value={llmModel} onValueChange={setLlmModel}>
-                    <SelectTrigger id="llm-model" className="w-full">
-                      <SelectValue placeholder="Select a model" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {selectedProvider.models.map((model) => (
-                        <SelectItem key={model} value={model}>
-                          {model}
+                  <div className="flex flex-col gap-2">
+                    <Select
+                      value={modelSelectValue}
+                      onValueChange={handleModelChange}
+                    >
+                      <SelectTrigger id="llm-model" className="w-full">
+                        <SelectValue placeholder="Select a model" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {selectedProvider.models.map((model) => (
+                          <SelectItem key={model} value={model}>
+                            {model}
+                          </SelectItem>
+                        ))}
+                        <SelectItem value={CUSTOM_LLM_MODEL_VALUE}>
+                          {CUSTOM_LLM_MODEL_LABEL}
                         </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                      </SelectContent>
+                    </Select>
+
+                    {isCustomProviderModel && (
+                      <Input
+                        type="text"
+                        id="llm-model-custom"
+                        value={llmModel}
+                        onChange={(e) => setLlmModel(e.target.value)}
+                        placeholder="Enter LLM model name"
+                        className="border border-input rounded-md p-2 w-full"
+                      />
+                    )}
+                  </div>
                 ) : (
                   <Input
                     type="text"

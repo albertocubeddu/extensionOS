@@ -183,6 +183,13 @@ Move it somewhere else ASAP:
 
 # Changelog
 
+### 0.0.31
+
+- LLM Settings: Updated the default provider model lists for Extension | OS, Groq, OpenAI, Together, and localhost.
+- LLM Settings: Added an `Other` model option so users can manually enter new model IDs before they are added to the built-in list.
+- Prompt Factory: Replaced the blocking browser alert after `Save All` with inline save status to prevent the blank-screen save failure.
+- Development: Updated automated coverage for manual model selection, legacy stored model compatibility, and Prompt Factory save behavior.
+
 ### 0.0.30
 
 - Prompt Factory: Added support for creating and deleting custom prompts.

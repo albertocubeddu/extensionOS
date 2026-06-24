@@ -1,4 +1,5 @@
 import { expect, type Page } from "@playwright/test";
+import { DEFAULT_LOCALHOST_MODEL } from "../lib/configurations/llmProviders";
 
 export async function getPlasmoStorage<T = unknown>(page: Page, key: string) {
    return page.evaluate(async (storageKey) => {
@@ -49,7 +50,7 @@ export async function configureLocalhostEndpoint(
    await openOptionsPage(page, extensionId);
    await setPlasmoStorage(page, {
       llmProvider: "localhost",
-      llmModel: "llama3",
+      llmModel: DEFAULT_LOCALHOST_MODEL,
       llmKeys: {
          localhost: "deterministic-test-key",
       },

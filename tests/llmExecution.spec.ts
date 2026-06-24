@@ -1,6 +1,9 @@
 import { test, expect } from "./fixtures";
 import type { Page } from "@playwright/test";
-import { DEFAULT_LLM_MODEL } from "../lib/configurations/llmProviders";
+import {
+   DEFAULT_LLM_MODEL,
+   DEFAULT_LOCALHOST_MODEL,
+} from "../lib/configurations/llmProviders";
 const groqKey = process.env.E2E_TEST_GROQ_KEY;
 
 async function openOptionsPage(page: Page, extensionId: string) {
@@ -56,7 +59,7 @@ test("be able to use default localhost and succesfully execute a query", async (
    await page.click("#llm-provider");
    await page.click('div[role="option"] >> text="Localhost"');
    const modelText = await page.locator("#llm-model").inputValue(); // Retrieve the text from the input
-   await expect(modelText).toBe("llama3"); //
+   await expect(modelText).toBe(DEFAULT_LOCALHOST_MODEL); //
 
    await page.goto("/selection.html");
    await expect(page).toHaveTitle("ExtensionOS selection fixture");
