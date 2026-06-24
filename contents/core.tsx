@@ -5,6 +5,14 @@ import type { PlasmoCSConfig } from "plasmo"
 import { useEffect, useState } from "react"
 import { useStorage } from "@plasmohq/storage/hook"
 import { sendToBackground } from "@plasmohq/messaging"
+import type {
+    RequestBody as IdentityRequestBody,
+    RequestResponse as IdentityRequestResponse,
+} from "~background/messages/identity"
+import {
+    storageKey,
+    STORAGE_KEYS,
+} from "~lib/storage"
 
 // We enable the extension to be used in anywebsite with an http/https protocol.
 export const config: PlasmoCSConfig = {
@@ -22,15 +30,18 @@ const PlasmoOverlay = () => {
     const [successDivVisibe, setSuccessDivVisibile] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
     const [errorDivVisibe, setErrorDivVisibe] = useState(false)
-    const [llmModel] = useStorage("llmModel")
-    const [debugInfo] = useStorage("debugInfo")
+    const [llmModel] = useStorage(storageKey(STORAGE_KEYS.llmModel))
+    const [debugInfo] = useStorage(storageKey(STORAGE_KEYS.debugInfo))
 
 
     useEffect(() => {
 
         //Trick to fetch the chrome.profile from the background;
         const fetchData = async () => {
-            const resp = await sendToBackground({
+            const resp = await sendToBackground<
+                IdentityRequestBody,
+                IdentityRequestResponse
+            >({
                 name: "identity",
             })
             return resp;

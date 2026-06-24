@@ -183,6 +183,21 @@ Move it somewhere else ASAP:
 
 # Changelog
 
+### 0.0.30
+
+- Prompt Factory: Added support for creating and deleting custom prompts.
+- Prompt Factory: Added prompt ordering controls; the Prompt Factory order is now the menu order.
+- Prompt Factory: Added animated reorder feedback and auto-scroll so moved prompts stay visible.
+- Prompt Factory: Hid the Context selector while prompts are selection-based by default.
+- Prompt Factory: Polished the prompt card header with aligned icon-only controls for visibility, ordering, and delete actions.
+- Prompt Factory: Replaced the large selected-text alert with a compact `Selected text added here` badge inside the prompt field.
+- Selection Menu: Added star-based visibility controls so users can choose up to 5 prompts for the compact selection menu.
+- Selection Menu: Kept backward compatibility by making the first 5 legacy prompts visible by default.
+- Development: Added QA coverage for add, remove, reorder, visibility limits, selected-text badge behavior, and empty prompt-list edge cases.
+
+### 0.0.29
+- Full Refactor (Codebase, UI, UX, etc.) 
+
 ### 0.0.28
 
 - Upgrade to the latest version after the release workflow was implemented.
@@ -354,15 +369,36 @@ Move it somewhere else ASAP:
 - We currently have two menus that function similarly but not identically; we need to implement a more efficient solution to consolidate them into one.
 - The Plasmo handler may stop functioning unexpectedly without errors if a response is not returned; ensure to always return a response to prevent this issue.
 
+# Development and release commands
+
+This repository uses `pnpm`. Agents should choose the smallest command that proves the change, then use the larger gates before handing off risky or release-bound work.
+
+## Command reference
+
+- `pnpm dev`: starts `plasmo dev` for local extension development. Use this when manually testing the extension in Chrome during active UI or runtime work.
+- `pnpm typecheck`: runs `tsc --noEmit --pretty false`. Use this after TypeScript-only edits or before a focused test run.
+- `pnpm check:messaging`: verifies that `plasmo-messaging.d.ts` matches the files in `background/messages`. Use this whenever adding, deleting, or renaming a Plasmo message handler.
+- `pnpm test:unit`: runs the Vitest unit suite in `tests/unit`. Use this for pure logic, storage defaults, message orchestration, and configuration changes.
+- `pnpm build`: runs `plasmo build` and produces `build/chrome-mv3-prod`. Use this after Plasmo entrypoint, manifest, background, content script, options, or side panel changes.
+- `pnpm package`: runs `plasmo package` and creates `build/chrome-mv3-prod.zip`. Use this only when a Chrome Web Store upload artifact is needed, or when validating release packaging behavior.
+- `pnpm validate:artifact`: validates the existing production build and zip. Run it after `pnpm package`; it expects `build/chrome-mv3-prod` and `build/chrome-mv3-prod.zip` to already exist.
+- `pnpm test:e2e:built`: runs the deterministic Playwright extension tests against an existing built extension. Use this when `pnpm build` has already run and you only need to rerun E2E checks.
+- `pnpm test:e2e`: runs `pnpm build` and then `pnpm test:e2e:built`. Use this for browser-visible behavior when no fresh build exists yet.
+- `pnpm test:live`: runs the live-provider smoke tests. Use only when provider-specific env vars such as `E2E_TEST_GROQ_KEY` or `E2E_TEST_OLLAMA` are available and live network/provider calls are acceptable.
+- `pnpm test`: default PR gate. Runs typecheck, Plasmo messaging metadata validation, unit tests, production build, and deterministic Playwright extension tests.
+- `pnpm test:release`: full release gate. Runs typecheck, messaging validation, unit tests, production build, `pnpm package`, artifact validation, and deterministic Playwright extension tests.
+
+## Agent command selection
+
+- For most code changes: run `pnpm test`.
+- For storage changes: run `pnpm test`, or at minimum `pnpm typecheck`, `pnpm test:unit`, `pnpm build`, and `pnpm exec playwright test tests/storageCompatibility.spec.ts --workers=1 --reporter=list`.
+- For Plasmo message handler changes: run `pnpm check:messaging` plus the relevant unit or E2E tests. Use `pnpm test` before handoff if the change touches call sites.
+- For content script, options page, side panel, background service worker, or manifest-impacting changes: run `pnpm build` and the relevant Playwright spec. Use `pnpm test` before handoff.
+- For release preparation or Chrome Web Store upload: run `pnpm test:release`.
+- For generating a zip only: run `pnpm package`, then `pnpm validate:artifact`. Prefer `pnpm test:release` when the artifact is intended to ship.
+- For live LLM/provider behavior: run `pnpm test:live` only after confirming credentials and network calls are acceptable.
+
 # Deployment Instruction for production
-
-## QA gates
-
-Use these commands before promoting a build:
-
-- `pnpm test`: PR gate. Runs TypeScript, unit tests, production build, and deterministic Playwright extension tests.
-- `pnpm test:release`: release gate. Runs the PR gate plus `plasmo package` and validates the generated Chrome MV3 artifact.
-- `pnpm test:live`: optional live-provider smoke. Requires provider-specific env vars such as `E2E_TEST_GROQ_KEY` or `E2E_TEST_OLLAMA`.
 
 ## Local release
 

@@ -13,7 +13,7 @@ import {
     SelectValue
 } from "@/components/ui/select"
 import vapiLogo from "data-base64:~assets/AppIcons/vapi.png"
-import React, { useEffect } from "react"
+import React from "react"
 
 import { useStorage } from "@plasmohq/storage/hook"
 import LabelWithTooltip from "~components/blocks/LabelWithTooltip"
@@ -21,16 +21,24 @@ import CardHeaderIntro from "~components/blocks/CardHeaderIntro"
 import FakeSaveButton from "~components/blocks/FakeSaveButton"
 import ProviderVoiceInstruction from "./promptFactory/ProviderVoiceInstruction"
 import { ArrowBigLeftDash } from "lucide-react"
+import {
+    DEFAULT_STORAGE_VALUES,
+    storageKey,
+    STORAGE_KEYS,
+} from "~lib/storage"
 
 export default function VoiceSettingsOutbound({
     debugInfo
 }: {
     debugInfo: string
 }) {
-    const [authToken, setauthToken] = useStorage("voice_outbound_authToken", "")
-    const [phoneNumberId, setPhoneNumberId] = useStorage(
-        "voice_outbound_phoneNumberId",
-        ""
+    const [authToken, setauthToken] = useStorage<string>(
+        storageKey(STORAGE_KEYS.voiceOutboundAuthToken),
+        DEFAULT_STORAGE_VALUES.voiceOutboundAuthToken
+    )
+    const [phoneNumberId, setPhoneNumberId] = useStorage<string>(
+        storageKey(STORAGE_KEYS.voiceOutboundPhoneNumberId),
+        DEFAULT_STORAGE_VALUES.voiceOutboundPhoneNumberId
     )
 
 

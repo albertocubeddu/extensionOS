@@ -1,17 +1,22 @@
-import { Storage } from "@plasmohq/storage";
+import { getVoiceOutboundSettings } from "~lib/storage";
+
+export type CreateCallResponse =
+   | {
+        ok: true;
+        data?: unknown;
+     }
+   | {
+        ok: false;
+        error: string;
+     };
 
 export const createCall = async (
    systemPrompt: string,
    message: string,
    customerNumber: string,
    firstMessageText: string
-) => {
-   const storage = new Storage();
-
-   // Your Vapi API Authorization token
-   const authToken = await storage.get("voice_outbound_authToken");
-   // The Phone Number ID, and the Customer details for the call
-   const phoneNumberId = await storage.get("voice_outbound_phoneNumberId");
+): Promise<CreateCallResponse> => {
+   const { authToken, phoneNumberId } = await getVoiceOutboundSettings();
 
    // Create the header with Authorization token
    const headers = {
@@ -49,10 +54,22 @@ export const createCall = async (
 
       if (response.status === 201) {
          const responseData = await response.json();
+         return {
+            ok: true,
+            data: responseData,
+         };
       } else {
          const errorData = await response.text();
+         return {
+            ok: false,
+            error: errorData || `Vapi responded with HTTP status ${response.status}`,
+         };
       }
    } catch (error) {
       console.error("Error creating call:", error);
+      return {
+         ok: false,
+         error: error instanceof Error ? error.message : String(error),
+      };
    }
 };

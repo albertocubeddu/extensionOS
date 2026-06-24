@@ -1,5 +1,5 @@
 import { test, expect } from "./fixtures";
-import type { Page } from "@playwright/test";
+import type { BrowserContext, Page } from "@playwright/test";
 
 async function openOptionsPage(page: Page, extensionId: string) {
    await page.goto(`chrome-extension://${extensionId}/options.html`);
@@ -18,20 +18,39 @@ async function selectFixtureText(page: Page) {
    await page.mouse.up(); // Release the mouse button to complete the selection
 }
 
+async function waitForOptionsPage(
+   context: BrowserContext,
+   extensionId: string
+) {
+   const optionsUrl = `chrome-extension://${extensionId}/options.html`;
+
+   await expect
+      .poll(() => context.pages().some((page) => page.url() === optionsUrl))
+      .toBe(true);
+
+   const optionsPage = context.pages().find((page) => page.url() === optionsUrl);
+   if (!optionsPage) {
+      throw new Error("Options page was not opened.");
+   }
+
+   return optionsPage;
+}
+
 test("Selection Menu: Must show with the default config", async ({ page }) => {
    await page.goto("/selection.html");
    await expect(page).toHaveTitle("ExtensionOS selection fixture");
    await selectFixtureText(page);
 
-   const options = await page.getByRole("option");
-   const optionsCount = await options.count();
-   //Must be 7 as you have to count the +2 (separator + Setup Your Own Prompt)
-   expect(optionsCount).toBe(7);
+   const options = page.getByRole("option");
+   // Five visible prompts plus the two built-in utility actions.
+   await expect(options).toHaveCount(7);
 
    const isGrammarFixerPresent = await page
       .getByRole("option", { name: "❗Grammar Fixer" })
       .isVisible();
    expect(isGrammarFixerPresent).toBe(true);
+   await expect(options.nth(5)).toHaveText("Setup Your Own Prompt");
+   await expect(options.nth(6)).toHaveText("Deactivate this menu");
 });
 
 test("Selection Menu: Must NOT show when the config is set to false", async ({
@@ -51,8 +70,27 @@ test("Selection Menu: Must NOT show when the config is set to false", async ({
    await expect(page).toHaveTitle("ExtensionOS selection fixture");
    await selectFixtureText(page);
 
-   const options = await page.getByRole("option");
-   const optionsCount = await options.count();
    //Must be 0 as the configuration is NOT Showing the menu!
-   expect(optionsCount).toBe(0);
+   await expect(page.getByRole("option")).toHaveCount(0);
+});
+
+test("Selection Menu: Can open settings from the deactivate menu item", async ({
+   context,
+   page,
+   extensionId,
+}) => {
+   await page.goto("/selection.html");
+   await expect(page).toHaveTitle("ExtensionOS selection fixture");
+   await selectFixtureText(page);
+
+   await expect(
+      page.getByRole("option", { name: "Deactivate this menu" })
+   ).toBeVisible();
+   await page.getByRole("option", { name: "Deactivate this menu" }).click();
+   const optionsPage = await waitForOptionsPage(context, extensionId);
+
+   await expect(optionsPage).toHaveTitle("Extension-OS: Your AI Partner");
+   await expect(
+      optionsPage.getByRole("switch", { name: /Display Selection Menu/ })
+   ).toHaveAttribute("aria-checked", "true");
 });

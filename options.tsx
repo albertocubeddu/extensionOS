@@ -3,6 +3,11 @@ import "./globals.css"
 import React, { useState } from "react"
 
 import { useStorage } from "@plasmohq/storage/hook"
+import {
+    DEFAULT_STORAGE_VALUES,
+    storageKey,
+    STORAGE_KEYS,
+} from "~lib/storage"
 
 import OptionsAbout from "~options/OptionsAbout"
 import OptionsGeneral from "~options/OptionsGeneral"
@@ -16,7 +21,10 @@ import OptionsSettings from "~options/OptionsSettings"
 // --------------------------------
 export default function Options() {
 
-    const [activeTab, setActiveTab] = useStorage<string>("activeTab", "general")
+    const [activeTab, setActiveTab] = useStorage<string>(
+        storageKey(STORAGE_KEYS.activeTab),
+        DEFAULT_STORAGE_VALUES.activeTab
+    )
 
     return (
         <div className="flex min-h-screen w-full flex-col">

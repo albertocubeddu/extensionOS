@@ -14,16 +14,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect } from "react";
 
 import { useStorage } from "@plasmohq/storage/hook";
 import LabelWithTooltip from "~components/blocks/LabelWithTooltip";
 import CardHeaderIntro from "~components/blocks/CardHeaderIntro";
 import FakeSaveButton from "~components/blocks/FakeSaveButton";
 import {
-  DEFAULT_LLM_MODEL,
-  DEFAULT_LLM_PROVIDER,
-  DEFAULT_LOCALHOST_ENDPOINT,
   LLM_PROVIDERS,
   getDefaultModelForProvider,
   type ProviderName,
@@ -31,6 +28,11 @@ import {
 import ProviderInstruction from "./promptFactory/ProviderInstruction";
 import { ArrowBigLeftDash } from "lucide-react";
 import { ExtensionOsLogin } from "./settings/ExtensionOsLogin";
+import {
+  DEFAULT_STORAGE_VALUES,
+  storageKey,
+  STORAGE_KEYS,
+} from "~lib/storage";
 
 function formatProviderName(providerName: string) {
   return providerName.charAt(0).toUpperCase() + providerName.slice(1);
@@ -38,33 +40,31 @@ function formatProviderName(providerName: string) {
 
 export default function LlmSettings({ debugInfo }: { debugInfo: string }) {
   const [llmModel, setLlmModel] = useStorage<string>(
-    "llmModel",
-    DEFAULT_LLM_MODEL
+    storageKey(STORAGE_KEYS.llmModel),
+    (value) => value ?? DEFAULT_STORAGE_VALUES.llmModel
   );
-  const [llmProvider, setLlmProvider] = useStorage<ProviderName | string>(
-    "llmProvider",
-    DEFAULT_LLM_PROVIDER
+  const [llmProvider, setLlmProvider, { isLoading: isLlmProviderLoading }] =
+    useStorage<ProviderName | string>(
+      storageKey(STORAGE_KEYS.llmProvider),
+      (value) => value ?? DEFAULT_STORAGE_VALUES.llmProvider
   );
   const [llmKeys, setLlmKeys] = useStorage<Record<string, string>>(
-    "llmKeys",
-    {}
+    storageKey(STORAGE_KEYS.llmKeys),
+    (value) => value ?? DEFAULT_STORAGE_VALUES.llmKeys
   );
   const [llmCustomEndpoint, setLlmCustomEndpoint] = useStorage<string>(
-    "llmCustomEndpoint",
-    (value) => (value === undefined ? DEFAULT_LOCALHOST_ENDPOINT : value)
+    storageKey(STORAGE_KEYS.llmCustomEndpoint),
+    (value) => value ?? DEFAULT_STORAGE_VALUES.llmCustomEndpoint
   );
 
-  const hasRun = useRef(false);
   const selectedProvider = LLM_PROVIDERS.find(
     (provider) => provider.name === llmProvider
   );
 
   //To auto-assign a model when the provider is changed.
   useEffect(() => {
-    if (!hasRun.current) {
-      /* Plasmo storage is undefined here, it will read only the default value! */
-      hasRun.current = true;
-      return; // Skip the first cycle, so plasmo loads the useStorage correctly...
+    if (isLlmProviderLoading) {
+      return;
     }
 
     if (!selectedProvider) {
@@ -74,7 +74,7 @@ export default function LlmSettings({ debugInfo }: { debugInfo: string }) {
     if (!selectedProvider.models.includes(llmModel)) {
       setLlmModel(getDefaultModelForProvider(llmProvider));
     }
-  }, [llmProvider, selectedProvider]);
+  }, [isLlmProviderLoading, llmModel, llmProvider, selectedProvider, setLlmModel]);
 
   const handleKeyChange = (provider: string, key: string) => {
     setLlmKeys((prevKeys) => ({ ...prevKeys, [provider]: key }));

@@ -1,13 +1,8 @@
-import { Storage } from "@plasmohq/storage";
 import {
    DEFAULT_CONTEXT_MENU_ITEMS,
    normalizeContextMenuItems,
-   type ContextMenuItem,
 } from "~lib/configurations/contextMenuItems";
-
-const storage = new Storage();
-
-export type IContextConfigItems = ContextMenuItem;
+import { extensionStorage, STORAGE_KEYS } from "~lib/storage";
 
 export async function initializeStorage() {
    //   https://unicode-table.com/
@@ -17,14 +12,17 @@ export async function initializeStorage() {
       // storage.removeAll();
    }
 
-   const initState = await storage.get("contextMenuItems");
+   const initState = await extensionStorage.get(STORAGE_KEYS.contextMenuItems);
 
    if (initState) {
       const normalizedItems = normalizeContextMenuItems(initState);
-      await storage.set("contextMenuItems", normalizedItems);
+      await extensionStorage.set(STORAGE_KEYS.contextMenuItems, normalizedItems);
       return normalizedItems;
    }
 
-   await storage.set("contextMenuItems", DEFAULT_CONTEXT_MENU_ITEMS);
+   await extensionStorage.set(
+      STORAGE_KEYS.contextMenuItems,
+      DEFAULT_CONTEXT_MENU_ITEMS
+   );
    return DEFAULT_CONTEXT_MENU_ITEMS;
 }

@@ -1,6 +1,6 @@
 import deepmerge from "deepmerge";
-import { Storage } from "@plasmohq/storage";
-const storage = new Storage();
+
+import { extensionStorage, STORAGE_KEYS } from "~lib/storage";
 
 //We want to have everything as Partial (deep too) as the deepmerge will take care of matching with the default/stored configuration.
 type DeepPartial<T> = {
@@ -16,7 +16,7 @@ export const defaultGlobalConfig = {
 export async function getGlobalConfig() {
    let storagedConfig = {};
    try {
-      storagedConfig = await storage.get("globalConfig");
+      storagedConfig = await extensionStorage.get(STORAGE_KEYS.globalConfig);
    } catch (error) {}
    return deepmerge(
       {},
@@ -30,7 +30,9 @@ export async function setGlobalConfig(
 ) {
    let storagedConfig: DeepPartial<typeof defaultGlobalConfig>;
    try {
-      storagedConfig = (await storage.get("globalConfig")) as Partial<
+      storagedConfig = (await extensionStorage.get(
+         STORAGE_KEYS.globalConfig
+      )) as Partial<
          typeof defaultGlobalConfig
       >;
    } catch (error) {}
@@ -38,6 +40,6 @@ export async function setGlobalConfig(
       DeepPartial<typeof defaultGlobalConfig>,
       DeepPartial<typeof defaultGlobalConfig>
    >(storagedConfig, config);
-   await storage.set("globalConfig", config);
+   await extensionStorage.set(STORAGE_KEYS.globalConfig, config);
    return config;
 }

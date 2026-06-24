@@ -2,17 +2,14 @@
 // This file helps to connect to any of the API supporting the OPEN AI standards
 // ------------------------------------------------------------------------------------
 
-import { Storage } from "@plasmohq/storage";
 import { getOrCreateClientUUID } from "./clientUUID";
 import { insertStatisticsRow } from "./anonymousTracking";
 import { sendMessageToActiveTab } from "./chromeApi";
 import {
-   DEFAULT_LLM_MODEL,
-   DEFAULT_LLM_PROVIDER,
-   DEFAULT_LOCALHOST_ENDPOINT,
    getProviderEndpoint,
    type ProviderName,
 } from "./configurations/llmProviders";
+import { getLlmSettings } from "./storage";
 
 // TODO: move somewhere else
 const getAccessToken = async (): Promise<string> => {
@@ -38,22 +35,9 @@ export async function callOpenAIReturn(
    overrideModel?: string,
    overrideProvider?: ProviderName | string
 ): Promise<ApiResponse<any>> {
-   const storage = new Storage();
-
    try {
-      const [storedModel, storedVendor, llmKeys, customEndpoint] =
-         await Promise.all([
-            storage
-               .get<string>("llmModel")
-               .then((model) => model ?? DEFAULT_LLM_MODEL),
-            storage
-               .get<ProviderName>("llmProvider")
-               .then((provider) => provider ?? DEFAULT_LLM_PROVIDER),
-            storage.get<Record<string, string>>("llmKeys").then((key) => key ?? {}),
-            storage
-               .get<string>("llmCustomEndpoint")
-               .then((endpoint) => endpoint ?? DEFAULT_LOCALHOST_ENDPOINT),
-         ]);
+      const { storedModel, storedVendor, llmKeys, customEndpoint } =
+         await getLlmSettings();
 
       //Capture statistics, so that we can provide prioritarisation for features based on the provider/model most used.
       try {
