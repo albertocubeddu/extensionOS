@@ -1,3 +1,5 @@
+import type { Page } from "@playwright/test";
+
 import { expect, test } from "./fixtures";
 import {
    configureLocalhostEndpoint,
@@ -8,6 +10,11 @@ import {
 
 const SELECTED_TEXT_BADGE_TOOLTIP =
    "When you run this prompt, Extension | OS adds the text you highlighted on the page after your prompt. This badge is just a marker, not saved text.";
+
+async function saveAllPrompts(page: Page) {
+   await page.getByRole("button", { name: "Save All" }).click();
+   await expect(page.getByText("Changes saved.")).toBeVisible();
+}
 
 test("prompt factory edits persist and refresh the injected selection menu", async ({
    page,
@@ -30,8 +37,7 @@ test("prompt factory edits persist and refresh the injected selection menu", asy
    await page.locator("#title-1").fill("QA Grammar Fixer");
    await page.locator("#prompt-1").fill("Return only the corrected text.");
 
-   page.once("dialog", (dialog) => dialog.accept());
-   await page.getByRole("button", { name: "Save All" }).click();
+   await saveAllPrompts(page);
 
    const storedItems = await getPlasmoStorage<any[]>(page, "contextMenuItems");
 
@@ -77,8 +83,7 @@ test("prompt factory preserves the sidebar ID convention when functionality chan
    await page.locator("button").filter({ hasText: "Write to Sidebar" }).click();
    await page.click('div[role="option"] >> text="Copy to Clipboard"');
 
-   page.once("dialog", (dialog) => dialog.accept());
-   await page.getByRole("button", { name: "Save All" }).click();
+   await saveAllPrompts(page);
 
    const updatedItems = await getPlasmoStorage(page, "contextMenuItems");
 
@@ -106,8 +111,7 @@ test("prompt factory can add prompts without adding a 6th compact-menu item", as
    await page.locator("#title-0").fill("QA Added Prompt");
    await page.locator("#prompt-0").fill("Reply with a short answer.");
 
-   page.once("dialog", (dialog) => dialog.accept());
-   await page.getByRole("button", { name: "Save All" }).click();
+   await saveAllPrompts(page);
 
    const storedItems = await getPlasmoStorage<any[]>(page, "contextMenuItems");
    expect(storedItems).toEqual(
@@ -153,8 +157,7 @@ test("prompt factory can add a visible prompt and execute it from the compact me
    await page.locator("#title-0").fill("QA Executable Prompt");
    await page.locator("#prompt-0").fill("Return a deterministic QA response.");
 
-   page.once("dialog", (dialog) => dialog.accept());
-   await page.getByRole("button", { name: "Save All" }).click();
+   await saveAllPrompts(page);
 
    await openSelectionFixtureAndSelectText(page);
    await page.getByRole("option", { name: "QA Executable Prompt" }).click();
@@ -199,8 +202,7 @@ test("prompt factory ordering controls persist menu order", async ({
    await expect(page.locator("#title-0")).toHaveValue("❗Grammar Fixer");
    await expect(page.locator("#title-1")).toHaveValue("💬 Comment Post");
 
-   page.once("dialog", (dialog) => dialog.accept());
-   await page.getByRole("button", { name: "Save All" }).click();
+   await saveAllPrompts(page);
 
    const storedItems = await getPlasmoStorage<any[]>(
       page,
@@ -271,8 +273,7 @@ test("prompt factory supports ordering with add, remove, and visibility changes 
       "true"
    );
 
-   page.once("dialog", (dialog) => dialog.accept());
-   await page.getByRole("button", { name: "Save All" }).click();
+   await saveAllPrompts(page);
 
    const storedItems = await getPlasmoStorage<any[]>(
       page,
@@ -323,8 +324,7 @@ test("prompt factory hard deletes removed prompts after saving", async ({
    });
    await page.getByRole("button", { name: "Remove" }).nth(1).click();
 
-   page.once("dialog", (dialog) => dialog.accept());
-   await page.getByRole("button", { name: "Save All" }).click();
+   await saveAllPrompts(page);
 
    const storedItems = await getPlasmoStorage<any[]>(page, "contextMenuItems");
    expect(storedItems).not.toEqual(
@@ -357,8 +357,7 @@ test("prompt factory can remove every prompt without restoring defaults", async 
    await expect(page.getByText("No prompts configured yet.")).toBeVisible();
    await expect(page.locator('[id^="title-"]')).toHaveCount(0);
 
-   page.once("dialog", (dialog) => dialog.accept());
-   await page.getByRole("button", { name: "Save All" }).click();
+   await saveAllPrompts(page);
 
    const storedItems = await getPlasmoStorage<any[]>(
       page,

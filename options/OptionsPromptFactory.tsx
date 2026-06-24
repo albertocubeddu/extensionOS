@@ -195,7 +195,7 @@ function SelectedTextBadge() {
                             variant="outline"
                             className="border-violet-400/70 bg-gray-950/95 px-2.5 py-1 text-[11px] font-semibold text-violet-100 shadow-sm"
                         >
-                            Selected text will be added at the end.
+                            Selected text added here
                         </Badge>
                     </span>
                 </TooltipTrigger>
@@ -211,6 +211,8 @@ export default function OptionsPromptFactory() {
     const [contextMenuItems, setContextMenuItems] = useState<ContextMenuItem[]>([]);
     const [openFunctionalitySheet, setOpenFunctionalitySheet] = useState(false);
     const [promptFactoryError, setPromptFactoryError] = useState<string | null>(null);
+    const [promptFactoryStatus, setPromptFactoryStatus] = useState<string | null>(null);
+    const [isSaving, setIsSaving] = useState(false);
     const [addedPromptId, setAddedPromptId] = useState<string | null>(null);
     const reorderAnimationFrameRef = useRef<number | null>(null);
     const reorderScrollTimeoutRef = useRef<number | null>(null);
@@ -362,6 +364,7 @@ export default function OptionsPromptFactory() {
     */
     const handleChange = useCallback((id: string, prop: string, value: any) => {
         setPromptFactoryError(null);
+        setPromptFactoryStatus(null);
         setContextMenuItems(prevItems =>
             prevItems.map(item => {
                 if (item.id === id) {
@@ -391,6 +394,7 @@ export default function OptionsPromptFactory() {
 
     const handleSelectionMenuVisibleChange = useCallback((id: string, checked: boolean) => {
         setPromptFactoryError(null);
+        setPromptFactoryStatus(null);
 
         const item = contextMenuItems.find((candidate) => candidate.id === id);
         if (!item) {
@@ -416,6 +420,7 @@ export default function OptionsPromptFactory() {
 
     const handleAddPrompt = useCallback(() => {
         setPromptFactoryError(null);
+        setPromptFactoryStatus(null);
         const id = createPromptId(contextMenuItems);
 
         const newPrompt: ContextMenuItem = {
@@ -437,6 +442,7 @@ export default function OptionsPromptFactory() {
 
     const handleMovePrompt = useCallback((id: string, direction: -1 | 1) => {
         setPromptFactoryError(null);
+        setPromptFactoryStatus(null);
 
         const promptIndex = promptItems.findIndex((item) => item.id === id);
         const nextPromptIndex = promptIndex + direction;
@@ -477,6 +483,7 @@ export default function OptionsPromptFactory() {
         }
 
         setPromptFactoryError(null);
+        setPromptFactoryStatus(null);
         setContextMenuItems((prevItems) =>
             prevItems.filter((candidate) => candidate.id !== item.id)
         );
@@ -484,6 +491,10 @@ export default function OptionsPromptFactory() {
 
     //What a shit show, saving two things together. Best practice thrown in the bin. TODO: Refactor the smelly code. (10:00PM - night)
     const handleSave = async () => {
+        setIsSaving(true);
+        setPromptFactoryError(null);
+        setPromptFactoryStatus(null);
+
         try {
             const result = await sendToBackground<
                 SaveContextMenuItemsBody,
@@ -501,10 +512,12 @@ export default function OptionsPromptFactory() {
 
             setContextMenuItems(result.items);
             setPromptFactoryError(null);
-            alert("Changes saved!");
+            setPromptFactoryStatus("Changes saved.");
         } catch (error) {
             console.error("Failed to save changes:", error);
-            alert("Failed to save changes. Please try again.");
+            setPromptFactoryError("Failed to save changes. Please try again.");
+        } finally {
+            setIsSaving(false);
         }
     };
 
@@ -528,11 +541,21 @@ export default function OptionsPromptFactory() {
                                         <Plus className="mr-2 h-4 w-4" />
                                         Add Prompt
                                     </Button>
-                                    <Button className="bg-gradient-to-r from-violet-500 to-orange-500 text-white" onClick={() => handleSave()}>
-                                        Save All
+                                    <Button
+                                        className="bg-gradient-to-r from-violet-500 to-orange-500 text-white"
+                                        disabled={isSaving}
+                                        onClick={() => handleSave()}
+                                    >
+                                        {isSaving ? "Saving..." : "Save All"}
                                     </Button>
                                 </div>
                             </div>
+                            {promptFactoryStatus && (
+                                <Alert className="mb-6">
+                                    <AlertTitle>Prompt Factory</AlertTitle>
+                                    <AlertDescription>{promptFactoryStatus}</AlertDescription>
+                                </Alert>
+                            )}
                             {promptFactoryError && (
                                 <Alert variant="destructive" className="mb-6">
                                     <AlertTitle>Prompt Factory Error</AlertTitle>

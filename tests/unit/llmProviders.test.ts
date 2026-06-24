@@ -1,8 +1,10 @@
 import { describe, expect, it } from "vitest";
 
 import {
+   CUSTOM_LLM_MODEL_VALUE,
    DEFAULT_LLM_MODEL,
    DEFAULT_LLM_PROVIDER,
+   DEFAULT_LOCALHOST_MODEL,
    DEFAULT_LOCALHOST_ENDPOINT,
    getDefaultModelForProvider,
    getProvider,
@@ -26,8 +28,18 @@ describe("LLM provider configuration", () => {
    });
 
    it("selects the first model as the provider default", () => {
-      expect(getDefaultModelForProvider("openai")).toBe("gpt-4");
-      expect(getDefaultModelForProvider("localhost")).toBe("llama3");
+      expect(getDefaultModelForProvider("openai")).toBe("gpt-5.5");
+      expect(getDefaultModelForProvider("together")).toBe("moonshotai/Kimi-K2.6");
+      expect(getDefaultModelForProvider("localhost")).toBe(
+         DEFAULT_LOCALHOST_MODEL
+      );
+   });
+
+   it("keeps the custom model option out of provider API model lists", () => {
+      expect(getProvider("openai").models).not.toContain(CUSTOM_LLM_MODEL_VALUE);
+      expect(getProvider("together").models).not.toContain(
+         CUSTOM_LLM_MODEL_VALUE
+      );
    });
 
    it("uses custom localhost endpoints and stable third-party endpoints", () => {
